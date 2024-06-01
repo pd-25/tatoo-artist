@@ -216,16 +216,14 @@
                                     @enderror
                                 </div>
                             </div>
-
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Walk in Welcome</label>
-                                    <select name="walk_in_welcome" class="form-control"
-                                        value="{{ old('walk_in_welcome') }}">
-                                        <option selected disabled>select option</option>
+                                    <select name="walk_in_welcome" class="form-control">
+                                        <option disabled>select option</option>
                                         <option value="yes"
                                             {{ @$artistData->walk_in_welcome == 'yes' ? 'selected' : '' }}>Yes</option>
-                                        <option value="no {{ @$artistData->walk_in_welcome == 'no' ? 'selected' : '' }}">
+                                        <option value="no" {{ @$artistData->walk_in_welcome == 'no' ? 'selected' : '' }}>
                                             No</option>
                                     </select>
                                     @error('walk_in_welcome')
@@ -787,13 +785,13 @@
                             </div>
 
                         </div>
-
+{{-- @dd(!empty($artist->artistData->shop_logo), File::exists(public_path('storage/ShopImage/' . $artist->artistData->shop_logo)), $artist->artistData->shop_logo) --}}
                         <div class="row">
 
                             <div class="col-md-6" id="companyLogo">
                                 <div class="form-group">
                                     <label>Current Shop Logo</label>
-                                    @if (
+                                    {{-- @if (
                                         !empty($artist->artistData->shop_logo) &&
                                             File::exists(public_path('storage/ShopImage/' . $artist->artistData->shop_logo)))
                                         <img style="height: 82px; width: 82px;"
@@ -802,7 +800,13 @@
                                     @else
                                         <img style="height: 82px; width: 82px;" src="{{ asset('noimg.png') }}"
                                             alt="">
+                                    @endif --}}
+                                    @if (!empty($artist->artistData->shop_logo) && Storage::disk('public')->exists('ShopImage/' . $artist->artistData->shop_logo))
+                                        <img style="height: 82px; width: 82px;" src="{{ asset('storage/ShopImage/' . $artist->artistData->shop_logo) }}" alt="">
+                                    @else
+                                        <img style="height: 82px; width: 82px;" src="{{ asset('noimg.png') }}" alt="">
                                     @endif
+
                                 </div>
                             </div>
 
@@ -921,7 +925,7 @@
                             <div class="col-md-6" id="companyLogo">
                                 <div class="form-group">
                                     <label>Current Profile Image</label>
-                                    @if (!empty($artist->profile_image) && File::exists(public_path('storage/ProfileImage/' . $artist->profile_image)))
+                                    @if (!empty($artist->profile_image) && Storage::disk('public')->exists('ProfileImage/' . $artist->profile_image))
                                         <img style="height: 82px; width: 82px;"
                                             src="{{ asset('storage/ProfileImage/' . $artist->profile_image) }}"
                                             alt="">
@@ -939,7 +943,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Current Banner Image</label>
-                                    @if (!empty($artist->banner_image) && File::exists(public_path('storage/BannerImage/' . $artist->banner_image)))
+                                    @if (!empty($artist->banner_image) && Storage::disk('public')->exists('BannerImage/' . $artist->banner_image))
+                                    
                                         <img style="height: 82px; width: 82px;"
                                             src="{{ asset('storage/BannerImage/' . $artist->banner_image) }}"
                                             alt="">
