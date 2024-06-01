@@ -1,0 +1,107 @@
+.lin {
+    background-color: #000000 !important;
+    height: 2px !important;
+    opacity: .60 !important;
+}
+
+hr.dotted {
+    border: none;
+    border-top: 1px dotted #000;
+    color: #000000;
+    /* Set the same color as your background */
+    background-color: #fff;
+    /* Set the same color as your background */
+    height: 2px;
+    opacity: 1;
+}
+
+.radio-container {
+    display: inline-block;
+    position: relative;
+    padding-left: 40px;
+    margin-bottom: 15px;
+}
+
+.radio-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 30px;
+    width: 45px;
+    background-color: #eee;
+    border: 1px solid #ddd;
+}
+
+
+.radio-container input:checked+.checkmark {
+    background-color: #2196F3;
+}
+
+
+.checkmark:after {
+    content: "Yes";
+    position: absolute;
+    display: block;
+    left: 10px;
+    top: 2px;
+    color: #000000;
+}
+
+
+.radio-container input:checked+.checkmark:after {
+    color: #fff;
+}
+
+/* ----------------------------------------- */
+.checkmark2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 30px;
+    width: 45px;
+    background-color: #eee;
+    border: 1px solid #ddd;
+}
+
+.radio-container input:checked+.checkmark2 {
+    background-color: #be2a01;
+}
+
+
+.checkmark2:after {
+    content: "No";
+    position: absolute;
+    display: block;
+    left: 10px;
+    top: 2px;
+    color: #000000;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+.form-check-input {
+    border-color: #000000 !important;
+}
+
+.imgx {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 20px;
+}
+
+.display-none {
+    display: none;
+}
