@@ -104,8 +104,8 @@ Route::delete('/delete-appointment/{id}', [DashboardController::class, 'deleteAp
 Route::get('/all-comment', [ArtworkController::class, 'allComment'])->name('admin.allComment');
 
 Route::post('userlogin', [AuthController::class, 'userlogin'])->name('userlogin');
-
-Route::group(['prefix' => 'user', 'middleware' => 'artistCheck'], function () {
+// 'middleware' => 'artistCheck'
+Route::group(['prefix' => 'user'], function () {
     Route::get('/artist-dashboard', [ArtistDashboardController::class, 'index'])->name('artists.dashboard');
     Route::get('/artist-profile', [ArtistDashboardController::class, 'profile'])->name('artists.profile');
     Route::put('/artist-profile/{id}', [ArtistController::class, 'update'])->name('artists.profileUpdate');

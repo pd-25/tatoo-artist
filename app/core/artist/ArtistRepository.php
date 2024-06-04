@@ -16,8 +16,10 @@ class ArtistRepository implements ArtistInterface
        
         if(Auth::guard('admins')->check()){
             return User::whereNotIn('id', [1])->where('type', 'artist')->orderBy('id', 'DESC')->get();
+        }elseif(auth()->guard('sales')->user()->type == 'sales'){
+            return User::whereNotIn('id', [1])->where('type', 'artist')->where('created_by', Auth::guard('sales')->id())->orderBy('id', 'DESC')->get();
+            
         }else{
-            // return User::whereNotIn('id', [1])->where('type', 'artist')->where('created_by', Auth::guard('sales')->id())->orderBy('id', 'DESC')->get();
             return User::whereNotIn('id', [1])->where('type', 'artist')->orderBy('id', 'DESC')->get();
         }
         

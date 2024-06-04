@@ -46,7 +46,7 @@
                         <li><a href="{{ route('artists.dashboard') }}"><i class="ti-desktop"></i>Dashboard </a></li> 
                     @endif       
 
-                    @if (Auth::guard('artists')->check())
+                    @if (Auth::guard('artists')->check() || auth()?->guard('sales')->user()?->type == 'sales')
                         <li><a href="{{ route('artists.profile') }}"><i class="ti-user"></i>Profile </a></li>
                         <li><a href="{{ url('/user/artist-profile#profileHours') }}"><i class="ti-time"></i>Hours </a></li>
                     @else
@@ -77,7 +77,7 @@
                         @endif    
                     @endif
 
-                    @if (Auth::guard('artists')->check())
+                    @if (Auth::guard('artists')->check() || auth()?->guard('sales')->user()?->type == 'sales')
                         <li><a href="{{ route('artists.getForm') }}"><i class="ti-upload"></i> Upload Artwork</a></li>
                         <li><a href="{{ route('artists.getArtistWiseArtwork') }}"><i class="ti-image"></i> Modify Art</a>
                     @else
@@ -93,7 +93,7 @@
                         </li>       
                     @endif
                   
-                    @if (Auth::guard('artists')->check())
+                    @if (Auth::guard('artists')->check() || auth()?->guard('sales')->user()?->type == 'sales')
                         <li><a href="{{ route('artists.getArtistWiseBanner') }}"><i class="ti-layout-slider"></i> Carousel </a></li>
                         <li><a href="{{ route('admin.allComment') }}"><i class="ti-comment"></i> Comments</a></li>
                         <li><a href="{{ route('artists.bgetForm') }}"><i class="ti-upload"></i> Banner</a></li>
@@ -110,7 +110,7 @@
                     @endif
                      
                     
-                    @if (Auth::guard('artists')->check())
+                    @if (Auth::guard('artists')->check() || auth()?->guard('sales')->user()?->type == 'sales')
                     <li><a href="{{ url('/user/artist-profile#companyLogo') }}"><i class="ti-image"></i> Comapany Logo </a></li>
                     <li><a href="{{ route('admin.getQuote') }}"><i class="ti-envelope"></i>Quote Form</a></li>
                      
