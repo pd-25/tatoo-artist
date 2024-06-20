@@ -42,7 +42,7 @@ class ArtworkController extends Controller
      */
     public function create()
     {
-        $data['artists'] = $this->artistInterface->getAllArtist();
+        $data['artists'] = $this->artistInterface->getAllArtistss();
         $data['styles'] = $this->styleInterface->getAllStyle();
         $data['placements'] = $this->placementInterface->getAllPlacements();
         $data['subjects'] = $this->subjectInterface->getAllSubjects();
@@ -84,7 +84,7 @@ class ArtworkController extends Controller
     public function edit(string $id)
     {
         $data['artwork'] =  $this->artworkInterface->getSingleArtwork(decrypt($id));
-        $data['artists'] = $this->artistInterface->getAllArtist();
+        $data['artists'] = $this->artistInterface->getAllArtistss();
         $data['styles'] = $this->styleInterface->getAllStyle();
         $data['placements'] = $this->placementInterface->getAllPlacements();
         $data['subjects'] = $this->subjectInterface->getAllSubjects();

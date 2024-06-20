@@ -46,7 +46,7 @@
                         <li><a href="{{ route('artists.dashboard') }}"><i class="ti-desktop"></i>Dashboard </a></li> 
                     @endif       
 
-                    @if (Auth::guard('artists')->check() || auth()?->guard('sales')->user()?->type == 'sales')
+                    @if (Auth::guard('artists')->check())
                         <li><a href="{{ route('artists.profile') }}"><i class="ti-user"></i>Profile </a></li>
                         <li><a href="{{ url('/user/artist-profile#profileHours') }}"><i class="ti-time"></i>Hours </a></li>
                     @else
@@ -77,7 +77,7 @@
                         @endif    
                     @endif
 
-                    @if (Auth::guard('artists')->check() || auth()?->guard('sales')->user()?->type == 'sales')
+                    @if (Auth::guard('artists')->check())
                         <li><a href="{{ route('artists.getForm') }}"><i class="ti-upload"></i> Upload Artwork</a></li>
                         <li><a href="{{ route('artists.getArtistWiseArtwork') }}"><i class="ti-image"></i> Modify Art</a>
                     @else
@@ -93,12 +93,12 @@
                         </li>       
                     @endif
                   
-                    @if (Auth::guard('artists')->check() || auth()?->guard('sales')->user()?->type == 'sales')
+                    @if (Auth::guard('artists')->check())
                         <li><a href="{{ route('artists.getArtistWiseBanner') }}"><i class="ti-layout-slider"></i> Carousel </a></li>
                         <li><a href="{{ route('admin.allComment') }}"><i class="ti-comment"></i> Comments</a></li>
                         <li><a href="{{ route('artists.bgetForm') }}"><i class="ti-upload"></i> Banner</a></li>
                     @else
-                            {{-- <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Banner Management <span
+                            <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Banner Management <span
                         class="sidebar-collapse-icon ti-angle-down"></span></a>
                             <ul>
                                 <li><a href="{{ route('banners.create') }}">Add Banner</a></li>
@@ -106,11 +106,11 @@
                                 <li><a href="{{ route('banners.index') }}">All Banners</a>
                                 </li>
                             </ul>
-                        </li>         --}}
+                        </li>         
                     @endif
                      
                     
-                    @if (Auth::guard('artists')->check() || auth()?->guard('sales')->user()?->type == 'sales')
+                    @if (Auth::guard('artists')->check() || !Auth::guard('admins')->check())
                     <li><a href="{{ url('/user/artist-profile#companyLogo') }}"><i class="ti-image"></i> Comapany Logo </a></li>
                     <li><a href="{{ route('admin.getQuote') }}"><i class="ti-envelope"></i>Quote Form</a></li>
                      
@@ -120,8 +120,7 @@
                     <li><a href="{{ route('admin.getAcceptPayment') }}"><i class="ti-credit-card"></i>Accept Payment</a></li>
                     <li><a href="{{ route('admin.getExpenses') }}"><i class="ti-money"></i>Manage Expenses</a></li>
                     @endif
-
-                   
+                    
                     {{-- <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Order Management <span
                                 class="sidebar-collapse-icon ti-angle-down"></span></a>
                         <ul>

@@ -28,7 +28,7 @@ class ExpensesController extends Controller
     }
 
     public function AddexpensesForm(Request $request){
-        $data['artists'] = $this->artistInterface->getAllArtist();
+        $data['artists'] = $this->artistInterface->getAllArtistss();
         return view('admin.expense.create',$data);
     }
 
@@ -68,7 +68,7 @@ class ExpensesController extends Controller
     }
 
     public function editexpensesForm(Request $request,$id){
-        $artists = $this->artistInterface->getAllArtist();
+        $artists = $this->artistInterface->getAllArtistss();
         $expenses = ExpenseModel::where('id',decrypt($id))->first();
         return view('admin.expense.edit',compact('expenses','artists'));
     }

@@ -34,7 +34,7 @@ class BannerController extends Controller
      */
     public function create()
     {
-        $data['artists'] = $this->artistInterface->getAllArtist();
+        $data['artists'] = $this->artistInterface->getAllArtistss();
         return view('admin.banner.create', $data);
     }
 

@@ -39,8 +39,10 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Username</label><span class="text-info">(This field is not changable)</span>
-                                    <span class="form-control">{{ $artist->username }}</span>
+                                    <label>Username</label><span class="text-info"></span>
+                              
+                                    <input type="text" class="form-control" id="username" placeholder="username"
+                                        name="username" value="{{ $artist->username }}">
                                     @error('username')
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -51,8 +53,10 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Email</label><span class="text-info">(This field is not changable)</span>
-                                    <span class="form-control">{{ $artist->email }}</span>
+                                    <label>Email</label><span class="text-info"></span>
+                                         <input type="email" class="form-control" id="email" placeholder="email"
+                                        name="email" value="{{ $artist->email }}">
+                                    
                                     @error('email')
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -1241,6 +1245,7 @@
                         $(this).val(value.slice(0, 2));
                     }
                 });
+                
 
             });
         </script>
