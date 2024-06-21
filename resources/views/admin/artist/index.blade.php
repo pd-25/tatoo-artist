@@ -6,7 +6,7 @@
         <div class="col-lg-10">
             <div class="card">
                 <div class="card-title pr">
-                    <h4>All Artists</h4>
+                    <h4>All Artists ( {{ $totalArtists }} )</h4>
                     @if (Session::has('msg'))
                         <p class="alert alert-info">{{ Session::get('msg') }}</p>
                     @endif

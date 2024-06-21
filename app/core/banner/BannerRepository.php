@@ -9,11 +9,22 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
 class BannerRepository implements BannerInterface {
-    public function getAllBanners(){
+    public function getAllBanners($request){
         if(auth()->guard('artists')->check()){
             return BannerImage::where('user_id', auth()->guard('artists')->id())->with('artist')->orderBy('id', 'DESC')->get();
         }
-        return BannerImage::with('artist')->orderBy('id', 'DESC')->get();
+        $searchCustomer = trim($request->search_customer);
+        $artistQuery = BannerImage::with('artist')->orderBy('id', 'DESC');
+        if (!empty($searchCustomer)) {
+            $artistQuery->whereHas('artist', function ($query) use ($searchCustomer) {
+                $query->where('username', 'LIKE', "%{$searchCustomer}%")
+                      ->orWhere('name', 'LIKE', "%{$searchCustomer}%")
+                      ->orWhere('email', 'LIKE', "%{$searchCustomer}%");
+            });
+        }
+        return $artistQuery->get();
+        
+        // return BannerImage::with('artist')->orderBy('id', 'DESC')->get();
     }
 
     public function getArtistBanners(){

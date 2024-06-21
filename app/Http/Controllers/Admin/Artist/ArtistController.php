@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Style;
+use Illuminate\Database\QueryException;
+use Illuminate\Validation\ValidationException;
 
 class ArtistController extends Controller
 {
@@ -19,11 +21,21 @@ class ArtistController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $re)
-    {
-        $data['artists'] = $this->artistInterface->getAllArtist($re);
-        return view('admin.artist.index', $data);
-    }
+public function index(Request $re)
+{
+    // Get the list of artists using the repository method
+    $artists = $this->artistInterface->getAllArtistss($re);
+    
+    // Calculate the total number of artists
+    $totalArtists = $artists->count();
+    
+    // Prepare the data to be passed to the view
+    $data['artists'] = $artists;
+    $data['totalArtists'] = $totalArtists;
+    
+    // Return the view with the data
+    return view('admin.artist.index', $data);
+}
 
     /**
      * Display a listing of the customers.
@@ -174,60 +186,53 @@ class ArtistController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'name' => 'required|string',
-            'zipcode' => 'required|numeric|min:6',
-            'phone' => 'numeric',
-            'address' => 'nullable|string',
-        ]);
+   public function update(Request $request, string $id)
+{
+    // Validation rules
+    $request->validate([
+        'name' => 'required|string',
+        'zipcode' => 'required|numeric|min:6',
+        'phone' => 'numeric',
+        'address' => 'nullable|string',
+        'email' => 'email|unique:users,email,' . decrypt($id),
+        'username' => 'string|unique:users,username,' . decrypt($id),
+    ]);
 
-        $data = $request->only('name', 'username', 'email', 'phone', 'address', 'address2', 'country', 'state', 'city', 'password', 'zipcode', 'latitude', 'longitude', 'profile_image', 'banner_image');
-        $timeData = $request->only('sunday_from', 'sunday_to', 'monday_from', 'monday_to', 'tuesday_from', 'tuesday_to', 'wednesday_from', 'wednesday_to', 'thrusday_from', 'thrusday_to', 'friday_from', 'friday_to', 'saterday_from', 'saterday_to');
+    // Data to be updated
+    $data = $request->only('name', 'username', 'email', 'phone', 'address', 'address2', 'country', 'state', 'city', 'password', 'zipcode', 'latitude', 'longitude', 'profile_image', 'banner_image');
+    $timeData = $request->only('sunday_from', 'sunday_to', 'monday_from', 'monday_to', 'tuesday_from', 'tuesday_to', 'wednesday_from', 'wednesday_to', 'thrusday_from', 'thrusday_to', 'friday_from', 'friday_to', 'saterday_from', 'saterday_to');
+    $artistData = $request->only('hourly_rate', 'specialty', 'years_in_trade', 'walk_in_welcome', 'certified_professionals', 'consultation_available', 'language_spoken', 'parking', 'payment_method', 'air_conditioned', 'water_available', 'coffee_available', 'mask_worn', 'vaccinated_staff', 'wheel_chair_accessible', 'bike_parking', 'wifi_available', 'artist_of_the_year', 'insta_handle', 'facebook_handle', 'youtube_handle', 'twitter_handle', 'google_map_api', 'yelp_api', 'shop_logo', 'shop_percentage', 'shop_email', 'shop_name', 'shop_address');
+    $close = $request->only('sunday_close', 'monday_close', 'tuesday_close', 'wednesday_close', 'thrusday_close', 'friday_close', 'saterday_close');
 
-        $artistData = $request->only(
-            'hourly_rate',
-            'specialty',
-            "years_in_trade",
-            "walk_in_welcome",
-            "certified_professionals",
-            "consultation_available",
-            "language_spoken",
-            "parking",
-            "payment_method",
-            "air_conditioned",
-            "water_available",
-            "coffee_available",
-            "mask_worn",
-            "vaccinated_staff",
-            "wheel_chair_accessible",
-            "bike_parking",
-            "wifi_available",
-            "artist_of_the_year",
-            "insta_handle",
-            "facebook_handle",
-            "youtube_handle",
-            "twitter_handle",
-            "google_map_api",
-            "yelp_api",
-            "shop_logo",
-            "shop_percentage",
-            "shop_email",
-            "shop_name",
-            "shop_address"
-        );
-
-        $close = $request->only('sunday_close', 'monday_close', 'tuesday_close', 'wednesday_close', 'thrusday_close', 'friday_close', 'saterday_close');
-
+    try {
+        // Attempt to update the artist
         $update = $this->artistInterface->updateArtist($data, decrypt($id), $timeData, $artistData, $close);
 
+        // Check the result and return appropriate message
         if ($update) {
             return back()->with('msg', 'Artist information updated successfully.');
         } elseif ($update == 'No data') {
             return back()->with('msg', 'No artist found.');
         }
+    } catch (QueryException $e) {
+        // Catching unique constraint violation exception
+        if ($e->errorInfo[1] == 1062) {
+            // Determine which unique constraint was violated and set the error message
+            if (str_contains($e->getMessage(), 'users_email_unique')) {
+                $errorMessage = 'The email address is already in use. Please use a different email address.';
+            } elseif (str_contains($e->getMessage(), 'users_username_unique')) {
+                $errorMessage = 'The username is already in use. Please use a different username.';
+            } else {
+                $errorMessage = 'A unique constraint violation occurred.';
+            }
+            // Return with error message
+            return back()->withErrors(['msg' => $errorMessage])->withInput();
+        }
+
+        // Other SQL related errors
+        return back()->withErrors(['msg' => 'An error occurred while updating the artist information. Please try again later.'])->withInput();
     }
+}
 
     /**
      * Remove the specified resource from storage.

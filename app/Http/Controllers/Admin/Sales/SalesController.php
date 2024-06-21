@@ -18,9 +18,9 @@ class SalesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data['sales'] = $this->salesInterface->getAllSales();
+        $data['sales'] = $this->salesInterface->getAllSales($request);
         return view('admin.sales.index', $data);
     }
 

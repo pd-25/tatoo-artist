@@ -25,13 +25,32 @@ class ArtistRepository implements ArtistInterface
                 });
             }
             return $artistQuery->get();
-        }elseif(auth()->guard('sales')->user()->type == 'sales'){
-            return User::whereNotIn('id', [1])->where('type', 'artist')->where('created_by', Auth::guard('sales')->id())->orderBy('id', 'DESC')->get();
-            
         }else{
+            // return User::whereNotIn('id', [1])->where('type', 'artist')->where('created_by', Auth::guard('sales')->id())->orderBy('id', 'DESC')->get();
             return User::whereNotIn('id', [1])->where('type', 'artist')->orderBy('id', 'DESC')->get();
         }
         
+    }
+    public function getAllArtistss($re = null)
+    {
+        if (Auth::guard('admins')->check()) {
+            $searchCustomer = trim($re->search_customer);
+            $artistQuery =  User::whereNotIn('id', [1])->where('type', 'artist')->orderBy('id', 'DESC');
+            if (!empty($searchCustomer)) {
+                $artistQuery->where(function ($query) use ($searchCustomer) {
+                    $query->where('username', 'LIKE', "%{$searchCustomer}%")
+                        ->orWhere('name', 'LIKE', "%{$searchCustomer}%")
+                        ->orWhere('email', 'LIKE', "%{$searchCustomer}%");
+                });
+            }
+            return $artistQuery->get();
+        } else {
+            return User::whereNotIn('id', [1])
+                ->where('type', 'artist')
+                ->where('created_by', Auth::guard('sales')->id())
+                ->orderBy('id', 'DESC')
+                ->get();
+        }
     }
 
     public function storeArtistData(array $data, $timeData,$artistData)

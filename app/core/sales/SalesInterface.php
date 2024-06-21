@@ -2,7 +2,7 @@
 namespace App\core\sales;
 
 interface SalesInterface {
-    public function getAllSales();
+    public function getAllSales($request);
     public function storeSalesData(array $data);
     public function getSingleSales($id);
     public function updateSales($data,$id);

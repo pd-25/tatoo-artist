@@ -19,9 +19,9 @@ class BannerController extends Controller
         $this->artistInterface = $artistInterface;
     }
 
-    public function index() {
+    public function index(Request $request) {
         if(Auth::guard('admins')->check()){
-            $data['banners'] = $this->bannerInterface->getAllBanners();
+            $data['banners'] = $this->bannerInterface->getAllBanners($request);
         }else{
             $data['banners'] = $this->bannerInterface->getArtistBanners();
         }    
@@ -34,7 +34,7 @@ class BannerController extends Controller
      */
     public function create()
     {
-        $data['artists'] = $this->artistInterface->getAllArtist();
+        $data['artists'] = $this->artistInterface->getAllArtistss();
         return view('admin.banner.create', $data);
     }
 

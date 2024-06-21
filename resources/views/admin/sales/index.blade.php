@@ -1,5 +1,5 @@
 @extends('admin.layout.main')
-@section('title', env('APP_NAME').' | Artist-index'  )
+@section('title', env('APP_NAME').' | Sales-index'  )
 @section('content')
     <div class="row justify-content-center">
 
@@ -18,6 +18,17 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table student-data-table m-t-20">
+                            <form action="{{ route('sales.index') }}" method="get">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" name="search_customer"
+                                            id="artwrk_tbl_filter" placeholder="Search data for this page">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <Button type="submit" class="btn btn-md btn-primary">Search</Button>
+                                    </div>
+                                </div>
+                            </form>
                             <thead>
                                 <tr>
                                     <th>SN.</th>

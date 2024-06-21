@@ -7,5 +7,6 @@ interface ArtistInterface {
     public function getSingleArtist($id);
     public function updateArtist($data,$id, $timeData, $artistData, $close);
     public function deleteArtist($id);
+    public function getAllArtistss($re);
     
 }

@@ -8,9 +8,19 @@ use Illuminate\Support\Facades\Hash;
 
 class SalesRepository implements SalesInterface
 {
-    public function getAllSales()
+    public function getAllSales($request = null)
     {
-        return User::whereNotIn('id', [1])->where('type', 'sales')->orderBy('id', 'DESC')->get();
+        $searchCustomer = trim($request->search_customer);
+        $artistQuery =  User::whereNotIn('id', [1])->where('type', 'sales')->orderBy('id', 'DESC');
+        if (!empty($searchCustomer)) {
+            $artistQuery->where(function ($query) use ($searchCustomer) {
+                $query->where('username', 'LIKE', "%{$searchCustomer}%")
+                    ->orWhere('name', 'LIKE', "%{$searchCustomer}%")
+                    ->orWhere('email', 'LIKE', "%{$searchCustomer}%");
+            });
+        }
+        return $artistQuery->get();
+        // return User::whereNotIn('id', [1])->where('type', 'sales')->orderBy('id', 'DESC')->get();
     }
 
     public function storeSalesData(array $data)
@@ -44,7 +54,7 @@ class SalesRepository implements SalesInterface
         //dd($data);
         $find =  User::where('id', $id)->first();
         if ($find) {
-                
+
             if (isset($data['profile_image']) && $data['profile_image'] != null) {
                 File::delete(public_path("storage/ProfileImage/" . $find->profile_image));
                 $content_db = time() . rand(0000, 9999) . "." . $data['profile_image']->getClientOriginalExtension();
@@ -54,27 +64,28 @@ class SalesRepository implements SalesInterface
 
             if (isset($data['password']) && $data['password'] != null) {
                 $data['password'] = Hash::make($data['password']);
-            }else{
+            } else {
                 $data['password'] = $find->password;
             }
             return $find->update($data);
-        }else{
+        } else {
             return 'No data';
         }
     }
 
 
-    public function deleteSales($id){
+    public function deleteSales($id)
+    {
         $find =  User::where('id', $id)->first();
-        if($find) {
-            foreach($find->artworks as $art){
+        if ($find) {
+            foreach ($find->artworks as $art) {
                 $art->delete();
             }
 
-            foreach($find->bannerImages as $bannerImage){
+            foreach ($find->bannerImages as $bannerImage) {
                 $bannerImage->delete();
             }
-            
+
             return $find->delete();
         }
         return 'not found';

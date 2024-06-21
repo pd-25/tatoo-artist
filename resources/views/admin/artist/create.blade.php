@@ -193,7 +193,7 @@
                                     <div class="form-group">
                                         <label>Walk in Welcome</label>
                                         <select name="walk_in_welcome" class="form-control" value="{{ old('walk_in_welcome') }}">
-                                            <option selected disabled>select option</option>
+                                            <!--<option selected disabled>select option</option>-->
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
                                         </select>
@@ -213,7 +213,7 @@
                                     <div class="form-group">
                                         <label>Certified Professionals</label><span class="text-danger">*</span>
                                         <select name="certified_professionals" class="form-control" value="{{ old('certified_professionals') }}">
-                                            <option selected disabled>select option</option>
+                                            <!--<option selected disabled>select option</option>-->
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
                                         </select>
@@ -229,7 +229,7 @@
                                     <div class="form-group">
                                         <label>Consultations Available</label>
                                         <select name="consultation_available" class="form-control" value="{{ old('consultation_available') }}">
-                                            <option selected disabled>select option</option>
+                                            <!--<option selected disabled>select option</option>-->
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
                                         </select>
@@ -308,7 +308,7 @@
                                     <div class="form-group">
                                         <label>Parking Available</label>
                                         <select name="parking" class="form-control" value="{{ old('parking') }}">
-                                            <option selected disabled>select option</option>
+                                            <!--<option selected disabled>select option</option>-->
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
                                         </select>
@@ -402,7 +402,7 @@
                                     <div class="form-group">
                                         <label>Air Conditioned</label>
                                         <select name="air_conditioned" class="form-control" value="{{ old('air_conditioned') }}">
-                                            <option selected disabled>select option</option>
+                                            <!--<option selected disabled>select option</option>-->
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
                                         </select>
@@ -422,7 +422,7 @@
                                     <div class="form-group">
                                         <label>Water Available</label><span class="text-danger">*</span>
                                         <select name="water_available" class="form-control" value="{{ old('certified_professionals') }}">
-                                            <option selected disabled>select option</option>
+                                            <!--<option selected disabled>select option</option>-->
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
                                         </select>
@@ -438,7 +438,7 @@
                                     <div class="form-group">
                                         <label>Coffee Available</label>
                                         <select name="coffee_available" class="form-control" value="{{ old('coffee_available') }}">
-                                            <option selected disabled>select option</option>
+                                            <!--<option selected disabled>select option</option>-->
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
                                         </select>
@@ -458,7 +458,7 @@
                                     <div class="form-group">
                                         <label>Masks Worn</label><span class="text-danger">*</span>
                                         <select name="mask_worn" class="form-control" value="{{ old('mask_worn') }}">
-                                            <option selected disabled>select option</option>
+                                            <!--<option selected disabled>select option</option>-->
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
                                         </select>
@@ -474,7 +474,7 @@
                                     <div class="form-group">
                                         <label>Vaccinated Staff</label>
                                         <select name="vaccinated_staff" class="form-control" value="{{ old('vaccinated_staff') }}">
-                                            <option selected disabled>select option</option>
+                                            <!--<option selected disabled>select option</option>-->
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
                                         </select>
@@ -494,7 +494,7 @@
                                     <div class="form-group">
                                         <label>Wheel Chair Accessible</label><span class="text-danger">*</span>
                                         <select name="wheel_chair_accessible" class="form-control" value="{{ old('mask_worn') }}">
-                                            <option selected disabled>select option</option>
+                                            <!--<option selected disabled>select option</option>-->
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
                                         </select>
@@ -510,7 +510,7 @@
                                     <div class="form-group">
                                         <label>Bike Parking</label>
                                         <select name="bike_parking" class="form-control" value="{{ old('bike_parking') }}">
-                                            <option selected disabled>select option</option>
+                                            <!--<option selected disabled>select option</option>-->
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
                                         </select>
@@ -530,7 +530,7 @@
                                     <div class="form-group">
                                         <label>Wifi Available</label><span class="text-danger">*</span>
                                         <select name="wifi_available" class="form-control" value="{{ old('wifi_available') }}">
-                                            <option selected disabled>select option</option>
+                                            <!--<option selected disabled>select option</option>-->
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
                                         </select>
@@ -546,7 +546,7 @@
                                     <div class="form-group">
                                         <label>Artist of The Year</label>
                                         <select name="artist_of_the_year" class="form-control" value="{{ old('artist_of_the_year') }}">
-                                            <option selected disabled>select option</option>
+                                            <!--<option selected disabled>select option</option>-->
                                             <option value="yes">Yes</option>
                                             <option value="no">No</option>
                                         </select>
@@ -934,7 +934,7 @@
 
                     $("#latitude").val(latitude);
                     $("#longitude").val(longitude);
-
+                    $("#shop_address").val($("#autocomplete").val());
                     // Display the extracted address components
                     console.log('Country:', country);
                     console.log('State:', state);
@@ -953,5 +953,21 @@
                     $("#artistProfileUpdate").submit();
                 });
             });
+              $("#autocomplete").on("change", function() {
+                    $("#shop_address").val($(this).val());
+                });
+                  $("#hourly_rate").on("input", function() {
+                    var value = $(this).val();
+                    if (value.length > 3) {
+                        $(this).val(value.slice(0, 3));
+                    }
+                });
+
+                $("#years_in_trade").on("input", function() {
+                    var value = $(this).val();
+                    if (value.length > 2) {
+                        $(this).val(value.slice(0, 2));
+                    }
+                });
         </script>
     @endsection
