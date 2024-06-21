@@ -19,18 +19,29 @@ class ArtistController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $re)
     {
-        $data['artists'] = $this->artistInterface->getAllArtist();
+        $data['artists'] = $this->artistInterface->getAllArtist($re);
         return view('admin.artist.index', $data);
     }
 
-     /**
+    /**
      * Display a listing of the customers.
      */
-    public function customers()
+    public function customers(Request $re)
     {
-        $data['customers'] = User::where('type','=','Customer')->where('status',1)->get();
+        $searchCustomer = trim($re->search_customer);
+        $customersQuery = User::where('type', 'Customer')
+            ->where('status', 1);
+        if (!empty($searchCustomer)) {
+            $customersQuery->where(function ($query) use ($searchCustomer) {
+                $query->where('username', 'LIKE', "%{$searchCustomer}%")
+                    ->orWhere('name', 'LIKE', "%{$searchCustomer}%")
+                    ->orWhere('email', 'LIKE', "%{$searchCustomer}%");
+            });
+        }
+        $data['customers'] = $customersQuery->get();
+
         return view('admin.customers.index', $data);
     }
 
@@ -40,7 +51,8 @@ class ArtistController extends Controller
         return view('admin.customers.edit', $data);
     }
 
-    public function updateCustomer(Request $request, $id) {
+    public function updateCustomer(Request $request, $id)
+    {
         $request->validate([
             'name' => 'required',
             // 'username' => 'required',
@@ -48,15 +60,15 @@ class ArtistController extends Controller
             'email' => 'required',
             'address' => 'required'
         ]);
-        $data = $request->only('name', 'username','phone','email','address');
+        $data = $request->only('name', 'username', 'phone', 'email', 'address');
         User::where('id', $id)->update($data);
-        return redirect()->route('admin.customers')->with('msg','Data updated successfully');
-
+        return redirect()->route('admin.customers')->with('msg', 'Data updated successfully');
     }
 
-    public function destroyCustomer($id) {
-        User::where('id', $id)->update(['status'=> 0]);
-        return redirect()->route('admin.customers')->with('msg','Data blocked successfully');
+    public function destroyCustomer($id)
+    {
+        User::where('id', $id)->update(['status' => 0]);
+        return redirect()->route('admin.customers')->with('msg', 'Data blocked successfully');
     }
 
 
@@ -66,7 +78,7 @@ class ArtistController extends Controller
     public function create()
     {
         $data['styles'] = Style::orderBy('id', 'asc')->get();
-        return view('admin.artist.create',$data);
+        return view('admin.artist.create', $data);
     }
 
     /**
@@ -84,15 +96,41 @@ class ArtistController extends Controller
             'address' => 'nullable|string',
         ]);
         $data = $request->only('name', 'username', 'email', 'phone', 'address', 'password', 'zipcode', 'profile_image', 'banner_image');
-        $timeData = $request->only('sunday_from','sunday_to','monday_from','monday_to','tuesday_from','tuesday_to','wednesday_from','wednesday_to','thrusday_from','thrusday_to','friday_from','friday_to','saterday_from','saterday_to');
-        
-        $artistData = $request->only('hourly_rate','specialty',"years_in_trade","walk_in_welcome","certified_professionals","consultation_available",
-            "language_spoken","parking","payment_method","air_conditioned","water_available","coffee_available","mask_worn","vaccinated_staff","wheel_chair_accessible","bike_parking",
-            "wifi_available","artist_of_the_year","insta_handle","facebook_handle","youtube_handle","twitter_handle","google_map_api","yelp_api",
-            "shop_logo","shop_percentage","shop_email","shop_name","shop_address"
+        $timeData = $request->only('sunday_from', 'sunday_to', 'monday_from', 'monday_to', 'tuesday_from', 'tuesday_to', 'wednesday_from', 'wednesday_to', 'thrusday_from', 'thrusday_to', 'friday_from', 'friday_to', 'saterday_from', 'saterday_to');
+
+        $artistData = $request->only(
+            'hourly_rate',
+            'specialty',
+            "years_in_trade",
+            "walk_in_welcome",
+            "certified_professionals",
+            "consultation_available",
+            "language_spoken",
+            "parking",
+            "payment_method",
+            "air_conditioned",
+            "water_available",
+            "coffee_available",
+            "mask_worn",
+            "vaccinated_staff",
+            "wheel_chair_accessible",
+            "bike_parking",
+            "wifi_available",
+            "artist_of_the_year",
+            "insta_handle",
+            "facebook_handle",
+            "youtube_handle",
+            "twitter_handle",
+            "google_map_api",
+            "yelp_api",
+            "shop_logo",
+            "shop_percentage",
+            "shop_email",
+            "shop_name",
+            "shop_address"
         );
-       
-        $store = $this->artistInterface->storeArtistData($data, $timeData,$artistData);
+
+        $store = $this->artistInterface->storeArtistData($data, $timeData, $artistData);
         if ($store) {
             return redirect()->route('artists.index')->with('msg', 'New artist added successfully.');
         } else {
@@ -106,6 +144,10 @@ class ArtistController extends Controller
     public function show(string $id)
     {
         $data['artist'] = $this->artistInterface->getSingleArtist(decrypt($id));
+        $data['artistData'] = @$data['artist']->artistData;
+        $data['languageSpoken'] = explode(',', @$data['artistData']->language_spoken);
+        $data['PaymentMethod'] = explode(',', @$data['artistData']->payment_method);
+        $data['styles'] = Style::orderBy('id', 'asc')->get();
         if ($data['artist'] == 'Not Found') {
             return back()->with('msg', 'No artist found!');
         }
@@ -141,19 +183,45 @@ class ArtistController extends Controller
             'address' => 'nullable|string',
         ]);
 
-        $data = $request->only('name', 'username', 'email', 'phone', 'address', 'address2', 'country', 'state', 'city', 'password', 'zipcode', 'latitude','longitude', 'profile_image', 'banner_image');
-        $timeData = $request->only('sunday_from','sunday_to','monday_from','monday_to','tuesday_from','tuesday_to','wednesday_from','wednesday_to','thrusday_from','thrusday_to','friday_from','friday_to','saterday_from','saterday_to');
-       
-        $artistData = $request->only('hourly_rate','specialty',"years_in_trade","walk_in_welcome","certified_professionals","consultation_available",
-            "language_spoken","parking","payment_method","air_conditioned","water_available","coffee_available","mask_worn","vaccinated_staff","wheel_chair_accessible","bike_parking",
-            "wifi_available","artist_of_the_year","insta_handle","facebook_handle","youtube_handle","twitter_handle","google_map_api","yelp_api",
-            "shop_logo","shop_percentage","shop_email","shop_name","shop_address"
+        $data = $request->only('name', 'username', 'email', 'phone', 'address', 'address2', 'country', 'state', 'city', 'password', 'zipcode', 'latitude', 'longitude', 'profile_image', 'banner_image');
+        $timeData = $request->only('sunday_from', 'sunday_to', 'monday_from', 'monday_to', 'tuesday_from', 'tuesday_to', 'wednesday_from', 'wednesday_to', 'thrusday_from', 'thrusday_to', 'friday_from', 'friday_to', 'saterday_from', 'saterday_to');
+
+        $artistData = $request->only(
+            'hourly_rate',
+            'specialty',
+            "years_in_trade",
+            "walk_in_welcome",
+            "certified_professionals",
+            "consultation_available",
+            "language_spoken",
+            "parking",
+            "payment_method",
+            "air_conditioned",
+            "water_available",
+            "coffee_available",
+            "mask_worn",
+            "vaccinated_staff",
+            "wheel_chair_accessible",
+            "bike_parking",
+            "wifi_available",
+            "artist_of_the_year",
+            "insta_handle",
+            "facebook_handle",
+            "youtube_handle",
+            "twitter_handle",
+            "google_map_api",
+            "yelp_api",
+            "shop_logo",
+            "shop_percentage",
+            "shop_email",
+            "shop_name",
+            "shop_address"
         );
 
-        $close = $request->only( 'sunday_close','monday_close', 'tuesday_close', 'wednesday_close', 'thrusday_close','friday_close', 'saterday_close');
+        $close = $request->only('sunday_close', 'monday_close', 'tuesday_close', 'wednesday_close', 'thrusday_close', 'friday_close', 'saterday_close');
 
         $update = $this->artistInterface->updateArtist($data, decrypt($id), $timeData, $artistData, $close);
-       
+
         if ($update) {
             return back()->with('msg', 'Artist information updated successfully.');
         } elseif ($update == 'No data') {

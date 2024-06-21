@@ -34,17 +34,17 @@
                                         <tr>
                                             <td>#</td>
                                             <td>
-                                                {{ $comment->user->username }}
+                                                {{ $comment?->user?->username }}
                                                 
                                             </td>
                                             <td>
-                                                {{ $comment->comment }}
+                                                {{ $comment?->comment }}
                                                 
                                             </td>
                                         
                                             <td>
-                                                @if (!empty($comment->artwork->image) && File::exists(public_path('storage/ArtworkImage/' . $comment->artwork->image)))
-                                                <img style="height: 82px; width: 82px;" src="{{ asset('storage/ArtworkImage/'.$comment->artwork->image) }}" alt="">
+                                                @if (!empty($comment?->artwork?->image) && File::exists(public_path('storage/ArtworkImage/' . $comment?->artwork?->image)))
+                                                <img style="height: 82px; width: 82px;" src="{{ asset('storage/ArtworkImage/'.$comment?->artwork?->image) }}" alt="">
                                                     
                                                 @else
                                                 <img style="height: 82px; width: 82px;" src="{{asset('noimg.png') }}" alt="">
@@ -64,7 +64,7 @@
                                             
                                                 
                                                 <form method="POST"
-                                                    action="{{ route('comment.delete', encrypt($comment->id)) }}"
+                                                    action="{{ route('comment.delete', encrypt($comment?->id)) }}"
                                                     class="action-icon">
                                                     @csrf
                                                     <input name="_method" type="hidden" value="DELETE">

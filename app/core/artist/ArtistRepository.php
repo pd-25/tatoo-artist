@@ -11,11 +11,20 @@ use Illuminate\Support\Facades\Hash;
 
 class ArtistRepository implements ArtistInterface
 {
-    public function getAllArtist()
+    public function getAllArtist($re = null)
     {
        
         if(Auth::guard('admins')->check()){
-            return User::whereNotIn('id', [1])->where('type', 'artist')->orderBy('id', 'DESC')->get();
+            $searchCustomer = trim($re->search_customer);
+            $artistQuery =  User::whereNotIn('id', [1])->where('type', 'artist')->orderBy('id', 'DESC');
+            if (!empty($searchCustomer)) {
+                $artistQuery->where(function ($query) use ($searchCustomer) {
+                    $query->where('username', 'LIKE', "%{$searchCustomer}%")
+                        ->orWhere('name', 'LIKE', "%{$searchCustomer}%")
+                        ->orWhere('email', 'LIKE', "%{$searchCustomer}%");
+                });
+            }
+            return $artistQuery->get();
         }elseif(auth()->guard('sales')->user()->type == 'sales'){
             return User::whereNotIn('id', [1])->where('type', 'artist')->where('created_by', Auth::guard('sales')->id())->orderBy('id', 'DESC')->get();
             
