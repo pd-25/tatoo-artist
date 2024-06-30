@@ -16,9 +16,9 @@ class BannerController extends Controller
         $this->bannerInterface = $bannerInterface;
         $this->artistInterface = $artistInterface;
     }
-    public function getArtistWiseBanner()
+    public function getArtistWiseBanner(Request $request)
     {
-        $data['banners'] = $this->bannerInterface->getAllBanners();
+        $data['banners'] = $this->bannerInterface->getAllBanners($request);
         return view('admin.banner.index', $data);
     }
 
