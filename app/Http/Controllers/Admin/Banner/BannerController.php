@@ -20,7 +20,8 @@ class BannerController extends Controller
     }
 
     public function index(Request $request) {
-        if(Auth::guard('admins')->check()){
+        // dd(Auth::guard('admins')->check(), Auth::guard('sales')->check());
+        if(Auth::guard('admins')->check() || Auth::guard('sales')->check()){
             $data['banners'] = $this->bannerInterface->getAllBanners($request);
         }else{
             $data['banners'] = $this->bannerInterface->getArtistBanners();
@@ -32,9 +33,9 @@ class BannerController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $re)
     {
-        $data['artists'] = $this->artistInterface->getAllArtistss();
+        $data['artists'] = $this->artistInterface->getAllArtistss($re);
         return view('admin.banner.create', $data);
     }
 
