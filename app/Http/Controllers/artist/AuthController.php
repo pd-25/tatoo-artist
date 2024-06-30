@@ -40,12 +40,12 @@ class AuthController extends Controller
 
             }else{
                 if ($guard_type === 'admins') {
-                    return redirect()->route('artistLogin')->with("msg", "Invalid credentials")->withInput();
+                    return redirect()->route('adminLogin')->with("msg", "Invalid credentials")->withInput();
                 } 
                 else if ($guard_type === 'sales') {
                     return redirect()->route('salesLogin')->with("msg", "Invalid credentials")->withInput();
                 } else {
-                    return redirect()->route('adminLogin')->with("msg", "Invalid credentials")->withInput();
+                    return redirect()->route('artistLogin')->with("msg", "Invalid credentials")->withInput();
                 }
             }
 
