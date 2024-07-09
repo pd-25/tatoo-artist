@@ -21,7 +21,7 @@ class BannerController extends Controller
 
     public function index(Request $request) {
         // dd(Auth::guard('admins')->check(), Auth::guard('sales')->check());
-        if(Auth::guard('admins')->check() || Auth::guard('sales')->check()){
+        if(Auth::guard('admins')->check()){
             $data['banners'] = $this->bannerInterface->getAllBanners($request);
         }else{
             $data['banners'] = $this->bannerInterface->getArtistBanners();

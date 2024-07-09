@@ -34,7 +34,7 @@ class ArtistRepository implements ArtistInterface
     public function getAllArtistss($re = null)
     {
         if (Auth::guard('admins')->check()) {
-            $searchCustomer = trim($re->search_customer);
+            $searchCustomer = $re ? trim($re->search_customer) : '';
             $artistQuery =  User::whereNotIn('id', [1])->where('type', 'artist')->orderBy('id', 'DESC');
             if (!empty($searchCustomer)) {
                 $artistQuery->where(function ($query) use ($searchCustomer) {

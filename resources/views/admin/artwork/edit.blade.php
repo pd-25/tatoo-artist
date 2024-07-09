@@ -27,8 +27,14 @@
                                         <label>Artist Name</label><span class="text-info">(the artist can't be
                                             changed)</span>
                                         @if (Auth::guard('artists')->check())
-                                            <input type="text" class="form-control" placeholder="Artist Name" name="artist_name" value="{{ $payments->artist->name }}" readonly>
-                                            <input type="hidden" name="user_id" value="{{ Auth::guard('artists')->user()->id; }}">
+                                        <select name="user_id" id="user_id" class="form-control" value="{{ old('user_id') }}">
+                                            <option selected value="{{ auth()->guard('artists')->id() }}">{{ auth()->guard('artists')->user()->name }}</option>
+                                           
+                                        </select>
+                                            {{-- <input type="text" class="form-control" placeholder="Artist Name" name="artist_name" value="{{ $payments->artist->name }}" readonly> --}}
+                                            <input type="hidden" name="user_id" value="{{ Auth::guard('artists')->user()->id }}">
+
+
                                         @else
                                             <select name="user_id" class="form-control" value="{{ old('user_id') }}">
                                                 <option value="">select artist</option>

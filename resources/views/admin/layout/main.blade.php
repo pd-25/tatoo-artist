@@ -40,10 +40,14 @@
                         <a href="#"> <span>{{ Auth::guard('admins')->check() ? "Admin Pannel" : ( Auth::guard('sales')->check() ? "Sales Pannel" : "Artist Panel") }}</span></a>
                     </div>
 
-                    @if (Auth::guard('admins')->check())
+                    @if (Auth::guard('admins')->check() || Auth::guard('sales')->check()) 
                         <li><a href="{{ route('admin.dashboard') }}"><i class="ti-desktop"></i>Dashboard </a></li>
-                    @else
+                    @elseif (Auth::guard('artists')->check())
                         <li><a href="{{ route('artists.dashboard') }}"><i class="ti-desktop"></i>Dashboard </a></li> 
+                       
+                        @else
+                        <li><a href="{{ route('admin.dashboard') }}"><i class="ti-desktop"></i>Dashboard </a></li> 
+
                     @endif       
 
                     @if (Auth::guard('artists')->check())
@@ -110,8 +114,7 @@
                     @endif
                      
                     
-                    @if (Auth::guard('artists')->check() || !Auth::guard('admins')->check())
-                    <li><a href="{{ url('/user/artist-profile#companyLogo') }}"><i class="ti-image"></i> Comapany Logo </a></li>
+                    @if (Auth::guard('artists')->check() || Auth::guard('admins')->check() || Auth::guard('sales')->check())
                     <li><a href="{{ route('admin.getQuote') }}"><i class="ti-envelope"></i>Quote Form</a></li>
                      
                     <li><a href="{{ route('admin.getAppointment') }}"><i class="ti-calendar"></i>Appointment </a></li>
@@ -119,8 +122,12 @@
                     
                     <li><a href="{{ route('admin.getAcceptPayment') }}"><i class="ti-credit-card"></i>Accept Payment</a></li>
                     <li><a href="{{ route('admin.getExpenses') }}"><i class="ti-money"></i>Manage Expenses</a></li>
+                   
                     @endif
-                    
+                    @if (Auth::guard('artists')->check())
+                    <li><a href="{{ url('/user/artist-profile#companyLogo') }}"><i class="ti-image"></i> Comapany Logo </a></li>
+ 
+                     @endif
                     {{-- <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Order Management <span
                                 class="sidebar-collapse-icon ti-angle-down"></span></a>
                         <ul>
