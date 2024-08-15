@@ -646,7 +646,7 @@
 
                             <div class="row">
 
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Shop Logo</label><span class="text-danger">*</span>
                                         <input type="file" class="form-control" name="shop_logo"
@@ -657,7 +657,7 @@
                                             </span>
                                         @enderror
                                     </div>
-                                </div>    
+                                </div>     --}}
     
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -749,7 +749,7 @@
                                 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Banner Image</label>
+                                        <label>Shop logo</label>
                                         <input type="file" class="form-control" name="banner_image"
                                             value="{{ old('banner_image') }}">
                                         @error('banner_image')

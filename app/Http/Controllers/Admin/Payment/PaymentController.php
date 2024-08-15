@@ -137,7 +137,7 @@ class PaymentController extends Controller
             'customers_name'       => 'required',
             'design'               => 'required',
             'price'                => 'required',
-            'bill_image'           => 'required|image|mimes:jpeg,png,jpg,gif'
+            'bill_image'           => 'image|mimes:jpeg,png,jpg,gif'
         ],[
             'artist_id.required' => 'Please select an artist',
             'customers_name.required' => 'Please enter customer name',
@@ -263,6 +263,22 @@ class PaymentController extends Controller
         $pmodel->delete();
         return back()->with('msg', 'Record deleted successfully.');
     }
+    public function paymentview(Request $request,$id){
+     
+        if(Auth::guard('artists')->check()){
+            $artists = User::where('type', '=', 'artist')->get();
+        }
+        elseif(Auth::guard('admins')->check()){
+            $artists = User::where('type', '=', 'artist')->get();
+        }else{
+            $salespersonId = Auth::guard('sales')->id(); 
+            $artists = User::where('created_by', $salespersonId)->where('type', '=', 'artist')->get();
+        }
 
+        $payments = PaymentModel::where('id',decrypt($id))->first();
+        $placements = Placement::all();
+
+        return view('admin.payment.print',compact('payments','placements','artists'));
+    }
 
 }

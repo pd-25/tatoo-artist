@@ -78,7 +78,7 @@
                                     <th>Date</th>
                                     <th>Payment Method</th>
                                     <th>View Deposit Image</th>
-                                    <th>View Details</th>
+                                    <th>View/Print</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -138,6 +138,9 @@
                                             <td style="text-align: center;">
                                                 <a href="{{ route('admin.editpaymentForm', encrypt($payment->id)) }}" target="_blank">
                                                     <i class="ti-eye btn btn-sm btn-primary"></i>
+                                                </a>
+                                                <a href="{{ route('admin.paymentview', encrypt($payment->id)) }}" target="_blank">
+                                                    <i class="ti-printer btn btn-sm btn-primary"></i>
                                                 </a>
                                             </td>
 

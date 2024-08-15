@@ -22,8 +22,8 @@
                                     <div class="form-group">
                                         <label>Artist Name</label>
                                         @if (Auth::guard('artists')->check())
-                                            <input type="text" class="form-control" placeholder="Artist Name" name="artist_name" value="{{ $payments->artist->name }}" readonly>
-                                            <input type="hidden" name="user_id" value="{{ Auth::guard('artists')->user()->id; }}">
+                                            <input type="text" class="form-control" placeholder="Artist Name" name="artist_name" value="{{ Auth::guard('artists')->user()->name }}" readonly>
+                                            <input type="hidden" name="user_id" value="{{ Auth::guard('artists')->user()->id }}">
                                         @else
                                             <select name="user_id" class="form-control" value="{{ old('user_id') }}">
                                                 <option value="">select artist</option>

@@ -19,8 +19,8 @@
                                     <div class="form-group">
                                         <label>Artist Name</label><span class="text-danger">*</span>
                                         @if (Auth::guard('artists')->check())
-                                            <input type="text" class="form-control" value="{{ Auth::guard('artists')->user()->name; }}" readonly>
-                                            <input type="text" name="artist_id" value="{{ Auth::guard('artists')->user()->id; }}">
+                                            <input type="text" class="form-control" value="{{ Auth::guard('artists')->user()->name }}" readonly>
+                                            <input type="hidden" name="artist_id" value="{{ Auth::guard('artists')->user()->id }}">
                                         @else
                                         <select name="artist_id" class="form-control">
                                             <option value="">select artist</option>

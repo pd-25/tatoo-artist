@@ -5,6 +5,10 @@
 
         <div class="col-lg-10">
             <div class="card">
+                <div class="card-title text-right">
+                    <a href="{{route('admin.addCustomer')}}" class="btn btn-sm btn-success">Add Customer</a>
+
+                </div>
                 <div class="card-title pr">
                     <h4>All Customers</h4>
                     @if (Session::has('msg'))
@@ -34,7 +38,12 @@
                                     <th>Username</th>
                                     <th>Phone</th>
                                     <th>Email</th>
+                                    @if (Auth::guard('artists')->check())
                                     <th>Address</th>
+                                    @else
+                                    <th>Created By</th>
+                                    
+                                    @endif
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -44,6 +53,11 @@
                                         <td>#</td>
                                         <td>
                                             {{ $customer->name }}
+                                            @if($customer->walkin == 1)
+                                            <p style="margin: 5px 0 0 -10px; padding: 3px; background-color: green; text-align: center; color: white; line-height: 1; width: 65px; border-radius: 10px;">
+                                                Walk-in
+                                            </p>
+                                        @endif
                                         </td>
 
                                         <td>
@@ -57,10 +71,17 @@
                                         <td>
                                             {{ $customer->email }}
                                         </td>
-
+                                        @if (Auth::guard('artists')->check())
                                         <td>
                                             {{ isset($customer->address) ? $customer->address : 'Not Provided!' }}
+
                                         </td>
+                                        @else
+                                        <td>
+                                            {{ isset($customer->creator_name) ? $customer->creator_name : 'Added By You' }}
+
+                                        </td>
+                                        @endif
                                         <td>
                                             <a href="{{ route('admin.editCustomer', $customer->id) }}"><i
                                                     class="ti-pencil btn btn-sm btn-primary"></i></a>

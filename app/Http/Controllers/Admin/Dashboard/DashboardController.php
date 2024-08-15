@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin\Dashboard;
-
+use App\core\artist\ArtistInterface;
 use App\Http\Controllers\Controller;
 use App\Models\Quote;
 use App\Models\Appointment;
@@ -18,6 +18,12 @@ use PDF;
 use Illuminate\Support\Facades\Storage;
 class DashboardController extends Controller
 {
+
+    private $artistInterface;
+
+    public function __construct(ArtistInterface $artistInterface){
+        $this->artistInterface = $artistInterface;
+    }
     // public function __construct()
     // {
     //     $this->middleware('auth');
@@ -35,17 +41,45 @@ class DashboardController extends Controller
 
         return view('admin.dashboard.dashboard',compact('totalUsers','totalArtists','totalArtworks'));
     }
-
+//for sales
     public function impersonate($salesExeID){
         // Save the current admin's ID in the session for later revert
-        session(['admin_id' => Auth::guard('admins')->id()]);
-
+        if (Auth::guard('admins')->check()){
+            session(['admin_id' => Auth::guard('admins')->id()]);
+            session()->forget('sales_id');
+        } 
         if (Auth::guard('admins')->check()) {
             Auth::guard('admins')->logout();
         }
 
         // Perform impersonation
         Auth::guard('sales')->loginUsingId($salesExeID);
+
+        // Redirect to the manager's dashboard
+        return redirect()->route('admin.dashboard');
+    }
+
+    
+//for artist
+
+  public function impersonateartist($salesExeID){
+        // Save the current admin's ID in the session for later revert
+        if (Auth::guard('admins')->check()){
+            session(['admin_id' => Auth::guard('admins')->id()]);
+            session()->forget('sales_id');
+        } elseif(Auth::guard('sales')->check()){
+           
+        session(['sales_id' => Auth::guard('sales')->id()]);
+        
+        }
+        if (Auth::guard('admins')->check()) {
+            Auth::guard('admins')->logout();
+        }
+
+        // Perform impersonation
+        Auth::guard('sales')->loginUsingId($salesExeID);
+        Auth::guard('artists')->loginUsingId($salesExeID);
+
 
         // Redirect to the manager's dashboard
         return redirect()->route('admin.dashboard');
@@ -59,16 +93,41 @@ class DashboardController extends Controller
             if (Auth::guard('sales')->check()) {
                 Auth::guard('sales')->logout();
             }
+            if (Auth::guard('artists')->check()) {
+                Auth::guard('artists')->logout();
+            }
             // Re-login as the admin
             Auth::guard('admins')->loginUsingId(session('admin_id'));
             session()->forget('admin_id'); // Remove the admin_id from session
+
+            
+        }
+
+        // Redirect back to the admin panel
+        return redirect()->route('admin.dashboard');
+    }
+
+    public function revertImpersonateforsales()
+    {
+        // Check if the session has the original admin's ID
+        if (session('admin_id')) {
+            
+            if (Auth::guard('artists')->check()) {
+                Auth::guard('artists')->logout();
+            }
+            // Re-login as the admin
+            Auth::guard('sales')->loginUsingId(session('sales_id'));
+            session()->forget('sales_id'); 
+
+            
         }
 
         // Redirect back to the admin panel
         return redirect()->route('sales.index');
     }
 
-    public function getQuote(){
+
+    public function getQuote(Request $request){
         if(Auth::guard('artists')->check()){
             $data['quotes'] = Quote::where('artist_id',auth()->guard('artists')->id())->with('user', 'artist')->get();
         }
@@ -81,11 +140,60 @@ class DashboardController extends Controller
             $data['quotes'] = Quote::with('user', 'artist')->whereIn('artist_id', $artists->pluck('id'))->get(); 
         }
         
-        //dd($data['quotes']);
-
+        //get customer id
+        if (Auth::guard('admins')->check()) {
+            // Admin can view all customers
+            $customerQuery = User::select('users.*', 'creator.name as creator_name')
+                ->leftJoin('users as creator', 'users.created_by', '=', 'creator.id')
+                ->where('users.type', 'Customer')
+                ->orderBy('users.id', 'DESC');
+    
+            $data['customers'] = $customerQuery->get();
+        } elseif (Auth::guard('sales')->check()) {
+            $salesUserId = Auth::guard('sales')->id();
+    
+            // Get customers created by this sales user
+            $customerQuery = User::select('users.*', 'creator.name as creator_name')
+                ->leftJoin('users as creator', 'users.created_by', '=', 'creator.id')
+                ->where('users.type', 'Customer')
+                ->where(function ($query) use ($salesUserId) {
+                    $query->where('users.created_by', $salesUserId)
+                        ->orWhereIn('users.created_by', function ($subQuery) use ($salesUserId) {
+                            $subQuery->select('id')
+                                ->from('users')
+                                ->where('created_by', $salesUserId);
+                        });
+                })
+                ->orderBy('users.id', 'DESC');
+    
+            $data['customers'] = $customerQuery->get();
+        } else {
+            // For other users (like artists), just fetch their own created customers
+            $data['customers'] = User::where('type', 'Customer')
+                ->where('created_by', Auth::guard('artists')->id())
+                ->orderBy('id', 'DESC')
+                ->get();
+        }
+    
+        // Get all artist for the select dropdown
+      
+        $data['artists'] = $this->artistInterface->getAllArtistss();
         return view('admin.quote', $data);
     }
+    public function storeQuote(Request $request)
+    {
+        $request->validate([
+            'artist_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:users,id',
+        ]);
 
+        Quote::create([
+            'artist_id' => $request->artist_id,
+            'user_id' => $request->user_id,
+        ]);
+        return back()->with('success', 'Quote created successfully.');
+       
+    }
     public function getAppointment(){
         if(Auth::guard('artists')->check()){
             $data['appointments'] = Appointment::where('artist_id',auth()->guard('artists')->id())->with('user', 'artist')->get();
@@ -134,32 +242,76 @@ class DashboardController extends Controller
 
     }
 
-    public function formlinkurl(Request $request){
-        $data['user_id'] = request()->segment(2);
-        $data['artist_id'] = request()->segment(3);
-        $data['dbid'] = request()->segment(4);
-
-        //check if this form is belongs to this user and the form is already submitted
-        $quote = Quote::where('user_id', request()->segment(2))
-              ->where('artist_id', request()->segment(3))
-              ->where('id', request()->segment(4))
-              ->first();
+    // public function formlinkurl(Request $request){
+    //     $data['user_id'] = request()->segment(2);
+    //     $data['artist_id'] = request()->segment(3);
+    //     $data['dbid'] = request()->segment(4);
+ 
+    //     //check if this form is belongs to this user and the form is already submitted
+    //     $quote = Quote::where('user_id', request()->segment(2))
+    //           ->where('artist_id', request()->segment(3))
+    //           ->where('id', request()->segment(4))
+    //           ->first();
         
-        if($quote):
-           if(!is_null($quote->pdf_path)):
-               $error_msg1 = "We have already received your submitted data.";
-               $error_msg2 = "We'll be in touch shortly!";
-               return view('admin.sendlink.error',compact('error_msg1','error_msg2'));
-           else:
-               return view('admin.sendlink.index',$data);
-           endif;    
-        else:
-           $error_msg1 = "Something went wrong.";
-           $error_msg2 = "Please get in touch us.";
-           return view('admin.sendlink.error',compact('error_msg1','error_msg2'));
-        endif;         
-    }
+    //     if($quote):
+    //        if(!is_null($quote->pdf_path)):
+    //            $error_msg1 = "We have already received your submitted data.";
+    //            $error_msg2 = "We'll be in touch shortly!";
+    //            return view('admin.sendlink.error',compact('error_msg1','error_msg2'));
+    //        else:
+    //            return view('admin.sendlink.index',$data);
+    //        endif;    
+    //     else:
+    //        $error_msg1 = "Something went wrong.";
+    //        $error_msg2 = "Please get in touch us.";
+    //        return view('admin.sendlink.error',compact('error_msg1','error_msg2'));
+    //     endif;         
+    // }
 
+   
+   
+    public function formlinkurl(Request $request) {
+        // Extract parameters from URL segments
+        $userId = $request->segment(2);
+        $artistId = $request->segment(3);
+        $dbId = $request->segment(4);
+    
+        // Retrieve artist information
+        $artistInfo = User::find($artistId);
+    
+        // Check if artist exists
+        if (!$artistInfo) {
+            $errorMsg1 = "Artist not found.";
+            $errorMsg2 = "Please contact support.";
+            return view('admin.sendlink.error', compact('errorMsg1', 'errorMsg2'));
+        }
+    
+        // Check if the form belongs to the user and if it has been submitted
+        $quote = Quote::where('user_id', $userId)
+                      ->where('artist_id', $artistId)
+                      ->where('id', $dbId)
+                      ->first();
+    
+        if ($quote) {
+            if (!is_null($quote->pdf_path)) {
+                $errorMsg1 = "We have already received your submitted data.";
+                $errorMsg2 = "We'll be in touch shortly!";
+                return view('admin.sendlink.error', compact('errorMsg1', 'errorMsg2'));
+            } else {
+                $data = [
+                    'user_id' => $userId,
+                    'artist_id' => $artistId,
+                    'dbid' => $dbId,
+                    'artistinfo' => $artistInfo
+                ];
+                return view('admin.sendlink.index', $data);
+            }
+        } else {
+            $errorMsg1 = "Something went wrong.";
+            $errorMsg2 = "Please get in touch with us.";
+            return view('admin.sendlink.error', compact('errorMsg1', 'errorMsg2'));
+        }
+    }
     public function userformsubmit(Request $request){
         /*
         $this->validate($request, [

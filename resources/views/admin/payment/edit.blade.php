@@ -21,7 +21,7 @@
                                         <label>Select Artist</label><span class="text-danger">*</span>
                                         @if (Auth::guard('artists')->check())
                                             <input type="text" class="form-control" placeholder="Artist Name" name="artist_name" value="{{ $payments->artist->name }}" readonly>
-                                            <input type="hidden" name="artist_id" value="{{ Auth::guard('artists')->user()->id; }}">
+                                            <input type="hidden" name="artist_id" value="{{ Auth::guard('artists')->user()->id }}">
                                         @else
                                             <select name="artist_id" class="form-control" value="{{ old('artist_id') }}">
                                                 <option value="">select artist</option>
@@ -38,7 +38,6 @@
                                             </span>
                                         @enderror
                                     </div>
-
 
                                     <div class="form-group">
                                         <label>Design</label><span class="text-danger">*</span>
@@ -97,16 +96,10 @@
                                                     alt="">
                                             @endif
                                         </div>
-
-                                        <div class="form-group">
-
-                                        </div>
                                     </div>
-
                                 </div>
 
                                 <div class="col-md-6">
-
                                     <div class="form-group">
                                         <label>Customers Name</label><span class="text-danger">*</span>
                                         <input type="text" class="form-control" placeholder="Customers Name" name="customers_name" value="{{ $payments->customers_name }}" required>
@@ -119,7 +112,6 @@
 
                                     <div class="form-group">
                                         <label>Placement</label>
-                                        {{-- <input type="text" class="form-control" placeholder="Placement" name="placement" value="{{ $payments->placement }}"> --}}
                                         <select name="placement" class="form-control" value="{{ old('placement') }}">
                                             <option value="">select placement</option>
                                             @foreach ($placements as $placement)
@@ -144,8 +136,6 @@
                                         @enderror
                                     </div>
 
-
-
                                     <div class="form-group">
                                         <label>Fees</label>
                                         <input type="text" class="form-control" placeholder="Fees" name="fees" value="{{  $payments->fees  }}">
@@ -157,7 +147,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label>Total Due</label>
+                                        <label>Payment Method</label>
                                         <select name="payment_method" class="form-control">
                                             <option value="atm_debit" @if($payments->payment_method == 'atm_debit') selected @endif>Atm/Debit</option>
                                             <option value="cash" @if($payments->payment_method == 'cash') selected @endif>Cash</option>
@@ -170,22 +160,21 @@
                                             </span>
                                         @enderror
                                     </div>
-
-
-
-
                                 </div>
                             </div>
 
-
-
-
-
-
-                        <button type="submit" class="btn btn-default">Submit</button>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                            <button type="button" class="btn btn-primary" onclick="window.print()">Print</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-    @endsection
+    </div>
+@endsection
+
+@section('scripts')
+<script>
+    // You can add any additional JavaScript here if needed
+</script>
+@endsection

@@ -75,13 +75,13 @@
 
                                         <tr>
                                             <td><?=$index+1?></td>
-                                            <td> {{ $appointment->user->name }}</td>
+                                            <td> {{ $appointment->user->name ?? 'No name available' }}</td>
 
-                                            <td>  {{ $appointment->user->email }}</td>
+                                            <td>  {{ $appointment->user->email ?? 'No name available' }}</td>
 
-                                            <td>{{ $formattedPhoneNumber }}</td>
+                                            <td>{{ $formattedPhoneNumber ?? 'No name available' }}</td>
 
-                                            <td>{{ $appointment->artist->name }} </td>
+                                            <td>{{ $appointment->artist->name ?? 'No name available' }} </td>
 
                                             <td> 
                                                 <button class="btn btn-sm btn-primary viewAppointmentDetails" data-availability="{{$availability}}" data-created ="{{$appo_created_at}}" data-msg="{{$escapedMessage}}">View Quote Details</button>

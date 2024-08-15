@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin\Artist;
-
+use Illuminate\Support\Facades\Auth;
 use App\core\artist\ArtistInterface;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Style;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
 
 class ArtistController extends Controller
 {
@@ -43,20 +44,97 @@ public function index(Request $re)
     public function customers(Request $re)
     {
         $searchCustomer = trim($re->search_customer);
-        $customersQuery = User::where('type', 'Customer')
-            ->where('status', 1);
-        if (!empty($searchCustomer)) {
-            $customersQuery->where(function ($query) use ($searchCustomer) {
-                $query->where('username', 'LIKE', "%{$searchCustomer}%")
-                    ->orWhere('name', 'LIKE', "%{$searchCustomer}%")
-                    ->orWhere('email', 'LIKE', "%{$searchCustomer}%");
-            });
+    
+        if (Auth::guard('admins')->check()) {
+            // Admin can view all customers
+            $customerQuery = User::select('users.*', 'creator.name as creator_name')
+                ->leftJoin('users as creator', 'users.created_by', '=', 'creator.id')
+                ->where('users.type', 'Customer')
+                ->orderBy('users.id', 'DESC');
+    
+            if (!empty($searchCustomer)) {
+                $customerQuery->where(function ($query) use ($searchCustomer) {
+                    $query->where('users.username', 'LIKE', "%{$searchCustomer}%")
+                        ->orWhere('users.name', 'LIKE', "%{$searchCustomer}%")
+                        ->orWhere('users.email', 'LIKE', "%{$searchCustomer}%");
+                });
+            }
+    
+            $data['customers'] = $customerQuery->get();
+        } elseif (Auth::guard('sales')->check()) {
+            $salesUserId = Auth::guard('sales')->id();
+    
+            // Get customers created by this sales user
+            $customerQuery = User::select('users.*', 'creator.name as creator_name')
+                ->leftJoin('users as creator', 'users.created_by', '=', 'creator.id')
+                ->where('users.type', 'Customer')
+                ->where(function ($query) use ($salesUserId) {
+                    $query->where('users.created_by', $salesUserId)
+                        ->orWhereIn('users.created_by', function ($subQuery) use ($salesUserId) {
+                            $subQuery->select('id')
+                                ->from('users')
+                                ->where('created_by', $salesUserId);
+                        });
+                })
+                ->orderBy('users.id', 'DESC');
+    
+            if (!empty($searchCustomer)) {
+                $customerQuery->where(function ($query) use ($searchCustomer) {
+                    $query->where('users.username', 'LIKE', "%{$searchCustomer}%")
+                        ->orWhere('users.name', 'LIKE', "%{$searchCustomer}%")
+                        ->orWhere('users.email', 'LIKE', "%{$searchCustomer}%");
+                });
+            }
+    
+            $data['customers'] = $customerQuery->get();
+        } else {
+            // For other users (like artists), just fetch their own created customers
+            $data['customers'] = User::where('type', 'Customer')
+                ->where('created_by', Auth::guard('artists')->id())
+                ->orderBy('id', 'DESC')
+                ->get();
         }
-        $data['customers'] = $customersQuery->get();
-
+    
         return view('admin.customers.index', $data);
     }
+    
+    
+    
+    
+    
+    public function addCustomer()
+    {
+       
+        return view('admin.customers.add');
+    }
+    public function storeCustomer(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'username' => 'required|unique:users',
+            'phone' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'min:6',
+           
+        ]);
+    
+        $data = $request->only('name', 'username', 'phone', 'email');
+        $data['password'] = Hash::make($request->phone);
+        $data['type'] = 'customer';
+        $data['walkin'] = '1';
+        if (Auth::guard('admins')->check()) {
+            $data['created_by'] = 0;
+        } elseif(Auth::guard('sales')->check()) {
+            $data['created_by'] = Auth::guard('sales')->id();
+        }else{
+            $data['created_by'] = Auth::guard('artists')->id();
+        }
 
+        User::create($data);
+    
+        return redirect()->route('admin.customers')->with('msg', 'Customer added successfully');
+    }
+    
     public function editCustomer($id)
     {
         $data['customer'] = User::where('id', $id)->first();
@@ -66,16 +144,26 @@ public function index(Request $re)
     public function updateCustomer(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required',
-            // 'username' => 'required',
-            'phone' => 'required',
-            'email' => 'required',
-            'address' => 'required'
+            'name' => 'required|string|max:255',
+            // 'username' => 'required|string|max:255', // Username might be unique and not changeable
+            'phone' => 'string', // Assuming a max length for phone numbers
+            'email' => 'required|string|email|max:255', // Make sure to add a unique rule if email should be unique
+            'address' => 'required|string|max:255',
+            'password' => 'nullable|string|min:6|confirmed' // Password field is optional
         ]);
+    
         $data = $request->only('name', 'username', 'phone', 'email', 'address');
+    
+        // Check if password is provided and update it
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+    
         User::where('id', $id)->update($data);
+    
         return redirect()->route('admin.customers')->with('msg', 'Data updated successfully');
     }
+    
 
     public function destroyCustomer($id)
     {

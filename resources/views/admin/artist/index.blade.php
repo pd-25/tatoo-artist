@@ -82,6 +82,9 @@
                                                     class="ti-eye btn btn-sm btn-success"></i></a>
                                                 <a href="{{ route('artists.edit', encrypt($artist->id)) }}"><i
                                                         class="ti-pencil btn btn-sm btn-primary"></i></a>
+                                                        <a href="{{ route('admin.impersonateartist', $artist->id) }}">        
+                                                            <i class="ti-power-off btn btn-sm btn-info"></i>
+                                                        </a>  
                                                 <form method="POST"
                                                     action="{{ route('artists.destroy', encrypt($artist->id)) }}"
                                                     class="action-icon">

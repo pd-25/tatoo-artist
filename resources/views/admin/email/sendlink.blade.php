@@ -50,7 +50,7 @@
                                    <td style='text-align: center;background: #FFF;padding:20px 30px;border-radius: 10px;'>
                                       <!-- <h5 style='color: #6D717A;font-size: 20px;line-height: 23px;'>If you've lost your password or wish to reset it, use the link below to get started.</h5> -->
                                       <h4>
-                                        <a href="{{ url('form-link-url/'.$user_id.'/'.$artist_id.'/'.$dbid); }}" style='color: #FFF;text-align: center;background: #EE5719;padding: 15px 50px;border-radius: 50px;margin: 10px auto;text-decoration: none;display: inline-block;'>
+                                        <a href="{{ url('form-link-url/'.$user_id.'/'.$artist_id.'/'.$dbid) }}" style='color: #FFF;text-align: center;background: #EE5719;padding: 15px 50px;border-radius: 50px;margin: 10px auto;text-decoration: none;display: inline-block;'>
                                             Submit Your Tattoo from
                                         </a>
                                       </h4>

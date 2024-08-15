@@ -792,19 +792,10 @@
 {{-- @dd(!empty($artist->artistData->shop_logo), File::exists(public_path('storage/ShopImage/' . $artist->artistData->shop_logo)), $artist->artistData->shop_logo) --}}
                         <div class="row">
 
-                            <div class="col-md-6" id="companyLogo">
+                            {{-- <div class="col-md-6" id="companyLogo">
                                 <div class="form-group">
                                     <label>Current Shop Logo</label>
-                                    {{-- @if (
-                                        !empty($artist->artistData->shop_logo) &&
-                                            File::exists(public_path('storage/ShopImage/' . $artist->artistData->shop_logo)))
-                                        <img style="height: 82px; width: 82px;"
-                                            src="{{ asset('storage/ShopImage/' . $artist->artistData->shop_logo) }}"
-                                            alt="">
-                                    @else
-                                        <img style="height: 82px; width: 82px;" src="{{ asset('noimg.png') }}"
-                                            alt="">
-                                    @endif --}}
+                                   
                                     @if (!empty($artist->artistData->shop_logo) && Storage::disk('public')->exists('ShopImage/' . $artist->artistData->shop_logo))
                                         <img style="height: 82px; width: 82px;" src="{{ asset('storage/ShopImage/' . $artist->artistData->shop_logo) }}" alt="">
                                     @else
@@ -812,7 +803,7 @@
                                     @endif
 
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -912,7 +903,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Banner Image</label>
+                                    <label>Shop Image</label>
                                     <input type="file" class="form-control" name="banner_image"
                                         value="{{ old('banner_image') }}">
                                     @error('banner_image')
@@ -946,7 +937,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Current Banner Image</label>
+                                    <label>Current Shop Image</label>
                                     @if (!empty($artist->banner_image) && Storage::disk('public')->exists('BannerImage/' . $artist->banner_image))
                                     
                                         <img style="height: 82px; width: 82px;"

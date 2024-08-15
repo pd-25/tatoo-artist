@@ -24,23 +24,21 @@
         }
     </style>
     <div class="row justify-content-center">
-
         <div class="col-lg-11">
             <div class="card">
                 <div class="card-title pr">
                     <h4>All Quotes</h4>
+
                     @if (Session::has('msg'))
                         <p class="alert alert-info">{{ Session::get('msg') }}</p>
                     @endif
                 </div>
-                {{-- <div class="card-title text-right">
-                    <a href="{{ route('artworks.create') }}" class="btn btn-sm btn-success">Add Comment</a>
-
-                </div> --}}
+                <div class="card-title text-right">
+                    <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#createQuoteModal">Create Quote</a>
+                </div>
                 <div class="ajax-loader">
                     <img src="https://i.stack.imgur.com/MnyxU.gif" class="img-responsive" />
                 </div>
-
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table student-data-table m-t-20">
@@ -51,108 +49,71 @@
                                     <th>User Email</th>
                                     <th>User Contact</th>
                                     <th>Artist Name</th>
-                                    <th>Reference Image</th>
-                                    <th>View Quote Details</th>
-                                    <th>Send Link</th>
-                                    <th>Delete Quote</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody style="text-align: center;">
-                                <?php 
-                                  if(count($quotes)>0):
-                                    foreach ($quotes as $index => $quote):
+                                @if(count($quotes) > 0)
+                                    @foreach ($quotes as $index => $quote)
+                                        @php
+                                            $availability = date('jS F, Y', strtotime($quote->availability));
+                                            $quote_created_at = date('jS F, Y', strtotime($quote->created_at));
+                                            $escapedDescription = htmlspecialchars($quote->description, ENT_QUOTES, 'UTF-8');
+                                            $formattedPhoneNumber = sprintf("(%s) %s-%s",
+                                                substr(@$quote->user->phone, 0, 3),
+                                                substr(@$quote->user->phone, 3, 3),
+                                                substr(@$quote->user->phone, 6, 4)
+                                            );
+                                        @endphp
 
-                                        $availability = date('jS F, Y', strtotime($quote->availability));
-                                        $quote_created_at = date('jS F, Y', strtotime($quote->created_at));
-
-                                        // Format quote description
-                                        $escapedDescription = htmlspecialchars($quote->description, ENT_QUOTES, 'UTF-8');
-
-                                        $formattedPhoneNumber = sprintf("(%s) %s-%s",
-                                                                    substr(@$quote->user->phone, 0, 3),
-                                                                    substr(@$quote->user->phone, 3, 3),
-                                                                    substr(@$quote->user->phone, 6, 4)
-                                                                );
-                                  
-                                ?>
-
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ @$quote->user->name }}</td>
+                                            <td>{{ @$quote->user->email }}</td>
+                                            <td>{{ @$formattedPhoneNumber }}</td>
+                                            <td>{{ @$quote->artist->name }}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-info toggle-actions mb-1">Show Actions</button>
+                                                <div class="quote-actions" style="display: none;">
+                                                    <a href="{{ asset('storage/quoteImage/' . $quote->reference_image) }}" class="btn btn-sm btn-success" target="_blank">View Image</a><br>
+                                                    <button class="btn btn-sm btn-primary viewQuoteDetails"
+                                                        data-size="{{ $quote->size }}" data-color="{{ $quote->color }}"
+                                                        data-whtogttato="{{ $quote->when_get_tattooed }}"
+                                                        data-budget="{{ $quote->budget }}" data-availability="{{ $availability }}"
+                                                        data-fbv="{{ $quote->front_back_view }}"
+                                                        data-created ="{{ $quote_created_at }}"
+                                                        data-desc="{{ $escapedDescription }}">View Quote Details</button><br>
+                                                    @if ($quote->link_send_status == 0)
+                                                        <button class="btn btn-sm btn-primary" onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Send Link</button>
+                                                    @elseif($quote->link_send_status == 1)
+                                                        <button class="btn btn-sm btn-warning" onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Again Send Link</button>
+                                                    @else
+                                                        <a href="{{ $quote->pdf_path }}" class="btn btn-sm btn-success" target="_blank">View Link</a>
+                                                    @endif
+                                                    <form method="POST" action="{{ route('quote.delete', encrypt($quote->id)) }}" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-danger delete-icon show_confirm" data-toggle="tooltip" title="Delete">
+                                                            <i class="ti-trash"></i> Delete
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
                                     <tr>
-                                        <td><?= $index + 1 ?></td>
-                                        <td> {{ @$quote->user->name }}</td>
-
-                                        <td> {{ @$quote->user->email }}</td>
-
-                                        <td>{{ @$formattedPhoneNumber }}</td>
-
-                                        <td>{{ @$quote->artist->name }} </td>
-
-                                        <td>
-                                            @if (!empty($quote->reference_image))
-                                                <a href="{{ asset('storage/quoteImage/' . $quote->reference_image) }}"
-                                                    class="btn btn-sm btn-success" target="_blank">View Link</a>
-                                            @else
-                                                <button class="btn btn-sm btn-danger" readonly>No image provided!</button>
-                                            @endif
-                                        </td>
-
-                                        {{-- <td><span id="status-btn{{ $comment->id }}">
-                                                <button class="btn btn-sm {{ $comment->status == 'Available' ? 'btn-success' : ($comment->status == 'Inactive' ? 'bg-danger' : 'bg-warning'); }}"  onclick="changeStatus('{{ $comment->id }}', {{ $comment->id}})" >
-                                                    {{ $comment->status }}
-                                                </button>
-                                            </span>
-                                            </td> --}}
-                                        <td>
-                                            <button class="btn btn-sm btn-primary viewQuoteDetails"
-                                                data-size="{{ $quote->size }}" data-color="{{ $quote->color }}"
-                                                data-whtogttato={{ $quote->when_get_tattooed }}
-                                                data-budget="{{ $quote->budget }}" data-availability="{{ $availability }}"
-                                                data-fbv="{{ $quote->front_back_view }}"
-                                                data-created ="{{ $quote_created_at }}"
-                                                data-desc="{{ $escapedDescription }}">View Quote Details</button>
-                                        </td>
-
-                                        <td>
-                                            {{-- <a href="{{ route('admin.SendLink',[$quote->user_id]) }}" class="btn btn-sm btn-primary">SendLink</a> --}}
-                                            @if ($quote->link_send_status == 0)
-                                                <button class="btn btn-sm btn-primary" id=""
-                                                    onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">SendLink</button>
-                                            @elseif($quote->link_send_status == 1)
-                                                <button class="btn btn-sm btn-warning" readonly>waiting for a user form
-                                                    submit</button>
-                                            @else
-                                                <a href="{{ $quote->pdf_path }}" class="btn btn-sm btn-success"
-                                                    target="_blank">View Link</a>
-                                            @endif
-                                        </td>
-
-                                        <td>
-                                            <form method="POST" action="{{ route('quote.delete', encrypt($quote->id)) }}"
-                                                class="action-icon">
-                                                @csrf
-                                                <input name="_method" type="hidden" value="DELETE">
-                                                <button type="submit" class="btn btn-sm btn-danger  delete-icon show_confirm"
-                                                    data-toggle="tooltip" title='Delete'>
-                                                    <i class="ti-trash"></i> Delete
-                                                </button>
-                                            </form>
-                                        </td>
-
-                                    </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="9" style="text-align: center;">
+                                        <td colspan="6" style="text-align: center;">
                                             <b>No record is found at this moment!</b>
                                         </td>
-                                    </tr>    
-                                <?php endif; ?>        
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <!-- Modal window div-->
@@ -163,7 +124,6 @@
                     <h4 class="modal-title" id="exampleModalLabel">Quote Details</h4>
                 </div>
                 <div class="modal-body">
-
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <h6><i class="fa fa-clone"></i> Other Informations</h6>
@@ -208,15 +168,12 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <h6><i class="fa fa-clone pr-1"></i>Description</h6>
-                            <div class="quote-desc" id="quote_description">
-                            </div>
+                            <div class="quote-desc" id="quote_description"></div>
                         </div>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -225,12 +182,57 @@
         </div>
     </div>
     <!-- Modal ends here -->
+
+    <!-- Create Quote Modal -->
+    <div class="modal fade" id="createQuoteModal" tabindex="-1" role="dialog" aria-labelledby="createQuoteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createQuoteModalLabel">Create Quote</h5>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form inside modal -->
+                    <form action="{{ route('admin.storeQuote') }}" method="POST">
+                        @csrf
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="artist_id" class="col-form-label">Artist ID</label>
+                                @if (Auth::guard('artists')->check())
+                                    <input type="text" class="form-control" value="{{ Auth::guard('artists')->user()->name }}" readonly>
+                                    <input type="hidden" name="artist_id" value="{{ Auth::guard('artists')->user()->id }}">
+                                @else
+                                    <select name="artist_id" class="form-control" id="artist_id">
+                                        <option value="">Select Artist</option>
+                                        @foreach($artists as $user)
+                                            <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                @endif
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="user_id" class="col-form-label">User ID</label>
+                                <select name="user_id" class="form-control" id="user_id">
+                                    <option value="">Select User</option>
+                                    @foreach($customers as $user)
+                                        <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group d-flex justify-content-center mt-3">
+                            <button type="submit" class="btn btn-primary">Create Quote</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
     <script>
         function Sendlink(userid, artistid, dbid) {
-
             $.ajax({
                 type: "POST",
                 url: "{{ route('admin.SendLink') }}",
@@ -247,36 +249,14 @@
                     $('.ajax-loader').hide();
                 },
                 success: function(result) {
-                    //alert(result); return false;
                     if (result == "emailsend") {
-                        //swal('Email sent successfully.');
                         swal({
                             title: 'Email sent successfully.',
                             target: ".myClass"
                         });
                         location.reload();
                     } else {
-                        swal('Some Error occur, relode the page');
-                    }
-                }
-            });
-        }
-
-        function changeStatus(slug, id) {
-            $.ajax({
-                type: "POST",
-                url: "#",
-                data: {
-                    'service_slug': slug,
-                    '_token': '{{ csrf_token() }}'
-                },
-                dataType: "JSON",
-                success: function(response) {
-                    if (response.status) {
-                        $("#status-btn" + id).load(window.location.href + " #status-btn" + id);
-                        swal('Status updated');
-                    } else {
-                        swal('Some Error occur, relode the page');
+                        swal('Some Error occur, reload the page');
                     }
                 }
             });
@@ -292,8 +272,6 @@
             let created = $(this).data('created');
             let quote_description = $(this).data('desc');
 
-            //console.log(description);
-
             $("#quo_size").text(size);
             $("#quo_color").text(color);
             $("#quo_whtogttato").text(when_to_get_tatto);
@@ -304,6 +282,16 @@
             $("#quote_description").html(quote_description);
 
             $("#viewQuoteModal").modal('show');
+        });
+
+        $(document).on("click", ".toggle-actions", function() {
+            let actionsDiv = $(this).siblings(".quote-actions");
+            actionsDiv.toggle();
+            if (actionsDiv.is(':visible')) {
+                $(this).text('Hide Actions');
+            } else {
+                $(this).text('Show Actions');
+            }
         });
     </script>
 @endsection

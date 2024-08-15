@@ -28,8 +28,8 @@
                     <div class="col-md-8">
                         <div class="container">
                             <h5 class="text-center">TATTOO INFORMED CONSENT & MEDICAL HISTORY</h5>
-                            <h5 class="text-center">TRIGGER HAPPY TATTOO, LLC</h5>
-                            <h5 class="text-center">704 EAST WHITTIER BLVD., LA HABRA, CA 562.691.8925U</h5>
+                            <h5 class="text-center">{{$artistinfo->name}}</h5>
+                            <h5 class="text-center">{{$artistinfo->address ?? '!Address not found' }}</h5>
                             <hr class="lin" />
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                 </div>
                 <div class="row text-justify">
                     <p>
-                        I am signing this agreement to induce Trigger Happy Tattoo, LLC (THT) and the Subcontracted Tattoo Artist (STA) to modify my tattoo and/o tattoo my person. In consideration of doing so, I hereby release THT and its
+                        I am signing this agreement to induce {{$artistinfo->name}} (THT) and the Subcontracted Tattoo Artist (STA) to modify my tattoo and/o tattoo my person. In consideration of doing so, I hereby release THT and its
                         employees and agents from all manner of liabilities, claims, actions and demands in law or in equity which I or my heirs have or might have now or hereafter by reason of complying with my request to be tattooed.
                     </p>
                     <p>
@@ -418,7 +418,7 @@
                                 <div class="col-md-12">
                                     <div class="input-group mb-3">
                                         <span class="input-group-text" id="basic-addon3">Phone: (H/W/C)</span>
-                                        <input type="text" name="phone" class="form-control" id="basic-url" aria-describedby="basic-addon3" required/>
+                                        <input type="text" name="phone" class="form-control" id="phone" aria-describedby="phoneHelp" required/>
                                     </div>
                                 </div>
                             </div>
@@ -483,6 +483,17 @@
             </div>
 
         </form>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#phone').mask('+000 000-0000', {
+                'translation': {
+                    0: {pattern: /[0-9]/}
+                }
+            });
+        });
+    </script>
     </body>
 </html>
 

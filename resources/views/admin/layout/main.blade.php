@@ -37,7 +37,7 @@
             <div class="nano-content">
                 <ul>
                     <div class="logo">
-                        <a href="#"> <span>{{ Auth::guard('admins')->check() ? "Admin Pannel" : ( Auth::guard('sales')->check() ? "Sales Pannel" : "Artist Panel") }}</span></a>
+                        <a href="#"><span>{{ Auth::guard('admins')->check() ? "Admin Panel" :  (Auth::guard('artists')->check() ? "Artists Panel" : "Sales Panel") }}</span></a>
                     </div>
 
                     @if (Auth::guard('admins')->check() || Auth::guard('sales')->check()) 
@@ -51,12 +51,14 @@
                     @endif       
 
                     @if (Auth::guard('artists')->check())
+                    <li><a href="{{ route('admin.customers') }}"><i class="ti-desktop"></i>Customers </a></li>
+                    
                         <li><a href="{{ route('artists.profile') }}"><i class="ti-user"></i>Profile </a></li>
                         <li><a href="{{ url('/user/artist-profile#profileHours') }}"><i class="ti-time"></i>Hours </a></li>
                     @else
-                        @if (Auth::guard('admins')->check())
+                       
                             <li><a href="{{ route('admin.customers') }}"><i class="ti-desktop"></i>Customers </a></li>
-                        @endif    
+                       
 
                         <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Artist Management <span
                                     class="sidebar-collapse-icon ti-angle-down"></span></a>
@@ -143,16 +145,23 @@
 
 
                     <li>
-                        @if(session()->has('admin_id'))
-                            <a href="{{ route('admin.revert.impersonate') }}">
-                                <i class="ti-close"></i> Back To Admin Panel
+                        @if(session()->has('sales_id'))
+                           
+                            <a href="{{ route('admin.revert.revertImpersonateforsales') }}">
+                                <i class="ti-close"></i> Back To Sales Panel
                             </a>
-                        @else 
+                        @elseif(session()->has('admin_id'))
+                        <a href="{{ route('admin.revert.impersonate') }}">
+                            <i class="ti-close"></i> Back To Admin Panel
+                        </a>
+                        @else
                             <a href="{{ Auth::guard('admins')->check() ? route('admin.logout') : route('artist.logout') }}">
                                 <i class="ti-close"></i> Logout
                             </a>
-                        @endif    
-                    </li>
+                        @endif
+                    
+                                          </li>
+                    
                 </ul>
             </div>
         </div>

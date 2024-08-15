@@ -56,7 +56,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminCheck'], function () {
     Route::resource('artworks', ArtworkController::class);
 
     Route::resource('sales', SalesController::class);
-
+    Route::get('/add-customer', [ArtistController::class, 'addCustomer'])->name('admin.addCustomer');
+    Route::post('/store-customer', [ArtistController::class, 'storeCustomer'])->name('admin.storeCustomer');
     Route::get('/customers', [ArtistController::class, 'customers'])->name('admin.customers');
     Route::get('/customers/{id}', [ArtistController::class, 'editCustomer'])->name('admin.editCustomer');
     Route::post('/customers/{id}', [ArtistController::class, 'updateCustomer'])->name('admin.updateCustomer');
@@ -68,9 +69,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminCheck'], function () {
 
     Route::get('/impersonate/{salesExeID}', [DashboardController::class, 'impersonate'])->name('admin.impersonate');
     Route::get('/revert-impersonate', [DashboardController::class, 'revertImpersonate'])->name('admin.revert.impersonate');
+
+    Route::get('/impersonateartist/{salesExeID}', [DashboardController::class, 'impersonateartist'])->name('admin.impersonateartist');
+    Route::get('/revert-impersonatesales', [DashboardController::class, 'revertImpersonateforsales'])->name('admin.revert.revertImpersonateforsales');
+
+
 });
 
-
+Route::post('/quotes', [DashboardController::class, 'storeQuote'])->name('admin.storeQuote');
 Route::get('/get-quote', [DashboardController::class, 'getQuote'])->name('admin.getQuote');
 Route::get('/get-appointment', [DashboardController::class, 'getAppointment'])->name('admin.getAppointment');
 Route::get('/get-deposit-slips', [PaymentController::class, 'getDepositSlips'])->name('admin.deposit-slips');
@@ -84,6 +90,8 @@ Route::post('/userformsubmit', [DashboardController::class, 'userformsubmit'])->
 Route::get('/get-accept-payment', [PaymentController::class, 'getAcceptPayment'])->name('admin.getAcceptPayment');
 Route::get('/add-payment', [PaymentController::class, 'AddpaymentForm'])->name('admin.AddpaymentForm');
 Route::post('/add-payment-post', [PaymentController::class, 'AddpaymentPost'])->name('admin.AddpaymentPost');
+Route::get('/print-payment-slip/{id}', [PaymentController::class, 'paymentview'])->name('admin.paymentview');
+
 Route::get('/edit-payment/{id}', [PaymentController::class, 'editpaymentForm'])->name('admin.editpaymentForm');
 Route::post('/edit-payment-post/{id}', [PaymentController::class, 'editpaymentPost'])->name('admin.editpaymentPost');
 Route::delete('/payment-delete/{id}', [PaymentController::class, 'deletepaymentForm'])->name('admin.deletepaymentForm');
@@ -121,4 +129,13 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('/banner-upload', [ArtistBannerController::class, 'getForm'])->name('artists.bgetForm');
     Route::post('/banner-upload', [ArtistBannerController::class, 'uploadArtistWiseBanner'])->name('artists.uploadArtistWiseBanner');
     Route::delete('/banner-delete/{id}', [ArtistBannerController::class, 'destroyBanner'])->name('artists.destroyBanner');
+
+Route::get('/add-customer', [ArtistController::class, 'addCustomer'])->name('admin.addCustomer');
+Route::post('/store-customer', [ArtistController::class, 'storeCustomer'])->name('admin.storeCustomer');
+Route::get('/customers', [ArtistController::class, 'customers'])->name('admin.customers');
+Route::get('/customers/{id}', [ArtistController::class, 'editCustomer'])->name('admin.editCustomer');
+Route::post('/customers/{id}', [ArtistController::class, 'updateCustomer'])->name('admin.updateCustomer');
+Route::delete('/customers/{id}', [ArtistController::class, 'destroyCustomer'])->name('admin.destroyCustomer');
+
 });
+
