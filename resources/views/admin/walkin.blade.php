@@ -45,11 +45,11 @@
                         </div>
                         @php
                             if (Auth::guard('artists')->check()) {
-                                $LoggedAuthId = auth()->guard("artists")->user()->id
+                                $LoggedAuthId = auth()->guard("artists")->user()->id;
                             }elseif(Auth::guard('admins')->check()){
-                                $LoggedAuthId = auth()->guard("admins")->user()->id
+                                $LoggedAuthId = auth()->guard("admins")->user()->id;
                             }elseif(Auth::guard('sales')->check()){
-                                $LoggedAuthId = auth()->guard("sales")->user()->id
+                                $LoggedAuthId = auth()->guard("sales")->user()->id;
                             }
                         @endphp
                         <div class="col-md-1">
