@@ -10,7 +10,7 @@ class Quote extends Model
     use HasFactory;
 
     protected $fillable = ['user_id','artist_id','color','description','size','when_get_tattooed',
-    'reference_image','budget','availability','front_back_view'];
+    'reference_image','budget','availability','front_back_view', "quote_type"];
 
     public function user()
     {
