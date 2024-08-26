@@ -43,8 +43,17 @@
                         <div class="col-md-11">
                             <input type="text" placeholder="abc@gmail.com" class="form-control" id="inputEmail">
                         </div>
+                        @php
+                            if (Auth::guard('artists')->check()) {
+                                $LoggedAuthId = auth()->guard("artists")->user()->id
+                            }elseif(Auth::guard('admins')->check()){
+                                $LoggedAuthId = auth()->guard("admins")->user()->id
+                            }elseif(Auth::guard('sales')->check()){
+                                $LoggedAuthId = auth()->guard("sales")->user()->id
+                            }
+                        @endphp
                         <div class="col-md-1">
-                            <button class="btn btn-md btn-success" type="button" onclick="Sendlink()">Send</button>
+                            <button class="btn btn-md btn-success" type="button" onclick="Sendlink({{ $LoggedAuthId  }})">Send</button>
                         </div>
                     </div>
                 </div>
@@ -160,7 +169,7 @@
 
 @section('script')
     <script>
-        function Sendlink() {
+        function Sendlink(authUserId) {
             const inputEmail = document.getElementById("inputEmail").value;
             $.ajax({
                 type: "POST",
@@ -168,7 +177,7 @@
                 data: {
                     'type': 'walkin',
                     'email': inputEmail,
-                    'artistid': "{{ auth()->guard('artists')->user()->id }}",
+                    'artistid': authUserId,
                     '_token': '{{ csrf_token() }}'
                 },
                 beforeSend: function() {
