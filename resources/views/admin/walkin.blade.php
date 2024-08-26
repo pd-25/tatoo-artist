@@ -51,7 +51,19 @@
                             }elseif(Auth::guard('sales')->check()){
                                 $LoggedAuthId = auth()->guard("sales")->user()->id;
                             }
+                            
                         @endphp
+                         <form method="POST"
+                         action="{{ route('quote.delete', encrypt($quote->id)) }}"
+                         class="d-inline">
+                         @csrf
+                         @method('DELETE')
+                         <button type="submit"
+                             class="btn btn-sm btn-danger delete-icon show_confirm"
+                             data-toggle="tooltip" title="Delete">
+                             <i class="ti-trash"></i> Delete
+                         </button>
+                     </form>
                         <div class="col-md-1">
                             <button class="btn btn-md btn-success" type="button" onclick="Sendlink({{ $LoggedAuthId  }})">Send</button>
                         </div>
