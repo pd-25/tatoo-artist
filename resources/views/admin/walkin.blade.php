@@ -23,9 +23,7 @@
             left: 50%;
         }
 
-        .card-css {
-            margin-top: 14%;
-        }
+        
     </style>
     <div class="row justify-content-center">
         <div class="col-lg-11">
@@ -53,6 +51,111 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+            <div class="card">
+                <div class="card-title pr">
+                    <h4>All</h4>
+
+                    @if (Session::has('msg'))
+                        <p class="alert alert-info">{{ Session::get('msg') }}</p>
+                    @endif
+                </div>
+              
+                <div class="ajax-loader">
+                    <img src="https://i.stack.imgur.com/MnyxU.gif" class="img-responsive" />
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table student-data-table m-t-20">
+                            <thead style="text-align: center;">
+                                <tr>
+                                    <th>SN.</th>
+                                    
+                                    <th>User Email</th>
+                                    
+                                    <th>Artist Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody style="text-align: center;">
+                                @if (count($quotes) > 0)
+                                    @foreach ($quotes as $index => $quote)
+                                        @if ($quote->quote_type != 0)
+                                            @php
+                                                $availability = date('jS F, Y', strtotime($quote->availability));
+                                                $quote_created_at = date('jS F, Y', strtotime($quote->created_at));
+                                                $escapedDescription = htmlspecialchars(
+                                                    $quote->description,
+                                                    ENT_QUOTES,
+                                                    'UTF-8',
+                                                );
+                                                $formattedPhoneNumber = sprintf(
+                                                    '(%s) %s-%s',
+                                                    substr(@$quote->user->phone, 0, 3),
+                                                    substr(@$quote->user->phone, 3, 3),
+                                                    substr(@$quote->user->phone, 6, 4),
+                                                );
+                                            @endphp
+
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                {{-- <td>{{ @$quote->user->name }}</td> --}}
+                                                <td>{{ @$quote->user->email }}</td>
+                                                {{-- <td>{{ @$formattedPhoneNumber }}</td> --}}
+                                                <td>{{ @$quote->artist->name }}</td>
+                                                <td>
+                                                    @if ($quote->link_send_status == 0)
+                                                    <button class="btn btn-sm btn-primary"
+                                                        onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Send
+                                                        Link</button>
+                                                @elseif($quote->link_send_status == 1)
+                                                    <button class="btn btn-sm btn-warning"
+                                                        onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Again
+                                                        Send Link</button>
+                                                @else
+                                                    <a href="{{ $quote->pdf_path }}" class="btn btn-sm btn-success"
+                                                        target="_blank">View Link</a>
+                                                @endif
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="6" style="text-align: center;">
+                                            <b>No record is found at this moment!</b>
+                                        </td>
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 @endsection
 
 @section('script')
