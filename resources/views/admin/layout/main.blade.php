@@ -52,7 +52,6 @@
 
                     @if (Auth::guard('artists')->check())
                     <li><a href="{{ route('admin.customers') }}"><i class="ti-desktop"></i>Customers </a></li>
-                    <li><a href="{{ route('artists.getWalkIn') }}"><i class="ti-desktop"></i>Walk In </a></li>
 
                     
                         <li><a href="{{ route('artists.profile') }}"><i class="ti-user"></i>Profile </a></li>
@@ -119,6 +118,8 @@
                      
                     
                     @if (Auth::guard('artists')->check() || Auth::guard('admins')->check() || Auth::guard('sales')->check())
+                    <li><a href="{{ route('artists.getWalkIn') }}"><i class="ti-desktop"></i>Walk In </a></li>
+                    
                     <li><a href="{{ route('admin.getQuote') }}"><i class="ti-envelope"></i>Quote Form</a></li>
                      
                     <li><a href="{{ route('admin.getAppointment') }}"><i class="ti-calendar"></i>Appointment </a></li>
