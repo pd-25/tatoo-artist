@@ -52,6 +52,8 @@
 
                     @if (Auth::guard('artists')->check())
                     <li><a href="{{ route('admin.customers') }}"><i class="ti-desktop"></i>Customers </a></li>
+                    <li><a href="{{ route('artists.getWalkIn') }}"><i class="ti-desktop"></i>Walk In </a></li>
+
                     
                         <li><a href="{{ route('artists.profile') }}"><i class="ti-user"></i>Profile </a></li>
                         <li><a href="{{ url('/user/artist-profile#profileHours') }}"><i class="ti-time"></i>Hours </a></li>

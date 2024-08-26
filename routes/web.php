@@ -111,6 +111,9 @@ Route::delete('/delete-appointment/{id}', [DashboardController::class, 'deleteAp
 
 Route::get('/all-comment', [ArtworkController::class, 'allComment'])->name('admin.allComment');
 
+Route::get('/walk-in', [DashboardController::class, 'getWalkIn'])->name('artists.getWalkIn');
+
+
 Route::post('userlogin', [AuthController::class, 'userlogin'])->name('userlogin');
 // 'middleware' => 'artistCheck'
 Route::group(['prefix' => 'user'], function () {
@@ -136,6 +139,10 @@ Route::get('/customers', [ArtistController::class, 'customers'])->name('admin.cu
 Route::get('/customers/{id}', [ArtistController::class, 'editCustomer'])->name('admin.editCustomer');
 Route::post('/customers/{id}', [ArtistController::class, 'updateCustomer'])->name('admin.updateCustomer');
 Route::delete('/customers/{id}', [ArtistController::class, 'destroyCustomer'])->name('admin.destroyCustomer');
+
+
+
+
 
 });
 

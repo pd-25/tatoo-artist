@@ -119,7 +119,12 @@ public function index(Request $re)
         ]);
     
         $data = $request->only('name', 'username', 'phone', 'email');
-        $data['password'] = Hash::make($request->phone);
+        $this->createCus($data);
+    
+        return redirect()->route('admin.customers')->with('msg', 'Customer added successfully');
+    }
+    public function createCus($data){
+        $data['password'] = Hash::make($data["email"]);
         $data['type'] = 'customer';
         $data['walkin'] = '1';
         if (Auth::guard('admins')->check()) {
@@ -131,8 +136,6 @@ public function index(Request $re)
         }
 
         User::create($data);
-    
-        return redirect()->route('admin.customers')->with('msg', 'Customer added successfully');
     }
     
     public function editCustomer($id)
