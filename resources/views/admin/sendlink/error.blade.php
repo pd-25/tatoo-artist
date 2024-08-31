@@ -42,7 +42,7 @@
         <i class="checkmark">✓</i>
       </div>
         <h1>Stop!</h1>
-        {{-- <p>{{ $error_msg1 }}<br/> {{ $error_msg2 }}</p> --}}
+        <p>{{ $errorMsg1 }}<br/> {{ $errorMsg2 }}</p>
       </div>
     </body>
 </html>
