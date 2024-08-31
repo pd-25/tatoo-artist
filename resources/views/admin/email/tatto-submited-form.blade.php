@@ -18,8 +18,8 @@
             <div class="row" style="width: 100vw;">
                 <div class="container w100" style="text-align: center;">
                     <h2 class="text-center">TATTOO INFORMED CONSENT & MEDICAL HISTORY</h2>
-                    <h2 class="text-center">{{$artistdata->name}}</h2>
-                    <h2 class="text-center">{{$artistdata->address ?? '!Address not found' }}</h2>
+                    <h2 class="text-center">>{{ $data['artistdata']->name }}</h2>
+                    <h2 class="text-center">{{$data['artistdata']->address ?? '!Address not found'  }}</h2>
                     <hr class="lin" />
                 </div>
             </div>
