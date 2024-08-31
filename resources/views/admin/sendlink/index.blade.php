@@ -474,11 +474,11 @@
                                     </div>
                             
                                     <!-- Digital Signature Canvas -->
-                                    <div id="digital-signature-div" class="mb-3" style="display: none;">
-                                        <label class="form-label">Digital Signature</label>
-                                        <canvas id="signature-pad" width="400" height="200" style="border: 1px solid #ccc;"></canvas>
-                                        <button type="button" class="btn btn-primary mt-2" onclick="clearSignature()">Clear Signature</button>
-                                        <input type="hidden" name="digital_signature" id="digitalSignature" />
+                                    <div class="form-group">
+                                        <label for="digital_signature">Digital Signature (Draw Here)</label>
+                                        <canvas id="signaturePad" class="border" width="400" height="200"></canvas>
+                                        <input type="hidden" id="digital_signature" name="digital_signature">
+                                        <button type="button" class="btn btn-secondary mt-2" id="clearSignature">Clear Signature</button>
                                     </div>
                                 <div class="col-md-4">
                                     <div class="mb-3">
@@ -535,83 +535,54 @@
         }
     }
 </script>
+<!-- Signature Pad JavaScript -->
 <script>
-    function toggleSignatureOptions(select) {
-        const fileInputDiv = document.getElementById('file-input-div');
-        const digitalSignatureDiv = document.getElementById('digital-signature-div');
-        if (select.value === 'file') {
-            fileInputDiv.style.display = 'block';
-            digitalSignatureDiv.style.display = 'none';
-        } else {
-            fileInputDiv.style.display = 'none';
-            digitalSignatureDiv.style.display = 'block';
-        }
-    }
+    // Initialize the canvas for digital signature
+    const canvas = document.getElementById('signaturePad');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
 
-    function readURL(input, imgId) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = document.getElementById(imgId);
-                img.src = e.target.result;
-                img.style.display = 'block'; // Make sure the image is displayed
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    let signaturePad;
-    document.addEventListener('DOMContentLoaded', () => {
-        const canvas = document.getElementById('signature-pad');
-        const context = canvas.getContext('2d');
-        signaturePad = {
-            isDrawing: false,
-            lastX: 0,
-            lastY: 0
-        };
-
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseleave', stopDrawing);
+    canvas.addEventListener('mousedown', (e) => {
+        drawing = true;
+        ctx.moveTo(e.offsetX, e.offsetY);
     });
 
-    function startDrawing(e) {
-        signaturePad.isDrawing = true;
-        [signaturePad.lastX, signaturePad.lastY] = [e.offsetX, e.offsetY];
+    canvas.addEventListener('mousemove', (e) => {
+        if (drawing) {
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+        }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        drawing = false;
+        updateSignatureInput();
+    });
+
+    canvas.addEventListener('mouseout', () => {
+        drawing = false;
+    });
+
+    // Clear the signature pad
+    document.getElementById('clearSignature').addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        updateSignatureInput();
+    });
+
+    // Update hidden input with the base64 image data
+    function updateSignatureInput() {
+        const signatureInput = document.getElementById('digital_signature');
+        signatureInput.value = canvas.toDataURL('image/png');
     }
 
-    function draw(e) {
-        if (!signaturePad.isDrawing) return;
+    // Handle form submission for digital signature or file upload
+    document.getElementById('tattooForm').addEventListener('submit', function (e) {
+        const signatureFileInput = document.getElementById('signature').files[0];
+        const digitalSignatureInput = document.getElementById('digital_signature').value;
 
-        const { lastX, lastY } = signaturePad;
-        const { offsetX, offsetY } = e;
-        const context = document.getElementById('signature-pad').getContext('2d');
-
-        context.beginPath();
-        context.moveTo(lastX, lastY);
-        context.lineTo(offsetX, offsetY);
-        context.stroke();
-
-        [signaturePad.lastX, signaturePad.lastY] = [offsetX, offsetY];
-    }
-
-    function stopDrawing() {
-        signaturePad.isDrawing = false;
-    }
-
-    function clearSignature() {
-        const canvas = document.getElementById('signature-pad');
-        const context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        document.getElementById('digitalSignature').value = '';
-    }
-
-    document.getElementById('signature-form').addEventListener('submit', (e) => {
-        const canvas = document.getElementById('signature-pad');
-        if (canvas && canvas.width && canvas.height) {
-            const dataURL = canvas.toDataURL('image/png');
-            document.getElementById('digitalSignature').value = dataURL;
+        if (!signatureFileInput && !digitalSignatureInput) {
+            e.preventDefault();
+            alert('Please provide either a signature file or draw a digital signature.');
         }
     });
 </script>
