@@ -12,14 +12,14 @@
             referrerpolicy="no-referrer"
         ></script>
     </head>
-
+ 
     <body>
         <div class="container" style="padding: 20px;">
             <div class="row" style="width: 100vw;">
                 <div class="container w100" style="text-align: center;">
                     <h2 class="text-center">TATTOO INFORMED CONSENT & MEDICAL HISTORY</h2>
-                    <h2 class="text-center">TRIGGER HAPPY TATTOO, LLC</h2>
-                    <h2 class="text-center">704 EAST WHITTIER BLVD., LA HABRA, CA 562.691.8925U</h2>
+                    <h2 class="text-center">{{$artistinfo->name}}</h2>
+                    <h2 class="text-center">{{$artistinfo->address ?? '!Address not found' }}</h2>
                     <hr class="lin" />
                 </div>
             </div>
