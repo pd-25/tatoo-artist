@@ -530,7 +530,7 @@
                             <!-- File Upload Input -->
                             <div id="file-input-div" class="mb-3">
                                 <label for="formFileSm" class="form-label">Upload Signature</label>
-                                <input class="form-control form-control-sm" name="signature" id="formFileSm" type="file" accept="image/*" onchange="readURL(this, 'sign');" />
+                                <input required class="form-control form-control-sm" name="signature" id="formFileSm" type="file" accept="image/*" onchange="readURL(this, 'sign');" />
                                 <img id="sign" src="" class="display-none imgx" alt="your image" style="display: none; max-width: 100%; height: auto;" />
                             </div>
                             
@@ -538,7 +538,7 @@
                             <div id="digital-signature-div" class="form-group" style="display: none;">
                                 <label for="digital_signature">Digital Signature (Draw Here)</label>
                                 <canvas id="signaturePad" class="border" width="400" height="200"></canvas>
-                                <input type="hidden" id="digital_signature" name="digital_signature">
+                                <input required type="hidden" id="digital_signature" name="digital_signature">
                                 <button type="button" class="btn btn-secondary mt-2" id="clearSignature">Clear Signature</button>
                             </div>
                             <div class="col-md-4">
@@ -553,7 +553,7 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="formFileSm" class="form-label">Driving Licence Back</label>
-                                    <input class="form-control form-control-sm" name="driving_licence_back"
+                                    <input required class="form-control form-control-sm" name="driving_licence_back"
                                         id="formFileSm" type="file" accept="image/*"
                                         onchange="readURL(this,'dl-back');" />
                                     <img id="dl-back" src="" class="display-none imgx" alt="your image" />
