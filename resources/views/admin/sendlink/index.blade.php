@@ -7,6 +7,8 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
         <link rel="stylesheet" href="{{ asset('admin-asset/getlink/style.css') }}" />
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
             integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
@@ -450,9 +452,29 @@
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="formFileSm" class="form-label">Signature</label>
-                                        <input class="form-control form-control-sm" name="signature" id="formFileSm" type="file" accept="image/*" onchange="readURL(this,'sign');" required/>
-                                        <img id="sign" src="" class="display-none imgx" alt="your image" />
+                                        
+                                        <!-- Option to switch between upload and digital signature -->
+                                        <div class="mb-2">
+                                            <input type="radio" name="signatureType" id="uploadOption" value="upload" checked onclick="toggleSignatureOption('upload')">
+                                            <label for="uploadOption">Upload Signature</label>
+                                            <input type="radio" name="signatureType" id="digitalOption" value="digital" onclick="toggleSignatureOption('digital')">
+                                            <label for="digitalOption">Digital Signature</label>
+                                        </div>
+                                    
+                                        <!-- File Upload -->
+                                        <div id="uploadSignature">
+                                            <input class="form-control form-control-sm" name="signature" id="formFileSm" type="file" accept="image/*" onchange="readURL(this,'sign');" required />
+                                            <img id="sign" src="" class="display-none imgx" alt="your image" />
+                                        </div>
+                                    
+                                        <!-- Digital Signature -->
+                                        <div id="digitalSignature" class="display-none">
+                                            <canvas id="signatureCanvas" class="border" width="300" height="150"></canvas>
+                                            <button type="button" class="btn btn-primary mt-2" onclick="saveSignature()">Save Signature</button>
+                                            <button type="button" class="btn btn-secondary mt-2" onclick="clearSignature()">Clear</button>
+                                        </div>
                                     </div>
+                                    
                                 </div>
                                 <div class="col-md-4">
                                     <div class="mb-3">
@@ -509,3 +531,57 @@
         }
     }
 </script>
+<script>
+    // Initialize Signature Pad
+    let canvas = document.getElementById('signatureCanvas');
+    let signaturePad = new SignaturePad(canvas);
+    
+    function toggleSignatureOption(option) {
+        const uploadDiv = document.getElementById('uploadSignature');
+        const digitalDiv = document.getElementById('digitalSignature');
+    
+        if (option === 'upload') {
+            uploadDiv.style.display = 'block';
+            digitalDiv.style.display = 'none';
+        } else {
+            uploadDiv.style.display = 'none';
+            digitalDiv.style.display = 'block';
+        }
+    }
+    
+    function saveSignature() {
+        if (signaturePad.isEmpty()) {
+            alert('Please provide a signature first.');
+        } else {
+            const dataURL = signaturePad.toDataURL();
+            downloadImage(dataURL, 'signature.png');
+        }
+    }
+    
+    function clearSignature() {
+        signaturePad.clear();
+    }
+    
+    // Helper function to download the signature image
+    function downloadImage(data, filename = 'signature.png') {
+        var a = document.createElement('a');
+        a.href = data;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+    
+    // Function to display selected image for file upload
+    function readURL(input, imageId) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById(imageId).src = e.target.result;
+                document.getElementById(imageId).classList.remove('display-none');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    </script>
+    
