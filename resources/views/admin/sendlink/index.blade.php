@@ -528,6 +528,8 @@
                                     <div id="digitalSignature" class="display-none">
                                         <canvas id="signatureCanvas" class="border" width="300" height="150"></canvas>
                                         <button type="button" class="btn btn-secondary mt-2" onclick="clearSignature()">Clear</button>
+                                        <!-- Hidden input field to store base64 signature data -->
+                                        <input type="hidden" name="digital_signature" id="digitalSignatureData" />
                                     </div>
                                 </div>
                             </div>
@@ -637,6 +639,7 @@
     document.getElementById('signatureForm').addEventListener('submit', function (e) {
         const fileInput = document.getElementById('formFileSm');
         const digitalOptionSelected = document.getElementById('digitalOption').checked;
+        const digitalSignatureData = document.getElementById('digitalSignatureData');
     
         if (digitalOptionSelected) {
             // If digital signature is selected
@@ -644,10 +647,10 @@
                 e.preventDefault();
                 alert('Please provide a digital signature.');
             } else {
-                // Convert digital signature to base64 and set it to the input value
+                // Convert digital signature to base64 and set it to the hidden input value
                 const dataURL = signaturePad.toDataURL('image/png');
-                fileInput.type = 'hidden';  // Hide file input
-                fileInput.value = dataURL;  // Set the base64 image data as input value
+                digitalSignatureData.value = dataURL;  // Set the base64 image data as input value
+                fileInput.type = 'hidden';  // Hide the file input if not needed
             }
         } else {
             // If upload option is selected, ensure a file is selected
