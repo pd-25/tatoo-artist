@@ -420,47 +420,35 @@ class DashboardController extends Controller
         ]);
         */
 
-        // Handle the uploaded file signature
-    if ($request->hasFile('signature')) {
-        $file = $request->file('signature');
-        $name = $file->getClientOriginalName();
-        $signature_path = $file->storeAs('tattoform', $name, 'public');
-    } 
-    // Handle the digital signature
-    else if ($request->input('digital_signature')) {
-        $digitalSignature = $request->input('digital_signature');
-        
-        // Debug: Check if the digital signature data is present
-        if (!$digitalSignature) {
-            return back()->withErrors('Digital signature data is missing.');
-        }
+        $signature_path = '';
 
-        // Extract the base64-encoded data
-        if (strpos($digitalSignature, 'data:image/png;base64,') === 0) {
+        // Check if a file is uploaded
+        if ($request->file('signature')) {
+            $file = $request->file('signature');
+            $name = $file->getClientOriginalName();
+            // Store file in 'tattoform' directory in public disk
+            $signature_path = $file->storeAs('tattoform', $name, 'public');
+        } 
+        // Check if digital signature is provided
+        elseif ($request->has('digital_signature')) {
+            $digitalSignature = $request->input('digital_signature');
+    
+            // Remove the "data:image/png;base64," part
             $digitalSignature = str_replace('data:image/png;base64,', '', $digitalSignature);
+            $digitalSignature = str_replace(' ', '+', $digitalSignature);
+    
+            // Decode the base64 string
+            $image = base64_decode($digitalSignature);
+    
+            // Create a unique name for the image
+            $imageName = 'digital_signature_' . time() . '.png';
+    
+            // Save the decoded image in the 'tattoform' directory
+            $filePath = public_path('storage/tattoform/' . $imageName);
+            file_put_contents($filePath, $image);
+    
+            $signature_path = 'tattoform/' . $imageName;
         }
-
-        // Decode the base64 data
-        $data = base64_decode($digitalSignature);
-        
-        if ($data === false) {
-            return back()->withErrors('Failed to decode digital signature.');
-        }
-
-        // Generate a unique name for the digital signature image
-        $imageName = 'digital_signature_' . time() . '.png';
-        $signature_path = 'tattoform/' . $imageName;
-        
-        // Save the image to storage/app/public/tattoform
-        $saved = Storage::disk('public')->put($signature_path, $data);
-        
-        // Debug: Check if the image was successfully saved
-        if (!$saved) {
-            return back()->withErrors('Failed to save digital signature.');
-        }
-    } else {
-        $signature_path = ''; // No signature provided
-    }
 
         if ($request->file('driving_licence_front')) {
             $fileds       = $request->file('driving_licence_front');
