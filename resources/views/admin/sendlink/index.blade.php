@@ -464,20 +464,22 @@
                                             <option value="digital">Digital Signature</option>
                                         </select>
                                     </div>
-                                    
+                            </div>
+
+                                    <!-- File Upload Input -->
                                     <div id="file-input-div" class="mb-3">
                                         <label for="formFileSm" class="form-label">Upload Signature</label>
                                         <input class="form-control form-control-sm" name="signature" id="formFileSm" type="file" accept="image/*" onchange="readURL(this, 'sign');" />
-                                        <img id="sign" src="" class="display-none imgx" alt="your image" />
+                                        <img id="sign" src="" class="display-none imgx" alt="your image" style="display: none; max-width: 100%; height: auto;" />
                                     </div>
-                                    
-                                    <div id="digital-signature-div" class="mb-3 display-none">
+                            
+                                    <!-- Digital Signature Canvas -->
+                                    <div id="digital-signature-div" class="mb-3" style="display: none;">
                                         <label class="form-label">Digital Signature</label>
-                                        <canvas id="signature-pad" width="400" height="200"></canvas>
+                                        <canvas id="signature-pad" width="400" height="200" style="border: 1px solid #ccc;"></canvas>
                                         <button type="button" class="btn btn-primary mt-2" onclick="clearSignature()">Clear Signature</button>
                                         <input type="hidden" name="digital_signature" id="digitalSignature" />
                                     </div>
-                                </div>
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="formFileSm" class="form-label">Driving Licence Front</label>
@@ -538,20 +540,21 @@
         const fileInputDiv = document.getElementById('file-input-div');
         const digitalSignatureDiv = document.getElementById('digital-signature-div');
         if (select.value === 'file') {
-            fileInputDiv.classList.remove('display-none');
-            digitalSignatureDiv.classList.add('display-none');
+            fileInputDiv.style.display = 'block';
+            digitalSignatureDiv.style.display = 'none';
         } else {
-            fileInputDiv.classList.add('display-none');
-            digitalSignatureDiv.classList.remove('display-none');
+            fileInputDiv.style.display = 'none';
+            digitalSignatureDiv.style.display = 'block';
         }
     }
 
     function readURL(input, imgId) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById(imgId).src = e.target.result;
-                document.getElementById(imgId).classList.remove('display-none');
+            reader.onload = function (e) {
+                const img = document.getElementById(imgId);
+                img.src = e.target.result;
+                img.style.display = 'block'; // Make sure the image is displayed
             }
             reader.readAsDataURL(input.files[0]);
         }
@@ -603,7 +606,7 @@
         context.clearRect(0, 0, canvas.width, canvas.height);
         document.getElementById('digitalSignature').value = '';
     }
-    
+
     document.getElementById('signature-form').addEventListener('submit', (e) => {
         const canvas = document.getElementById('signature-pad');
         if (canvas && canvas.width && canvas.height) {

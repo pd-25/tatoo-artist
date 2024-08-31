@@ -420,12 +420,34 @@ class DashboardController extends Controller
         ]);
         */
 
+        $signature_path = '';
+
+        // Check if a file is uploaded
         if ($request->file('signature')) {
-            $file       = $request->file('signature');
-            $name       = $file->getClientOriginalName();
-            $signature_path = $file->store('tattoform', 'public', $name);
-        } else {
-            $signature_path = '';
+            $file = $request->file('signature');
+            $name = $file->getClientOriginalName();
+            // Store file in 'tattoform' directory in public disk
+            $signature_path = $file->storeAs('tattoform', $name, 'public');
+        } 
+        // Check if digital signature is provided
+        elseif ($request->has('digital_signature')) {
+            $digitalSignature = $request->input('digital_signature');
+    
+            // Remove the "data:image/png;base64," part
+            $digitalSignature = str_replace('data:image/png;base64,', '', $digitalSignature);
+            $digitalSignature = str_replace(' ', '+', $digitalSignature);
+    
+            // Decode the base64 string
+            $image = base64_decode($digitalSignature);
+    
+            // Create a unique name for the image
+            $imageName = 'digital_signature_' . time() . '.png';
+    
+            // Save the decoded image in the 'tattoform' directory
+            $filePath = public_path('storage/tattoform/' . $imageName);
+            file_put_contents($filePath, $image);
+    
+            $signature_path = 'tattoform/' . $imageName;
         }
 
         if ($request->file('driving_licence_front')) {
