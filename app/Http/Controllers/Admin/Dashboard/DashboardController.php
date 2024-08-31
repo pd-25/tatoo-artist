@@ -419,104 +419,111 @@ class DashboardController extends Controller
             'image.required' => 'Please enter banner image',
         ]);
         */
-
-        if ($request->file('signature')) {
-            $file       = $request->file('signature');
-            $name       = $file->getClientOriginalName();
-            $signature_path = $file->store('tattoform', 'public', $name);
+    
+        // Handle base64 encoded signature data
+        if ($request->has('signature') && strpos($request->input('signature'), 'data:image/') === 0) {
+            $base64Signature = $request->input('signature');
+            // Extract the base64 string without the data:image part
+            $imageParts = explode(";base64,", $base64Signature);
+            $imageTypeAux = explode("image/", $imageParts[0]);
+            $imageType = $imageTypeAux[1]; // e.g., png, jpeg
+            $imageBase64 = base64_decode($imageParts[1]);
+    
+            $signatureFileName = 'signature_' . time() . '.' . $imageType;
+            Storage::disk('public')->put('tattoform/' . $signatureFileName, $imageBase64);
+            $signature_path = 'tattoform/' . $signatureFileName;
         } else {
             $signature_path = '';
         }
-
+    
+        // Handle file uploads for driving license front
         if ($request->file('driving_licence_front')) {
-            $fileds       = $request->file('driving_licence_front');
-            $nameds       = $fileds->getClientOriginalName();
+            $fileds = $request->file('driving_licence_front');
+            $nameds = $fileds->getClientOriginalName();
             $driving_licence_front_path = $fileds->store('tattoform', 'public', $nameds);
         } else {
             $driving_licence_front_path = '';
         }
-
+    
+        // Handle file uploads for driving license back
         if ($request->file('driving_licence_back')) {
-            $filedsb       = $request->file('driving_licence_back');
-            $namedsb       = $filedsb->getClientOriginalName();
+            $filedsb = $request->file('driving_licence_back');
+            $namedsb = $filedsb->getClientOriginalName();
             $driving_licence_back_path = $filedsb->store('tattoform', 'public', $namedsb);
         } else {
             $driving_licence_back_path = '';
         }
-
+    
+        // Save data to Tattoform
         $tatto = new Tattoform();
-        $tatto->user_id                                       = $request['user_id'];
-        $tatto->artist_id                                     = $request['artist_id'];
-        $tatto->general_good_health                           = $request['general_good_health'];
-        $tatto->you_under_any_medical_treatment               = $request['you_under_any_medical_treatment'];
-        $tatto->you_currently_taking_any_drugs                = $request['you_currently_taking_any_drugs'];
-        $tatto->you_have_a_history_of_medication              = $request['you_have_a_history_of_medication'];
-        $tatto->you_have_a_history_of_fainting                = $request['you_have_a_history_of_fainting'];
-        $tatto->are_you_allergic_to_latex                     = $request['are_you_allergic_to_latex'];
-        $tatto->have_any_wounds_healed_slowly                 = $request['have_any_wounds_healed_slowly'];
-        $tatto->are_you_allergic_to_any_know_materials        = $request['are_you_allergic_to_any_know_materials'];
-        $tatto->any_risk_factors_from_work_or_lifestyle       = $request['any_risk_factors_from_work_or_lifestyle'];
-        $tatto->are_you_pregnant_or_nursing                   = $request['are_you_pregnant_or_nursing'];
-        $tatto->cardiac_valve_disease                         = $request['cardiac_valve_disease'];
-        $tatto->high_blood_pressure                           = $request['high_blood_pressure'];
-        $tatto->respiratory_disease                           = $request['respiratory_disease'];
-        $tatto->diabetes                                      = $request['diabetes'];
-        $tatto->tumors_or_growths                             = $request['tumors_or_growths'];
-        $tatto->hemophilia                                    = $request['hemophilia'];
-        $tatto->liver_disease                                 = $request['liver_disease'];
-        $tatto->bleeding_disorder                             = $request['bleeding_disorder'];
-        $tatto->kidney_disease                                = $request['kidney_disease'];
-        $tatto->epilepsy                                      = $request['epilepsy'];
-        $tatto->jaundice                                      = $request['jaundice'];
-        $tatto->exposure_to_aids                              = $request['exposure_to_aids'];
-        $tatto->hepatitis                                     = $request['hepatitis'];
-        $tatto->venereal_disease                              = $request['venereal_disease'];
-        $tatto->herpes_infection_at_proposed_procedure_site   = $request['herpes_infection_at_proposed_procedure_site'];
-        $tatto->name                                          = $request['name'];
-        $tatto->todaysdate                                    = $request['todaysdate'];
-        $tatto->birthdate                                     = $request['birthdate'];
-        $tatto->phone                                         = $request['phone'];
-        $tatto->address                                       = $request['address'];
-        $tatto->stateid                                       = $request['stateid'];
-        $tatto->signature                                     = $signature_path;
-        $tatto->driving_licence_front                         = $driving_licence_front_path;
-        $tatto->driving_licence_back                          = $driving_licence_back_path;
+        $tatto->user_id = $request['user_id'];
+        $tatto->artist_id = $request['artist_id'];
+        $tatto->general_good_health = $request['general_good_health'];
+        $tatto->you_under_any_medical_treatment = $request['you_under_any_medical_treatment'];
+        $tatto->you_currently_taking_any_drugs = $request['you_currently_taking_any_drugs'];
+        $tatto->you_have_a_history_of_medication = $request['you_have_a_history_of_medication'];
+        $tatto->you_have_a_history_of_fainting = $request['you_have_a_history_of_fainting'];
+        $tatto->are_you_allergic_to_latex = $request['are_you_allergic_to_latex'];
+        $tatto->have_any_wounds_healed_slowly = $request['have_any_wounds_healed_slowly'];
+        $tatto->are_you_allergic_to_any_know_materials = $request['are_you_allergic_to_any_know_materials'];
+        $tatto->any_risk_factors_from_work_or_lifestyle = $request['any_risk_factors_from_work_or_lifestyle'];
+        $tatto->are_you_pregnant_or_nursing = $request['are_you_pregnant_or_nursing'];
+        $tatto->cardiac_valve_disease = $request['cardiac_valve_disease'];
+        $tatto->high_blood_pressure = $request['high_blood_pressure'];
+        $tatto->respiratory_disease = $request['respiratory_disease'];
+        $tatto->diabetes = $request['diabetes'];
+        $tatto->tumors_or_growths = $request['tumors_or_growths'];
+        $tatto->hemophilia = $request['hemophilia'];
+        $tatto->liver_disease = $request['liver_disease'];
+        $tatto->bleeding_disorder = $request['bleeding_disorder'];
+        $tatto->kidney_disease = $request['kidney_disease'];
+        $tatto->epilepsy = $request['epilepsy'];
+        $tatto->jaundice = $request['jaundice'];
+        $tatto->exposure_to_aids = $request['exposure_to_aids'];
+        $tatto->hepatitis = $request['hepatitis'];
+        $tatto->venereal_disease = $request['venereal_disease'];
+        $tatto->herpes_infection_at_proposed_procedure_site = $request['herpes_infection_at_proposed_procedure_site'];
+        $tatto->name = $request['name'];
+        $tatto->todaysdate = $request['todaysdate'];
+        $tatto->birthdate = $request['birthdate'];
+        $tatto->phone = $request['phone'];
+        $tatto->address = $request['address'];
+        $tatto->stateid = $request['stateid'];
+        $tatto->signature = $signature_path;
+        $tatto->driving_licence_front = $driving_licence_front_path;
+        $tatto->driving_licence_back = $driving_licence_back_path;
         $tatto->save();
-
+    
+        // Generate PDF and send email (remains the same)
         $data['artistdata'] = DB::table('users')
             ->where('id', $request['artist_id'])
             ->first();
-            
         $data['tattodata'] = Tattoform::where('id', $tatto->id)->first();
-
+    
         // GET User Details
         $user = User::where('id', $request['user_id'])->first();
-
+    
         $pdf = PDF::loadView('admin.email.tatto-submited-form', $data);
-
-        //return $pdf->stream('tattoform.pdf'); die;
         $content = $pdf->download()->getOriginalContent();
         $pdfname = time() . '.pdf';
         Storage::put('public/tattopdf/' . $pdfname, $content);
-        //$path =  Storage::url('public/tattopdf/'.$pdfname);
         $path = asset('storage/tattopdf/' . $pdfname);
-
+    
         $toemail = $user->email;
         Mail::send('admin.email.view-tatto', ['fullpath' => $path], function ($message) use ($toemail) {
             $message->to($toemail);
-            //$message->to('biswajitmaityniit@gmail.com');
-            //$message->bcc('test@salesanta.com');
             $message->subject('User Tattoo Submitted Data.');
         });
-
+    
         Quote::where('id', $request->dbid)
             ->update([
                 'link_send_status' => '2',
                 'pdf_path' => $path
             ]);
+    
         return redirect()->route('admin.success')->with('message', 'Record added successfully!');
-        //return redirect()->back()->with('message', 'Form data submited successfully.');
     }
+    
 
     public function success()
     {
