@@ -16,6 +16,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <style>
+            .display-none {
+                display: none;
+            }
+    
+            .imgx {
+                max-width: 100%;
+                height: auto;
+            }
+    
+            #signatureCanvas {
+                border: 1px solid #000;
+                width: 100%;
+                height: 200px;
+            }
+        </style>
 </head>
 
 <body>
@@ -508,28 +524,39 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="formFileSm" class="form-label">Signature</label>
                                     
-                                    <!-- Option to switch between upload and digital signature -->
-                                    <div class="mb-2">
-                                        <input type="radio" name="signatureType" id="uploadOption" value="upload" checked onclick="toggleSignatureOption('upload')">
-                                        <label for="uploadOption">Upload Signature</label>
-                                        <input type="radio" name="signatureType" id="digitalOption" value="digital" onclick="toggleSignatureOption('digital')">
-                                        <label for="digitalOption">Digital Signature</label>
+                                    
+                                    <div class="form-group">
+                                        <label>Select Signature Option:</label><br>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="signatureOption" id="uploadOption" value="upload"
+                                                onclick="toggleSignatureOption('upload')" checked>
+                                            <label class="form-check-label" for="uploadOption">Upload Signature Image</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="signatureOption" id="digitalOption"
+                                                value="digital" onclick="toggleSignatureOption('digital')">
+                                            <label class="form-check-label" for="digitalOption">Draw Digital Signature</label>
+                                        </div>
                                     </div>
-                            
-                                    <!-- File Upload -->
+                        
+                                    <!-- Upload Signature Image -->
                                     <div id="uploadSignature">
-                                        <input class="form-control form-control-sm" name="signature" id="formFileSm" type="file" accept="image/*" onchange="readURL(this,'sign');" />
-                                        <img id="sign" src="" class="display-none imgx" alt="your image" />
+                                        <div class="form-group">
+                                            <label for="formFileSm" class="form-label">Upload Signature Image</label>
+                                            <input class="form-control form-control-sm" name="signature_image" id="formFileSm" type="file"
+                                                accept="image/*" onchange="readURL(this, 'signaturePreview');" required />
+                                            <img id="signaturePreview" src="" class="display-none imgx" alt="Your signature image" />
+                                        </div>
                                     </div>
-                            
-                                    <!-- Digital Signature -->
+                        
+                                    <!-- Draw Digital Signature -->
                                     <div id="digitalSignature" class="display-none">
-                                        <canvas id="signatureCanvas" class="border" width="300" height="150"></canvas>
-                                        <button type="button" class="btn btn-secondary mt-2" onclick="clearSignature()">Clear</button>
-                                        <!-- Hidden input field to store base64 signature data -->
-                                        <input type="hidden" name="digital_signature" id="digitalSignatureData" />
+                                        <div class="form-group">
+                                            <canvas id="signatureCanvas"></canvas>
+                                            <button type="button" class="btn btn-secondary mt-2" onclick="clearSignature()">Clear Signature</button>
+                                            <input type="hidden" name="digital_signature" id="digitalSignatureData">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -597,67 +624,67 @@
 <script>
     // Initialize Signature Pad
     let canvas = document.getElementById('signatureCanvas');
-    let signaturePad = new SignaturePad(canvas, {
-        backgroundColor: 'rgb(255, 255, 255)', // White background for better visibility
-        penColor: 'rgb(0, 0, 0)' // Black pen color
-    });
-    
-    // Toggle between upload and digital signature options
-    function toggleSignatureOption(option) {
-        const uploadDiv = document.getElementById('uploadSignature');
-        const digitalDiv = document.getElementById('digitalSignature');
-    
-        if (option === 'upload') {
-            uploadDiv.style.display = 'block';
-            digitalDiv.style.display = 'none';
-            document.getElementById('formFileSm').required = true; // Set file input required
-        } else {
-            uploadDiv.style.display = 'none';
-            digitalDiv.style.display = 'block';
-            document.getElementById('formFileSm').required = false; // Remove required attribute from file input
-        }
-    }
-    
-    // Clear the signature from the canvas
-    function clearSignature() {
-        signaturePad.clear();
-    }
-    
-    // Handle file upload preview
-    function readURL(input, imageId) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById(imageId).src = e.target.result;
-                document.getElementById(imageId).classList.remove('display-none');
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    
-    // Handle form submission
-    document.getElementById('signatureForm').addEventListener('submit', function (e) {
-        const fileInput = document.getElementById('formFileSm');
-        const digitalOptionSelected = document.getElementById('digitalOption').checked;
-        const digitalSignatureData = document.getElementById('digitalSignatureData');
-    
-        if (digitalOptionSelected) {
-            // If digital signature is selected
-            if (signaturePad.isEmpty()) {
-                e.preventDefault();
-                alert('Please provide a digital signature.');
+        let signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgb(255, 255, 255)', // White background for better visibility
+            penColor: 'rgb(0, 0, 0)' // Black pen color
+        });
+
+        // Toggle between upload and digital signature options
+        function toggleSignatureOption(option) {
+            const uploadDiv = document.getElementById('uploadSignature');
+            const digitalDiv = document.getElementById('digitalSignature');
+
+            if (option === 'upload') {
+                uploadDiv.style.display = 'block';
+                digitalDiv.style.display = 'none';
+                document.getElementById('formFileSm').required = true; // Set file input required
             } else {
-                // Convert digital signature to base64 and set it to the hidden input value
-                const dataURL = signaturePad.toDataURL('image/png');
-                digitalSignatureData.value = dataURL;  // Set the base64 image data as input value
-                fileInput.type = 'hidden';  // Hide the file input if not needed
-            }
-        } else {
-            // If upload option is selected, ensure a file is selected
-            if (!fileInput.files.length) {
-                e.preventDefault();
-                alert('Please upload a signature file.');
+                uploadDiv.style.display = 'none';
+                digitalDiv.style.display = 'block';
+                document.getElementById('formFileSm').required = false; // Remove required attribute from file input
             }
         }
-    });
+
+        // Clear the signature from the canvas
+        function clearSignature() {
+            signaturePad.clear();
+        }
+
+        // Handle file upload preview
+        function readURL(input, imageId) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById(imageId).src = e.target.result;
+                    document.getElementById(imageId).classList.remove('display-none');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('signatureForm').addEventListener('submit', function (e) {
+            const fileInput = document.getElementById('formFileSm');
+            const digitalOptionSelected = document.getElementById('digitalOption').checked;
+            const digitalSignatureData = document.getElementById('digitalSignatureData');
+
+            if (digitalOptionSelected) {
+                // If digital signature is selected
+                if (signaturePad.isEmpty()) {
+                    e.preventDefault();
+                    alert('Please provide a digital signature.');
+                } else {
+                    // Convert digital signature to base64 and set it to the hidden input value
+                    const dataURL = signaturePad.toDataURL('image/png');
+                    digitalSignatureData.value = dataURL;  // Set the base64 image data as input value
+                    fileInput.type = 'hidden';  // Hide the file input if not needed
+                }
+            } else {
+                // If upload option is selected, ensure a file is selected
+                if (!fileInput.files.length) {
+                    e.preventDefault();
+                    alert('Please upload a signature file.');
+                }
+            }
+        });
     </script>
