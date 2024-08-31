@@ -420,7 +420,7 @@ class DashboardController extends Controller
         ]);
         */
 
-          // Handle the uploaded file signature
+        // Handle the uploaded file signature
     if ($request->hasFile('signature')) {
         $file = $request->file('signature');
         $name = $file->getClientOriginalName();
@@ -429,22 +429,20 @@ class DashboardController extends Controller
     // Handle the digital signature
     else if ($request->input('digital_signature')) {
         $digitalSignature = $request->input('digital_signature');
-
+        
         // Debug: Check if the digital signature data is present
         if (!$digitalSignature) {
             return back()->withErrors('Digital signature data is missing.');
         }
 
-        // Ensure the base64 string starts with the proper header and extract the data
+        // Extract the base64-encoded data
         if (strpos($digitalSignature, 'data:image/png;base64,') === 0) {
             $digitalSignature = str_replace('data:image/png;base64,', '', $digitalSignature);
-        } else {
-            return back()->withErrors('Invalid digital signature format.');
         }
 
         // Decode the base64 data
         $data = base64_decode($digitalSignature);
-
+        
         if ($data === false) {
             return back()->withErrors('Failed to decode digital signature.');
         }
@@ -452,23 +450,17 @@ class DashboardController extends Controller
         // Generate a unique name for the digital signature image
         $imageName = 'digital_signature_' . time() . '.png';
         $signature_path = 'tattoform/' . $imageName;
-
+        
         // Save the image to storage/app/public/tattoform
         $saved = Storage::disk('public')->put($signature_path, $data);
-
+        
         // Debug: Check if the image was successfully saved
         if (!$saved) {
             return back()->withErrors('Failed to save digital signature.');
         }
-
-        // Debugging - Check the storage path
-        if (!Storage::disk('public')->exists($signature_path)) {
-            return back()->withErrors('Digital signature saved but cannot be found.');
-        }
     } else {
         $signature_path = ''; // No signature provided
     }
-
 
         if ($request->file('driving_licence_front')) {
             $fileds       = $request->file('driving_licence_front');
