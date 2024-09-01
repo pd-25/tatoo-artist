@@ -680,8 +680,9 @@
 
     // Clear the signature pad
     document.getElementById('clearSignature').addEventListener('click', () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        updateSignatureInput();
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+        ctx.beginPath(); // Reset the current drawing path
+        updateSignatureInput(); // Update the hidden input
     });
 
     // Update hidden input with the base64 image data
@@ -715,3 +716,4 @@
         }
     }
 </script>
+
