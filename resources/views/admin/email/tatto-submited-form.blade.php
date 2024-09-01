@@ -325,7 +325,7 @@
                         <div class="mb-3">
                             <label for="formFileSm" class="form-label">Signature</label>
                             <br />
-                            <input class="form-control form-control-sm" id="formFileSm" type="file" accept="image/*" onchange="readURL(this,'sign');" />
+                            {{-- <input class="form-control form-control-sm" id="formFileSm" type="file" accept="image/*" onchange="readURL(this,'sign');" /> --}}
                             <img id="sign" src="{{ asset('storage/'.$tattodata->signature) }}" class="display-none imgx" alt="your image" />
                         </div>
                     </div>
@@ -333,7 +333,7 @@
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label for="formFileSm" class="form-label">Driving Licence Front</label>
-                            <input class="form-control form-control-sm" id="formFileSm" type="file" accept="image/*" onchange="readURL(this,'dl-front');" />
+                            {{-- <input class="form-control form-control-sm" id="formFileSm" type="file" accept="image/*" onchange="readURL(this,'dl-front');" /> --}}
                             <img id="dl-front" src="{{ asset('storage/'.$tattodata->driving_licence_front) }}" class="display-none imgx" alt="your image" />
                         </div>
                     </div>
@@ -341,7 +341,7 @@
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label for="formFileSm" class="form-label">Driving Licence Back</label>
-                            <input class="form-control form-control-sm" id="formFileSm" type="file" accept="image/*" onchange="readURL(this,'dl-back');" />
+                            {{-- <input class="form-control form-control-sm" id="formFileSm" type="file" accept="image/*" onchange="readURL(this,'dl-back');" /> --}}
                             <img id="dl-back" src="{{ asset('storage/'.$tattodata->driving_licence_back) }}" class="display-none imgx" alt="your image" />
                         </div>
                     </div>
