@@ -20,9 +20,28 @@
             display: none;
         }
 
-        #signature-pad {
-            border: 1px solid #000;
+        #signaturePad {
+        height: 200px; /* Fixed height for both views */
+        border: 1px solid #000; /* Optional: Add a border for visibility */
+        display: block; /* Ensures the canvas is displayed as a block element */
+        margin: 0 auto; /* Center the canvas */
+    }
+
+    /* Desktop view styles */
+    @media (min-width: 768px) { /* Adjust breakpoint as needed */
+        #signaturePad {
+            width: 400px; /* Fixed width for desktop view */
+            padding: 0px;
+            margin: 0;
         }
+    }
+
+    /* Mobile view styles */
+    @media (max-width: 767px) { /* Adjust breakpoint as needed */
+        #signaturePad {
+            width: 100%; /* Auto width for mobile view to take full container width */
+        }
+    }
     </style>
 </head>
 
@@ -537,7 +556,7 @@
                             <!-- Digital Signature Canvas -->
                             <div id="digital-signature-div" class="form-group" style="display: none;">
                                 <label for="digital_signature">Digital Signature (Draw Here)</label>
-                                <canvas id="signaturePad" class="border" width="400" height="200"></canvas>
+                                <canvas id="signaturePad" class="border ffffdee"></canvas>
                                 <input required type="hidden" id="digital_signature" name="digital_signature">
                                 <button type="button" class="btn btn-secondary mt-2" id="clearSignature">Clear Signature</button>
                             </div>
@@ -604,35 +623,60 @@
 </script>
 <!-- Signature Pad JavaScript -->
 <script>
-
-
-
-
     // Initialize the canvas for digital signature
     const canvas = document.getElementById('signaturePad');
     const ctx = canvas.getContext('2d');
     let drawing = false;
 
-    canvas.addEventListener('mousedown', (e) => {
-        drawing = true;
-        ctx.moveTo(e.offsetX, e.offsetY);
-    });
-
-    canvas.addEventListener('mousemove', (e) => {
-        if (drawing) {
-            ctx.lineTo(e.offsetX, e.offsetY);
-            ctx.stroke();
+    // Helper function to get the correct position
+    function getPosition(e) {
+        const rect = canvas.getBoundingClientRect();
+        if (e.touches) {  // Touch events
+            return {
+                x: e.touches[0].clientX - rect.left,
+                y: e.touches[0].clientY - rect.top
+            };
+        } else {  // Mouse events
+            return {
+                x: e.offsetX,
+                y: e.offsetY
+            };
         }
-    });
+    }
 
-    canvas.addEventListener('mouseup', () => {
+    // Start drawing
+    function startDrawing(e) {
+        e.preventDefault();  // Prevent scrolling on touch devices
+        drawing = true;
+        const pos = getPosition(e);
+        ctx.moveTo(pos.x, pos.y);
+    }
+
+    // Draw on the canvas
+    function draw(e) {
+        if (!drawing) return;
+        const pos = getPosition(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+    }
+
+    // Stop drawing
+    function stopDrawing() {
         drawing = false;
         updateSignatureInput();
-    });
+    }
 
-    canvas.addEventListener('mouseout', () => {
-        drawing = false;
-    });
+    // Mouse events
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+
+    // Touch events
+    canvas.addEventListener('touchstart', startDrawing);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stopDrawing);
+    canvas.addEventListener('touchcancel', stopDrawing);
 
     // Clear the signature pad
     document.getElementById('clearSignature').addEventListener('click', () => {
@@ -657,7 +701,7 @@
         }
     });
 
-
+    // Toggle between signature file upload and digital signature drawing
     function toggleSignatureOptions(select) {
         const fileInputDiv = document.getElementById('file-input-div');
         const digitalSignatureDiv = document.getElementById('digital-signature-div');
