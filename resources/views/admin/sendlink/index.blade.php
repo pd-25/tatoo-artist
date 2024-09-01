@@ -621,7 +621,6 @@
         }
     }
 </script>
-<!-- Signature Pad JavaScript -->
 <script>
     // Initialize the canvas for digital signature
     const canvas = document.getElementById('signaturePad');
@@ -693,7 +692,7 @@
 
     // Handle form submission for digital signature or file upload
     document.getElementById('tattooForm').addEventListener('submit', function (e) {
-        const signatureFileInput = document.getElementById('signature').files[0];
+        const signatureFileInput = document.getElementById('formFileSm').files[0];
         const digitalSignatureInput = document.getElementById('digital_signature').value;
 
         if (!signatureFileInput && !digitalSignatureInput) {
@@ -704,29 +703,34 @@
 
     // Toggle between signature file upload and digital signature drawing
     function toggleSignatureOptions(select) {
-    const fileInputDiv = document.getElementById('file-input-div');
-    const digitalSignatureDiv = document.getElementById('digital-signature-div');
-    const fileInput = document.getElementById('signature');  // File input field
-    const digitalSignatureInput = document.getElementById('digital_signature');  // Hidden input for digital signature
+        const fileInputDiv = document.getElementById('file-input-div');
+        const digitalSignatureDiv = document.getElementById('digital-signature-div');
+        const fileInput = document.getElementById('formFileSm');  // Corrected File input field ID
+        const digitalSignatureInput = document.getElementById('digital_signature');  // Hidden input for digital signature
 
-    if (select.value === 'file') {
-        // Show file input and hide digital signature drawing area
-        fileInputDiv.style.display = 'block';
-        digitalSignatureDiv.style.display = 'none';
-        
-        // Make file input required and remove the requirement from digital signature
-        fileInput.setAttribute('required', 'required');
-        digitalSignatureInput.removeAttribute('required');
-    } else if (select.value === 'digital') {
-        // Show digital signature drawing area and hide file input
-        fileInputDiv.style.display = 'none';
-        digitalSignatureDiv.style.display = 'block';
-        
-        // Make digital signature required and remove the requirement from file input
-        digitalSignatureInput.setAttribute('required', 'required');
-        fileInput.removeAttribute('required');
+        if (select.value === 'file') {
+            // Show file input and hide digital signature drawing area
+            fileInputDiv.style.display = 'block';
+            digitalSignatureDiv.style.display = 'none';
+
+            // Make file input required and remove the requirement from digital signature
+            fileInput.setAttribute('required', 'required');
+            digitalSignatureInput.removeAttribute('required');
+        } else if (select.value === 'digital') {
+            // Show digital signature drawing area and hide file input
+            fileInputDiv.style.display = 'none';
+            digitalSignatureDiv.style.display = 'block';
+
+            // Make digital signature required and remove the requirement from file input
+            digitalSignatureInput.setAttribute('required', 'required');
+            fileInput.removeAttribute('required');
+        }
     }
-}
 
+    // Set initial state
+    document.addEventListener('DOMContentLoaded', function () {
+        toggleSignatureOptions(document.getElementById('signatureOption'));
+    });
 </script>
+
 
