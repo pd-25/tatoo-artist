@@ -549,7 +549,7 @@
                             <!-- File Upload Input -->
                             <div id="file-input-div" class="mb-3">
                                 <label for="formFileSm" class="form-label">Upload Signature</label>
-                                <input required class="form-control form-control-sm" name="signature" id="formFileSm" type="file" accept="image/*" onchange="readURL(this, 'sign');" />
+                                <input  class="form-control form-control-sm" name="signature" id="formFileSm" type="file" accept="image/*" onchange="readURL(this, 'sign');" />
                                 <img id="sign" src="" class="display-none imgx" alt="your image" style="display: none; max-width: 100%; height: auto;" />
                             </div>
                             
@@ -557,13 +557,13 @@
                             <div id="digital-signature-div" class="form-group" style="display: none;">
                                 <label for="digital_signature">Digital Signature (Draw Here)</label>
                                 <canvas id="signaturePad" class="border ffffdee"></canvas>
-                                <input required type="hidden" id="digital_signature" name="digital_signature">
+                                <input  type="hidden" id="digital_signature" name="digital_signature">
                                 <button type="button" class="btn btn-secondary mt-2" id="clearSignature">Clear Signature</button>
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="formFileSm" class="form-label">Driving Licence Front</label>
-                                    <input class="form-control form-control-sm" name="driving_licence_front"
+                                    <input required class="form-control form-control-sm" name="driving_licence_front"
                                         id="formFileSm" type="file" accept="image/*"
                                         onchange="readURL(this,'dl-front');" />
                                     <img id="dl-front" src="" class="display-none imgx" alt="your image" />
@@ -704,16 +704,29 @@
 
     // Toggle between signature file upload and digital signature drawing
     function toggleSignatureOptions(select) {
-        const fileInputDiv = document.getElementById('file-input-div');
-        const digitalSignatureDiv = document.getElementById('digital-signature-div');
+    const fileInputDiv = document.getElementById('file-input-div');
+    const digitalSignatureDiv = document.getElementById('digital-signature-div');
+    const fileInput = document.getElementById('signature');  // File input field
+    const digitalSignatureInput = document.getElementById('digital_signature');  // Hidden input for digital signature
 
-        if (select.value === 'file') {
-            fileInputDiv.style.display = 'block';
-            digitalSignatureDiv.style.display = 'none';
-        } else if (select.value === 'digital') {
-            fileInputDiv.style.display = 'none';
-            digitalSignatureDiv.style.display = 'block';
-        }
+    if (select.value === 'file') {
+        // Show file input and hide digital signature drawing area
+        fileInputDiv.style.display = 'block';
+        digitalSignatureDiv.style.display = 'none';
+        
+        // Make file input required and remove the requirement from digital signature
+        fileInput.setAttribute('required', 'required');
+        digitalSignatureInput.removeAttribute('required');
+    } else if (select.value === 'digital') {
+        // Show digital signature drawing area and hide file input
+        fileInputDiv.style.display = 'none';
+        digitalSignatureDiv.style.display = 'block';
+        
+        // Make digital signature required and remove the requirement from file input
+        digitalSignatureInput.setAttribute('required', 'required');
+        fileInput.removeAttribute('required');
     }
+}
+
 </script>
 
