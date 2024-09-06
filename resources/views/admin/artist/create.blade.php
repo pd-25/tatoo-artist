@@ -91,7 +91,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Country</label><span class="text-danger">*</span>
-                                        <input type="text" class="form-control" id="country" placeholder="Country" name="country">
+                                        <input type="text" class="form-control" id="country" placeholder="Country" name="country" value="United States">
                                         @error('country')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -349,9 +349,9 @@
                                           </div>
 
                                           <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="payment_method[]" value="Venomo" id="Venomo">
-                                            <label class="form-check-label" for="Venomo">
-                                              Venomo
+                                            <input class="form-check-input" type="checkbox" name="payment_method[]" value="Venmo" id="Venmo">
+                                            <label class="form-check-label" for="Venmo">
+                                              Venmo
                                             </label>
                                           </div>
 
