@@ -61,8 +61,8 @@
         </div>
         <div class="row text-justify">
             <p>
-                I am signing this agreement to induce {{$artistinfo->name ?? '!name not found' }} , {{$artistinfo->address ?? '!Address not found' }} and the Subcontracted Tattoo Artist
-                (STA) to modify my tattoo and/o tattoo my person. In consideration of doing so, I hereby release THT and
+                I am signing this agreement to induce {{$artistinfo->name ?? '!name not found' }} and the Subcontracted Tattoo Artist
+                (STA) to modify my tattoo and/o tattoo my person. In consideration of doing so, I hereby release {{$artistinfo->name ?? '!name not found' }} and
                 its
                 employees and agents from all manner of liabilities, claims, actions and demands in law or in equity
                 which I or my heirs have or might have now or hereafter by reason of complying with my request to be
@@ -92,28 +92,28 @@
                 with knowledge of the risks involved, which include infection or other injury. I understand it can be
                 expensive and painful to remove a tattoo and that the process is not always successful and may result in
                 scarring.
-                Additional information regarding this procedure are furnished in THT's Post Procedure Instructions. With
+                Additional information regarding this procedure are furnished in {{$artistinfo->name ?? '!name not found' }}'s Post Procedure Instructions. With
                 full knowledge of the dangers and risks involved I hereby agree and accept all risks of any kind or
                 nature. Being
-                of sound mind and body, I hereby release any and all persons representing THT from all responsibility
+                of sound mind and body, I hereby release any and all persons representing {{$artistinfo->name ?? '!name not found' }} from all responsibility
                 and liability for any consequences
             </p>
             <p>
                 that may stem from my decision to have tattoo work done. I hereby agree to hold harmless all owners,
-                agents, employees, and representatives of THT. I further agree not to file any suit, claim, or action
+                agents, employees, and representatives of {{$artistinfo->name ?? '!name not found' }}. I further agree not to file any suit, claim, or action
                 for any damages,
                 demands, rights, or causes of action for any nature, including but not limited to injury, maiming,
                 property damage or death to myself or any other person arising from my decision to have tattoo work done
-                by THT, its
+                by {{$artistinfo->name ?? '!name not found' }}, its
                 owners, agents, employees or representatives harmless of all damages, actions, causes of action, claim
                 judgements, cost of litigation, attorney fees, and any and all costs and expenses which may arise from
                 my decision to
-                have tattoo work done by THT
+                have tattoo work done by {{$artistinfo->name ?? '!name not found' }}
             </p>
             <p>
-                I agree to leave the premises of THT promptly upon request by any owner, agent, employee, or
-                representative of THT for any reason whatsoever. I agree these waivers and releases pertain to and are
-                directed to protect THT.
+                I agree to leave the premises of {{$artistinfo->name ?? '!name not found' }} promptly upon request by any owner, agent, employee, or
+                representative of {{$artistinfo->name ?? '!name not found' }} for any reason whatsoever. I agree these waivers and releases pertain to and are
+                directed to protect {{$artistinfo->name ?? '!name not found' }}.
             </p>
         </div>
     </div>
@@ -588,7 +588,7 @@
             </div>
 
             <div class="row mt-5">
-                <p class="text-center">This intellectual property belongs to the owner of THT and may not be copied
+                <p class="text-center">This intellectual property belongs to the owner of {{$artistinfo->name ?? '!name not found' }} and may not be copied
                     without written consent from the author.</p>
             </div>
         </div>
