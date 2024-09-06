@@ -107,13 +107,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Country</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="country" placeholder="Country" name="country"
-                                        value="{{ $artist->country }}" readonly>
-                                    {{-- <select class="form-control" id="country" name="country">
+                                    {{-- <input type="text" class="form-control" id="country" placeholder="Country" name="country"
+                                        value="{{ $artist->country }}" readonly> --}}
+                                    <select class="form-control" id="country" name="country">
                                         @foreach (config('contry.countries') as $k => $item)
                                             <option value="{{ $item }}">{{ $item }}</option>
                                         @endforeach
-                                    </select> --}}
+                                    </select>
 
                                     @error('country')
                                         <span class="text-danger" role="alert">

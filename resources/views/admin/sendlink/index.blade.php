@@ -61,7 +61,7 @@
         </div>
         <div class="row text-justify">
             <p>
-                I am signing this agreement to induce {{$artistinfo->name}} (THT) and the Subcontracted Tattoo Artist
+                I am signing this agreement to induce {{$artistinfo->name ?? '!name not found' }} , {{$artistinfo->address ?? '!Address not found' }} and the Subcontracted Tattoo Artist
                 (STA) to modify my tattoo and/o tattoo my person. In consideration of doing so, I hereby release THT and
                 its
                 employees and agents from all manner of liabilities, claims, actions and demands in law or in equity

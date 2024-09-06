@@ -91,7 +91,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Country</label><span class="text-danger">*</span>
-                                        <input readonly type="text" class="form-control" id="country" placeholder="Country" name="country" value="United States">
+                                        <input type="text" class="form-control" id="country" placeholder="Country" name="country">
                                         @error('country')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
