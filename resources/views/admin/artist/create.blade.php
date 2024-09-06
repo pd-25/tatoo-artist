@@ -91,7 +91,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Country</label><span class="text-danger">*</span>
-                                        <input readonly type="text" class="form-control" id="country" placeholder="Country" name="country" value="United States">
+                                        <input readonly type="text" class="form-control" id="country" placeholder="Country" name="country" >
                                         @error('country')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -866,7 +866,7 @@
         </div>
     @endsection
 
-    @section('script')
+    
         <!-- Include Inputmask from CDN -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
         <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAE6dk-Oc544R2gZpwVqPQDhN0VGAjkxhw&loading=async&libraries=places&callback=initAutocomplete"></script>
@@ -893,7 +893,7 @@
 
                     // Extracting address components
                     var addressComponents = place.address_components;
-                    var country = '';
+                    var country = 'United States';
                     var state = '';
                     var city = '';
                     var zipCode = '';
@@ -970,4 +970,4 @@
                     }
                 });
         </script>
-    @endsection
+
