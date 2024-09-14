@@ -75,6 +75,7 @@ class ArtistRepository implements ArtistInterface
         }else{
             $data['created_by'] = Auth::guard('sales')->id();
         }
+        // dd($data);
 
         $user = User::create($data);
 
