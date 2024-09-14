@@ -199,7 +199,7 @@ public function index(Request $re)
             'phone' => 'numeric',
             'address' => 'nullable|string',
         ]);
-        $data = $request->only('name', 'username', 'email', 'phone', 'address', 'password', 'zipcode', 'profile_image', 'banner_image',"address", "latitude", "longitude", "address2", "country", "state", "city", "zipcode");
+        $data = $request->only('name', 'username', 'email', 'phone', 'address', 'password', 'zipcode', 'profile_image', 'banner_image',"latitude", "longitude", "address2", "country", "state", "city");
         $timeData = $request->only('sunday_from', 'sunday_to', 'monday_from', 'monday_to', 'tuesday_from', 'tuesday_to', 'wednesday_from', 'wednesday_to', 'thrusday_from', 'thrusday_to', 'friday_from', 'friday_to', 'saterday_from', 'saterday_to');
 
         $artistData = $request->only(
