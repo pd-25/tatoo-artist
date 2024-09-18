@@ -6,7 +6,7 @@
         <div class="col-lg-10">
             <div class="card">
                 <div class="card-title pr">
-                    <h4>All BannerImages</h4>
+                    <h4>All Carousel Images</h4>
                     @if (Session::has('msg'))
                         <p class="alert alert-info">{{ Session::get('msg') }}</p>
                     @endif
@@ -42,7 +42,7 @@
                                 <tr>
                                     <th>SN.</th>
                                     <th>Artist name</th>
-                                    <th>Banner image</th>
+                                    <th>Carousel image</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -72,6 +72,10 @@
 
 
                                             <td>
+                                                <a href="{{ route('artists.getArtistWiseBanneredit', encrypt($banner->id)) }}">
+                                                    <i class="ti-pencil btn btn-sm btn-primary"></i>
+                                                </a>
+                                                
                                                 @if (Auth::guard('artists')->check())
                                                     <form method="POST"
                                                         action="{{ route('artists.destroyBanner', encrypt($banner->id)) }}"

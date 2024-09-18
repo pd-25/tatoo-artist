@@ -18,8 +18,8 @@
             <div class="row" style="width: 100vw;">
                 <div class="container w100" style="text-align: center;">
                     <h2 class="text-center">TATTOO INFORMED CONSENT & MEDICAL HISTORY</h2>
-                    <h2 class="text-center">{{ $artistdata->name ?? '!name not found'}}</h2>
-                    <h2 class="text-center">{{$artistdata->address ?? '!Address not found' }}</h2>
+                    <h2 class="text-center"> {{ $artistdata->name }} </h2>
+                    <h2 class="text-center"> {{ $artistdata->name }} </h2>
                     <hr class="lin" />
                 </div>
             </div>
@@ -28,12 +28,12 @@
 
         <div class="text-justify" style="margin: 25px;">
             <p>
-                I am signing this agreement to induce {{ $artistdata->name }} and the Subcontracted Tattoo Artist (STA) to modify my tattoo and/o tattoo my person. In consideration of doing so, I hereby release {{ $artistdata->name ?? '!name not found' }} and its employees
+                I am signing this agreement to induce {{ $artistdata->name }} and the Subcontracted Tattoo Artist (STA) to modify my tattoo and/or tattoo my person. In consideration of doing so, I hereby release  {{ $artistdata->name }}  and its employees
                 and agents from all manner of liabilities, claims, actions and demands in law or in equity which I or my heirs have or might have now or hereafter by reason of complying with my request to be tattooed.
             </p>
             <p>
-                I am promising to disclose on this medical form and to my STA if I have any of the following conditions, including but not limited to, a history o Herpes Infection at the proposed procedure site, Diabetes, Allergic reactions
-                to latex or antibiotics, Hemophilia or other bleeding disorders, o Cardiac Vascular Disease, Epilepsy, Keloiding (excessive scarring), AIDS or HIV, AIDS Related Complex (ARC), under the influence of drugs 01 alcohol, and
+                I am promising to disclose on this medical form and to my STA if I have any of the following conditions, including but not limited to, a history of Herpes Infection at the proposed procedure site, Diabetes, Allergic reactions
+                to latex or antibiotics, Hemophilia or other bleeding disorders, or Cardiac Vascular Disease, Epilepsy, Keloiding (excessive scarring), AIDS or HIV, AIDS Related Complex (ARC), under the influence of drugs or alcohol, and
                 Swelling, Lumps, or signs of irritation of the area to be tattooed or any related health risks. I will disclose if I am currently using medication, including being prescribed antibiotics prior to dental or surgical
                 procedures. Additionally, I will share if other risk factors for bloodborne pathogen exposure exist in my daily life. To my knowledge I do not have any physical, mental, or medical impairments or disability which might
                 affect my well being as a direct or indirect result from my decision to have tattoo work done at this time. Some of these conditions include pregnancy and but not limed to a history of severe asthma attacks
@@ -41,17 +41,17 @@
             <p>
                 The procedure of getting a tattoo means the insertion of pigment in human skin tissue by piercing it with a needle. It is permanent. I am aware that tattooing is a hazardous activity, and am voluntarily participating with
                 knowledge of the risks involved, which include infection or other injury. I understand it can be expensive and painful to remove a tattoo and that the process is not always successful and may result in scarring. Additional
-                information regarding this procedure are furnished in {{ $artistdata->name ?? '!name not found' }}'s Post Procedure Instructions. With full knowledge of the dangers and risks involved I hereby agree and accept all risks of any kind or nature. Being of sound mind
-                and body, I hereby release any and all persons representing {{ $artistdata->name ?? '!name not found' }} from all responsibility and liability for any consequences
+                information regarding this procedure are  {{ $artistdata->name }} 's Post Procedure Instructions. With full knowledge of the dangers and risks involved I hereby agree and accept all risks of any kind or nature. Being of sound mind
+                and body, I hereby release any and all persons representing  {{ $artistdata->name }}  from all responsibility and liability for any consequences
             </p>
             <p>
-                that may stem from my decision to have tattoo work done. I hereby agree to hold harmless all owners, agents, employees, and representatives of {{ $artistdata->name ?? '!name not found' }}. I further agree not to file any suit, claim, or action for any damages,
-                demands, rights, or causes of action for any nature, including but not limited to injury, maiming, property damage or death to myself or any other person arising from my decision to have tattoo work done by {{ $artistdata->name ?? '!name not found' }}, its owners,
+                that may stem from my decision to have tattoo work done. I hereby agree to hold harmless all owners, agents, employees, and representatives of  {{ $artistdata->name }} . I further agree not to file any suit, claim, or action for any damages,
+                demands, rights, or causes of action for any nature, including but not limited to injury, maiming, property damage or death to myself or any other person arising from my decision to have tattoo work done by  {{ $artistdata->name }} , its owners,
                 agents, employees or representatives harmless of all damages, actions, causes of action, claim judgements, cost of litigation, attorney fees, and any and all costs and expenses which may arise from my decision to have tattoo
-                work done by {{ $artistdata->name ?? '!name not found' }}
+                work done by  {{ $artistdata->name }} 
             </p>
             <p>
-                I agree to leave the premises of {{ $artistdata->name ?? '!name not found' }} promptly upon request by any owner, agent, employee, or representative of {{ $artistdata->name ?? '!name not found' }} for any reason whatsoever. I agree these waivers and releases pertain to and are directed to protect {{ $artistdata->name ?? '!name not found' }}.
+                I agree to leave the premises of  {{ $artistdata->name }}  promptly upon request by any owner, agent, employee, or representative of  {{ $artistdata->name }}  for any reason whatsoever. I agree these waivers and releases pertain to and are directed to protect  {{ $artistdata->name }} .
             </p>
         </div>
         <div class="row" style="margin: 25px;">
@@ -350,7 +350,7 @@
         </div>
 
         <div class="row mt-5">
-            <p class="text-center" style="width: 100vw; text-align: center;">This intellectual property belongs to the owner of {{ $artistdata->name ?? '!name not found' }} and may not be copied without written consent from the author.</p>
+            <p class="text-center" style="width: 100vw; text-align: center;">This intellectual property belongs to the owner of  {{ $artistdata->name }} and may not be copied without written consent from the author.</p>
         </div>
     </body>
 </html>

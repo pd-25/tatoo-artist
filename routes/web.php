@@ -128,10 +128,12 @@ Route::group(['prefix' => 'user'], function () {
     Route::put('/artwork-edit/{id}', [ArtistArtworkController::class, 'updateArtwork'])->name('artist.updateArtwork');
     Route::delete('/artwork-delete/{id}', [ArtistArtworkController::class, 'destroyArtwork'])->name('artist.destroyArtwork');
 
-    Route::get('/banner-get', [ArtistBannerController::class, 'getArtistWiseBanner'])->name('artists.getArtistWiseBanner');
-    Route::get('/banner-upload', [ArtistBannerController::class, 'getForm'])->name('artists.bgetForm');
-    Route::post('/banner-upload', [ArtistBannerController::class, 'uploadArtistWiseBanner'])->name('artists.uploadArtistWiseBanner');
-    Route::delete('/banner-delete/{id}', [ArtistBannerController::class, 'destroyBanner'])->name('artists.destroyBanner');
+    Route::get('/carousel-get', [ArtistBannerController::class, 'getArtistWiseBanner'])->name('artists.getArtistWiseBanner');
+    Route::get('/editcarousel-carousel/{id}', [ArtistBannerController::class, 'editArtistWiseBanner'])->name('artists.getArtistWiseBanneredit');
+    Route::post('/artist/carousel/update/{id}', [ArtistBannerController::class, 'updateArtistWiseBanner'])->name('artists.updateArtistWiseBanner');
+    Route::get('/carousel-upload', [ArtistBannerController::class, 'getForm'])->name('artists.bgetForm');
+    Route::post('/carousel-upload', [ArtistBannerController::class, 'uploadArtistWiseBanner'])->name('artists.uploadArtistWiseBanner');
+    Route::delete('/carousel-delete/{id}', [ArtistBannerController::class, 'destroyBanner'])->name('artists.destroyBanner');
 
 Route::get('/add-customer', [ArtistController::class, 'addCustomer'])->name('admin.addCustomer');
 Route::post('/store-customer', [ArtistController::class, 'storeCustomer'])->name('admin.storeCustomer');

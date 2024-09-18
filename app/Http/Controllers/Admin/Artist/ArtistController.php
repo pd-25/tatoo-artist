@@ -168,13 +168,21 @@ public function index(Request $re)
     }
     
 
+    // public function destroyCustomer($id)
+    // {
+    //     User::where('id', $id)->update(['status' => 0]);
+    //     return redirect()->route('admin.customers')->with('msg', 'Data blocked successfully');
+    // }
+
     public function destroyCustomer($id)
     {
-        User::where('id', $id)->update(['status' => 0]);
-        return redirect()->route('admin.customers')->with('msg', 'Data blocked successfully');
+        // Find the user by id and delete
+        User::where('id', $id)->delete();
+        
+        // Redirect to the customers route with a success message
+        return redirect()->route('admin.customers')->with('msg', 'Data deleted successfully');
     }
-
-
+    
     /**
      * Show the form for creating a new resource.
      */

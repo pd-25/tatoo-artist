@@ -29,9 +29,12 @@ class BannerController extends Controller
     public function uploadArtistWiseBanner(Request $request){
         $request->validate([
             'user_id' => 'required|numeric|exists:users,id',
-            'banner_image' => 'required|image|mimes:jpeg,png,jpg,gif'
+            'banner_image' => 'required|image|mimes:jpeg,png,jpg,gif',
+            'description' => 'nullable',
+            'from_date' => 'date',
+            'to_date' => 'date'
         ]);
-        $data = $request->only('user_id', 'banner_image');
+        $data = $request->only('user_id', 'banner_image' ,'description', 'from_date', 'to_date');
         $store = $this->bannerInterface->storeBannerImage($data);
         if ($store) {
             return redirect()->route('artists.getArtistWiseBanner')->with('msg', 'New banner image uploded successfully.');
@@ -39,7 +42,50 @@ class BannerController extends Controller
             return back()->with('msg', 'Some error occured.');
         }
     }
-
+    public function editArtistWiseBanner($id)
+    {
+        // Fetch the banner data by ID
+        $data['banner'] = $this->bannerInterface->getBannerById(decrypt($id));;
+        $data['artists'] = $this->artistInterface->getAllArtistss();
+        if (!$data['banner']) {
+            return redirect()->route('artists.getArtistWiseBanner')->with('msg', 'Banner not found.');
+        }
+     
+        // Return the view with the banner data
+        return view('admin.banner.edit', $data);
+    }
+    
+    public function updateArtistWiseBanner(Request $request, $id)
+    {
+        $request->validate([
+            'user_id' => 'required|numeric|exists:users,id',
+            'banner_image' => 'image|mimes:jpeg,png,jpg,gif',
+            'description' => 'nullable',
+            'from_date' => 'date',
+            'to_date' => 'date'
+        ]);
+    
+        $id = $id; // Decrypt ID if needed
+        $data = $request->only('user_id','description', 'from_date', 'to_date');
+    
+        // Check if a new image is uploaded
+        if ($request->hasFile('banner_image')) {
+            $data['banner_image'] = $request->file('banner_image');
+        }
+    
+        // Debugging: check what is being passed to the update function
+       
+    
+        $update = $this->bannerInterface->updateBannerImage($id, $data);
+    
+        if ($update) {
+            return redirect()->route('artists.getArtistWiseBanner')->with('msg', 'Banner image updated successfully.');
+        } else {
+            return back()->with('msg', 'Some error occurred while updating.');
+        }
+    }
+    
+    
     public function destroyBanner(string $id)
     {
         try {

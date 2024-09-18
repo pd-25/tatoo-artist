@@ -103,14 +103,14 @@
                     @if (Auth::guard('artists')->check())
                         <li><a href="{{ route('artists.getArtistWiseBanner') }}"><i class="ti-layout-slider"></i> Carousel </a></li>
                         <li><a href="{{ route('admin.allComment') }}"><i class="ti-comment"></i> Comments</a></li>
-                        <li><a href="{{ route('artists.bgetForm') }}"><i class="ti-upload"></i> Banner</a></li>
+                        {{-- <li><a href="{{ route('artists.bgetForm') }}"><i class="ti-upload"></i> Carousel</a></li> --}}
                     @else
-                            <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Banner Management <span
+                            <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Carousel Management <span
                         class="sidebar-collapse-icon ti-angle-down"></span></a>
                             <ul>
-                                <li><a href="{{ route('banners.create') }}">Add Banner</a></li>
+                                <li><a href="{{ route('banners.create') }}">Add Carousel</a></li>
 
-                                <li><a href="{{ route('banners.index') }}">All Banners</a>
+                                <li><a href="{{ route('banners.index') }}">All Carousel</a>
                                 </li>
                             </ul>
                         </li>         

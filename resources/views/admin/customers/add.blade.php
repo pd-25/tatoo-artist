@@ -43,7 +43,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Phone</label><span class="text-danger">*</span>
-                                        <input type="text" name="phone" class="form-control" value="{{ old('phone') }}">
+                                        <input type="text" name="phone" id="phone" class="form-control" placeholder="+1 (111) 333-1234" maxlength="18" pattern="\+\d{1} \(\d{3}\) \d{3}-\d{4}" required>
                                         @error('phone')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ 'phone field is required' }}</strong>
@@ -64,7 +64,6 @@
                                 </div>
                             </div>
 
-
                             <button type="submit" class="btn btn-default">Submit</button>
                         </form>
                     </div>
@@ -72,4 +71,43 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('phone').addEventListener('input', function (e) {
+            // Remove non-digit characters except for "+"
+            var value = e.target.value.replace(/[^\d]/g, '');
+    
+            // Ensure the phone number starts with "1" (US country code)
+            if (value.length > 0 && value.charAt(0) !== '1') {
+                value = '1' + value;
+            }
+    
+            // Limit the number to 11 digits (including the country code "1")
+            if (value.length > 11) {
+                value = value.substring(0, 11);
+            }
+    
+            // Start formatting the phone number
+            var formattedValue = '+1 ';
+    
+            // Format the first 3 digits (area code)
+            if (value.length > 1) {
+                formattedValue += '(' + value.substring(1, 4) + ') ';
+            }
+    
+            // Format the next 3 digits
+            if (value.length >= 5) {
+                formattedValue += value.substring(4, 7) + '-';
+            }
+    
+            // Format the remaining 4 digits
+            if (value.length >= 8) {
+                formattedValue += value.substring(7, 11);
+            }
+    
+            // Set the formatted value back to the input field
+            e.target.value = formattedValue;
+        });
+    </script>
+    
+    
 @endsection

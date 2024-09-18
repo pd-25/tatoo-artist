@@ -76,4 +76,56 @@ class BannerRepository implements BannerInterface {
         }
         return 'not found';
     }
+    public function getBannerById($id)
+{
+    $find =  BannerImage::where('id', $id)->first();
+    if ($find) {
+        return $find;
+    } else {
+        return 'Not Found';
+    }
 }
+public function updateBannerImage($id, $data)
+{
+    // Find the existing banner by ID
+    $banner = BannerImage::find($id);
+
+    if (!$banner) {
+        return false; // Banner not found, return false
+    }
+
+    // Handle the new image upload if available
+    if (isset($data['banner_image']) && $data['banner_image'] != null) {
+        $imageFile = $data['banner_image'];
+
+        if (!empty($imageFile)) {
+            $manager = new ImageManager(new Driver());
+
+            // Read and resize the image
+            $image = $manager->read($imageFile)->resize(370, 246);
+
+            // Create a unique filename
+            $filename = time() . rand(0000, 9999) . "." . $imageFile->getClientOriginalExtension();
+
+            // Save the image to the public directory
+            $path = public_path('storage/BannerImage/' . $filename);
+            $image->save($path, 60); // Save image with 60% quality
+
+            // Remove old image if it exists
+            if ($banner->banner_image && file_exists(public_path('storage/BannerImage/' . $banner->banner_image))) {
+                unlink(public_path('storage/BannerImage/' . $banner->banner_image));
+            }
+
+            // Update data array with new image filename
+            $data['banner_image'] = $filename;
+        }
+    }
+
+    // Update the banner in the database
+    $banner->update($data);
+
+    return true;
+}
+
+}
+

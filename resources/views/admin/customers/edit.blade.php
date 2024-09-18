@@ -14,7 +14,6 @@
                     <div class="basic-form">
 
                         <form action="{{ route('admin.updateCustomer', $customer->id) }}" method="POST" enctype="multipart/form-data">
-
                             @csrf
 
                             <div class="row">
@@ -22,8 +21,6 @@
                                     <div class="form-group">
                                         <label>Full name</label><span class="text-danger">*</span>
                                         <input type="text" name="name" class="form-control" value="{{ $customer->name }}">
-
-
                                         @error('name')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ 'name field is required' }}</strong>
@@ -34,8 +31,6 @@
                                 <div class="form-group">
                                     <label>Username</label><span class="text-danger">*</span>
                                     <input type="text" name="username" class="form-control" value="{{ $customer->username }}" disabled>
-
-
                                     @error('username')
                                         <span class="text-danger" role="alert">
                                             <strong>{{ 'username field is required' }}</strong>
@@ -48,9 +43,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Phone</label><span class="text-danger">*</span>
-                                        <input type="text" name="phone" class="form-control" value="{{ $customer->phone }}">
-    
-    
+                                        <input type="text" name="phone" class="form-control" id="phone" value="{{ $customer->phone }}">
                                         @error('phone')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ 'phone field is required' }}</strong>
@@ -63,8 +56,6 @@
                                     <div class="form-group">
                                         <label>Email</label><span class="text-danger">*</span>
                                         <input type="text" name="email" class="form-control" value="{{ $customer->email }}">
-    
-    
                                         @error('email')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ 'email field is required' }}</strong>
@@ -79,33 +70,11 @@
                                     <div class="form-group">
                                         <label>Address</label><span class="text-danger">*</span>
                                         <input type="text" name="address" class="form-control" value="{{ $customer->address }}">
-    
-    
                                         @error('address')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ 'address field is required' }}</strong>
                                             </span>
                                         @enderror
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Password</label>
-                                        <input type="password" name="password" class="form-control">
-                                        @error('password')
-                                            <span class="text-danger" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Confirm Password</label>
-                                        <input type="password" name="password_confirmation" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -116,4 +85,46 @@
                 </div>
             </div>
         </div>
-    @endsection
+    </div>
+    <script>
+        document.getElementById('phone').addEventListener('input', function (e) {
+            // Remove non-digit characters except for "+"
+            var value = e.target.value.replace(/[^\d]/g, '');
+
+            // Ensure the phone number starts with "1" (US country code)
+            if (value.length > 0 && value.charAt(0) !== '1') {
+                value = '1' + value;
+            }
+
+            // Limit the number to 11 digits (including the country code "1")
+            if (value.length > 11) {
+                value = value.substring(0, 11);
+            }
+
+            // Start formatting the phone number
+            var formattedValue = '+1 ';
+
+            // Format the first 3 digits (area code)
+            if (value.length > 1) {
+                formattedValue += '(' + value.substring(1, 4) + ') ';
+            }
+
+            // Format the next 3 digits
+            if (value.length >= 5) {
+                formattedValue += value.substring(4, 7) + '-';
+            }
+
+            // Format the remaining 4 digits
+            if (value.length >= 8) {
+                formattedValue += value.substring(7, 11);
+            }
+
+            // Set the formatted value back to the input field
+            e.target.value = formattedValue;
+        });
+    </script>
+@endsection
+
+
+
+
