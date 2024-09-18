@@ -62,7 +62,7 @@
         <div class="row text-justify">
             <p>
                 I am signing this agreement to induce {{$artistinfo->name ?? '!name not found' }} and the Subcontracted Tattoo Artist
-                (STA) to modify my tattoo and/o tattoo my person. In consideration of doing so, I hereby release {{$artistinfo->name ?? '!name not found' }} and
+                (STA) to modify my tattoo and/or tattoo my person. In consideration of doing so, I hereby release {{$artistinfo->name ?? '!name not found' }} and
                 its
                 employees and agents from all manner of liabilities, claims, actions and demands in law or in equity
                 which I or my heirs have or might have now or hereafter by reason of complying with my request to be
@@ -70,11 +70,11 @@
             </p>
             <p>
                 I am promising to disclose on this medical form and to my STA if I have any of the following conditions,
-                including but not limited to, a history o Herpes Infection at the proposed procedure site, Diabetes,
+                including but not limited to, a history or Herpes Infection at the proposed procedure site, Diabetes,
                 Allergic
-                reactions to latex or antibiotics, Hemophilia or other bleeding disorders, o Cardiac Vascular Disease,
+                reactions to latex or antibiotics, Hemophilia or other bleeding disorders, or Cardiac Vascular Disease,
                 Epilepsy, Keloiding (excessive scarring), AIDS or HIV, AIDS Related Complex (ARC), under the influence
-                of drugs 01
+                of drugs or
                 alcohol, and Swelling, Lumps, or signs of irritation of the area to be tattooed or any related health
                 risks. I will disclose if I am currently using medication, including being prescribed antibiotics prior
                 to dental or

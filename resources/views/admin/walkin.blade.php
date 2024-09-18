@@ -134,17 +134,18 @@
                                                 <td>{{ @$quote->artist->name }}</td>
                                                 <td>
                                                     @if ($quote->link_send_status == 0)
-                                                    <button class="btn btn-sm btn-primary"
-                                                        onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Send
-                                                        Link</button>
-                                                @elseif($quote->link_send_status == 1)
-                                                    <button class="btn btn-sm btn-warning"
-                                                        onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Again
-                                                        Send Link</button>
-                                                @else
-                                                    <a href="{{ $quote->pdf_path }}" class="btn btn-sm btn-success"
-                                                        target="_blank">View Link</a>
-                                                @endif
+                                                            <button class="btn btn-sm btn-primary"
+                                                                onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Send Consent
+                                                                Link</button>
+                                                        @elseif($quote->link_send_status == 1)
+                                                            <button class="btn btn-sm btn-warning"
+                                                                onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Again
+                                                                Send Consent
+                                                                Link</button>
+                                                        @else
+                                                            <a href="{{ $quote->pdf_path }}" class="btn btn-sm btn-success"
+                                                                target="_blank">View Link</a>
+                                                        @endif
 
                                                 <form method="POST"
                                                 action="{{ route('quote.delete', encrypt($quote->id)) }}"
@@ -184,15 +185,14 @@
 
 @section('script')
     <script>
-        function Sendlink(authUserId) {
-            const inputEmail = document.getElementById("inputEmail").value;
+        function Sendlink(userid, artistid, dbid) {
             $.ajax({
                 type: "POST",
                 url: "{{ route('admin.SendLink') }}",
                 data: {
-                    'type': 'walkin',
-                    'email': inputEmail,
-                    'artistid': authUserId,
+                    'userid': userid,
+                    'artistid': artistid,
+                    'dbid': dbid,
                     '_token': '{{ csrf_token() }}'
                 },
                 beforeSend: function() {
@@ -214,7 +214,6 @@
                 }
             });
         }
-
         $(document).on("click", ".viewQuoteDetails", function() {
             let size = $(this).data('size');
             let color = $(this).data('color');

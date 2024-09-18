@@ -18,14 +18,31 @@ class ExpensesController extends Controller
         $this->artistInterface = $artistInterface;
     }
 
-    public function getExpenses(Request $request){
-        if (Auth::guard('artists')->check()){
-            $expense = ExpenseModel::where('user_id',Auth::guard('artists')->user()->id)->get();
-        }else{
-            $expense = ExpenseModel::with('user')->get();
+    public function getExpenses(Request $request)
+    {
+        $query = ExpenseModel::with('user');
+    
+        // Check if start_date and end_date are provided in the request
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $startDate = $request->start_date;
+            $endDate = $request->end_date;
+    
+            // Filter by transaction_date based on the start and end date
+            $query->whereBetween('transaction_date', [$startDate, $endDate]);
         }
-        return view('admin.expense.index',compact('expense'));
+    
+        // If user is an artist, filter only their expenses
+        if (Auth::guard('artists')->check()) {
+            $query->where('user_id', Auth::guard('artists')->user()->id);
+        }
+    
+        // Fetch the filtered or full list of expenses
+        $expense = $query->get();
+    
+        return view('admin.expense.index', compact('expense'));
     }
+    
+    
 
     public function AddexpensesForm(Request $request){
         $data['artists'] = $this->artistInterface->getAllArtistss();

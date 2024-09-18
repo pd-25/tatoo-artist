@@ -16,6 +16,25 @@
 
                 </div>
                 <div class="card-body">
+                    <form action="{{ route('admin.getExpenses') }}" method="GET" class="row g-3 d-flex justify-content-center">
+                        <div class="col-md-5">
+                            <label for="start_date" class="form-label">Start Date:</label>
+                            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
+                        </div>
+                    
+                        <div class="col-md-5">
+                            <label for="end_date" class="form-label">End Date:</label>
+                            <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                        </div>
+                    
+                        <div class="col-md-2 d-flex align-items-end mb-1 justify-content-center">
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </div>
+                    </form>
+                    
+                    
+                    
+                    
                     <div class="table-responsive">
                         <table class="table student-data-table m-t-20">
                             <thead>
