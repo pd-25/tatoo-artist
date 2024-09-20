@@ -193,7 +193,7 @@
             data: {
                 'type': 'walkin',
                 'email': inputEmail,
-                'artistid': "{{ auth()->guard('artists')->user()->id }}",
+                'artistid': "{{ auth()->guard('artists')->user()->id }} ||{{ auth()->guard('admins')->user()->id }}",
                 '_token': '{{ csrf_token() }}'
             },
             beforeSend: function() {
