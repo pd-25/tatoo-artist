@@ -19,7 +19,7 @@
                 <div class="container w100" style="text-align: center;">
                     <h2 class="text-center">TATTOO INFORMED CONSENT & MEDICAL HISTORY</h2>
                     <h2 class="text-center"> {{ $artistdata->name }} </h2>
-                    <h2 class="text-center"> {{ $artistdata->name }} </h2>
+                    <h2 class="text-center"> {{$artistinfo->address ?? '!Address not found' }}</h2>
                     <hr class="lin" />
                 </div>
             </div>
