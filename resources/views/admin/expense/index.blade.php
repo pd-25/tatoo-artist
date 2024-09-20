@@ -55,7 +55,7 @@
                                         <tr>
                                             <td>{{$index+1}}</td>
                                             <td>
-                                                {{ $expenses->user->name }}
+                                                {{ $expenses->user->name ?? '' }}
                                             </td>
                                             <td>
                                                 {{ date('jS F, Y', strtotime($expenses->created_at)) }}
