@@ -26,9 +26,15 @@ use Illuminate\Support\Facades\Auth;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::fallback(function(){
-    return response()->json([ 'Page Not Found.'], 404);
-});
+// Route::fallback(function(){
+//     return response()->json([ 'Page Not Found.'], 404);
+// });
+
+Route::get('/', function () {
+    return view('homeadmin');
+})->name('homeadmin');
+
+
 Route::get('/artist/login', function () {
     return view('userLogin');
 })->name('artistLogin');
