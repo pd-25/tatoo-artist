@@ -25,7 +25,7 @@
                     
                     @endif
                     <li><strong>Artist Name:</strong> {{ $payments->artist->name ?? 'N/A' }}</li>
-                    <li><strong>Address:</strong> #{{ $payments->artist->address ?? 'N/A' }}</li>
+                    <li><strong>Address:</strong> #{{ $payments->artist->address ?? 'N/A' }}-{{$payments->artist->zipcode}}<br>{{$payments->artist->address2}}</li>
                     
                 </ul>
                 </div>
