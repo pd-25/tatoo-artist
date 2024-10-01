@@ -13,12 +13,12 @@
 
             <div class="print-content">
                 <div class="row d-flex justify-content-between text-left align-items-end">
-                <ul class="list-unstyled">
+                <ul class="list-unstyled" style="width:30%">
                     <li><strong>Customer's Name:</strong> {{ $payments->customers_name ?? 'N/A' }}</li>
                     <li><strong>Invoice Id:</strong> #{{ $payments->id ?? 'N/A' }}</li>
                     
                 </ul>
-                <ul class="list-unstyled">
+                <ul class="list-unstyled" style="width:40%">
                     @if($payments->artist->banner_image)
                     <li  class="text-center"><img style="height: 100px; width: 100px" src="{{asset('storage/BannerImage/'. $payments->artist->banner_image)}}"></li>
 
