@@ -51,7 +51,7 @@
 
                                     <div class="form-group">
                                         <label>Price</label>
-                                        <input type="text" class="form-control" placeholder="Price" name="price" value="{{ old('price') }}">
+                                        <input type="number" class="form-control" placeholder="Price" name="price" value="{{ old('price') }}">
                                         @error('price')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -61,7 +61,7 @@
 
                                     <div class="form-group">
                                         <label>Tips</label>
-                                        <input type="text" class="form-control" placeholder="Tips" name="tips" value="{{ old('tips') }}">
+                                        <input type="number" class="form-control" placeholder="Tips" name="tips" value="{{ old('tips') }}">
                                         @error('tips')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -71,7 +71,7 @@
 
                                     <div class="form-group">
                                         <label>Total Due</label>
-                                        <input type="text" class="form-control" placeholder="Total Due" name="total_due" value="{{ old('total_due') }}">
+                                        <input type="number" class="form-control" placeholder="Total Due" name="total_due" value="{{ old('total_due') }}">
                                         @error('total_due')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -120,7 +120,7 @@
 
                                     <div class="form-group">
                                         <label>Deposit</label>
-                                        <input type="text" class="form-control" placeholder="Deposit" name="deposit" value="{{ old('deposit') }}">
+                                        <input type="number" class="form-control" placeholder="Deposit" name="deposit" value="{{ old('deposit') }}">
                                         @error('deposit')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -130,7 +130,7 @@
 
                                     <div class="form-group">
                                         <label>Fees</label>
-                                        <input type="text" class="form-control" placeholder="Fees" name="fees" value="{{ old('fees') }}">
+                                        <input type="number" class="form-control" placeholder="Fees" name="fees" value="{{ old('fees') }}">
                                         @error('fees')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
