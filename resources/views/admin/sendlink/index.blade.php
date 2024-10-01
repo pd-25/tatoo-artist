@@ -53,7 +53,7 @@
                 <div class="container">
                     <h5 class="text-center">TATTOO INFORMED CONSENT & MEDICAL HISTORY</h5>
                     <h5 class="text-center">{{$artistinfo->name}}</h5>
-                    <h5 class="text-center">{{$artistinfo->address ?? '!Address not found' }}</h5>
+                    <h5 class="text-center">{{$artistinfo->address  }}-{{$artistinfo->zipcode }}  <br>{{$artistinfo->address2 }} </h5>
                     <hr class="lin" />
                 </div>
             </div>
@@ -536,25 +536,33 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="signatureOption" class="form-label">Signature  Type</label>
-                                    <select id="signatureOption" class="form-control" onchange="toggleSignatureOptions(this)">
-                                        <option value="file">Upload File</option>
-                                        <option value="digital">Digital Signature</option>
-                                    </select>
+                            <div class="col-md-12">
+                                <div class="mb-3 ">
+                                    <label class="form-label">Signature Type</label>
+                                    <div class="d-flex gap-5">
+                                        <div>
+                                            <input type="radio" id="digitalSignature" name="signatureOption" value="digital" onchange="toggleSignatureOptions(this)" checked>
+                                            <label for="digitalSignature">Digital Signature</label>
+                                        </div>
+                                    <div >
+                                        <input type="radio" id="uploadFile" name="signatureOption" value="file" onchange="toggleSignatureOptions(this)" >
+                                        <label for="uploadFile">Upload File</label>
+                                    </div>
+                                    
+                                    </div>
                                 </div>
                             </div>
                             
+                            
                             <!-- File Upload Input -->
-                            <div id="file-input-div" class="mb-3">
+                            <div id="file-input-div" class="mb-3" style="display: none;">
                                 <label for="formFileSm" class="form-label">Upload Signature</label>
                                 <input  class="form-control form-control-sm" name="signature" id="formFileSm" type="file" accept="image/*" onchange="readURL(this, 'sign');" />
                                 <img id="sign" src="" class="display-none imgx" alt="your image" style="display: none; max-width: 100%; height: auto;" />
                             </div>
                             
                             <!-- Digital Signature Canvas -->
-                            <div id="digital-signature-div" class="form-group" style="display: none;">
+                            <div id="digital-signature-div" class="form-group" >
                                 <label for="digital_signature">Digital Signature (Draw Here)</label>
                                 <canvas id="signaturePad" class="border ffffdee"></canvas>
                                 <input  type="hidden" id="digital_signature" name="digital_signature">
@@ -702,35 +710,71 @@
     });
 
     // Toggle between signature file upload and digital signature drawing
-    function toggleSignatureOptions(select) {
-        const fileInputDiv = document.getElementById('file-input-div');
-        const digitalSignatureDiv = document.getElementById('digital-signature-div');
-        const fileInput = document.getElementById('formFileSm');  // Corrected File input field ID
-        const digitalSignatureInput = document.getElementById('digital_signature');  // Hidden input for digital signature
+    // function toggleSignatureOptions(select) {
+    //     const fileInputDiv = document.getElementById('file-input-div');
+    //     const digitalSignatureDiv = document.getElementById('digital-signature-div');
+    //     const fileInput = document.getElementById('formFileSm');  // Corrected File input field ID
+    //     const digitalSignatureInput = document.getElementById('digital_signature');  // Hidden input for digital signature
 
-        if (select.value === 'file') {
-            // Show file input and hide digital signature drawing area
-            fileInputDiv.style.display = 'block';
-            digitalSignatureDiv.style.display = 'none';
+    //     if (select.value === 'file') {
+    //         // Show file input and hide digital signature drawing area
+    //         fileInputDiv.style.display = 'block';
+    //         digitalSignatureDiv.style.display = 'none';
 
-            // Make file input required and remove the requirement from digital signature
-            fileInput.setAttribute('required', 'required');
-            digitalSignatureInput.removeAttribute('required');
-        } else if (select.value === 'digital') {
-            // Show digital signature drawing area and hide file input
-            fileInputDiv.style.display = 'none';
-            digitalSignatureDiv.style.display = 'block';
+    //         // Make file input required and remove the requirement from digital signature
+    //         fileInput.setAttribute('required', 'required');
+    //         digitalSignatureInput.removeAttribute('required');
+    //     } else if (select.value === 'digital') {
+    //         // Show digital signature drawing area and hide file input
+    //         fileInputDiv.style.display = 'none';
+    //         digitalSignatureDiv.style.display = 'block';
 
-            // Make digital signature required and remove the requirement from file input
-            digitalSignatureInput.setAttribute('required', 'required');
-            fileInput.removeAttribute('required');
-        }
+    //         // Make digital signature required and remove the requirement from file input
+    //         digitalSignatureInput.setAttribute('required', 'required');
+    //         fileInput.removeAttribute('required');
+    //     }
+    // }
+
+    // // Set initial state
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     toggleSignatureOptions(document.getElementById('signatureOption'));
+    // });
+    // Toggle between signature file upload and digital signature drawing
+
+ // Toggle between signature file upload and digital signature drawing
+function toggleSignatureOptions(select) {
+    const fileInputDiv = document.getElementById('file-input-div');
+    const digitalSignatureDiv = document.getElementById('digital-signature-div');
+    const fileInput = document.getElementById('formFileSm');  // File input field ID
+    const digitalSignatureInput = document.getElementById('digital_signature');  // Hidden input for digital signature
+
+    if (select.value === 'file') {
+        // Show file input and hide digital signature drawing area
+        fileInputDiv.style.display = 'block';
+        digitalSignatureDiv.style.display = 'none';
+
+        // Make file input required and remove the requirement from digital signature
+        fileInput.setAttribute('required', 'required');
+        digitalSignatureInput.removeAttribute('required');
+    } else if (select.value === 'digital') {
+        // Show digital signature drawing area and hide file input
+        fileInputDiv.style.display = 'none';
+        digitalSignatureDiv.style.display = 'block';
+
+        // Make digital signature required and remove the requirement from file input
+        digitalSignatureInput.setAttribute('required', 'required');
+        fileInput.removeAttribute('required');
     }
+}
 
-    // Set initial state
-    document.addEventListener('DOMContentLoaded', function () {
-        toggleSignatureOptions(document.getElementById('signatureOption'));
-    });
+// Set initial state on page load
+document.addEventListener('DOMContentLoaded', function () {
+    // Find the checked radio button (by default 'digital' is checked)
+    const defaultOption = document.querySelector('input[name="signatureOption"]:checked');
+    toggleSignatureOptions(defaultOption); // Call toggle with the default selected option
+});
+
+
 </script>
 
 

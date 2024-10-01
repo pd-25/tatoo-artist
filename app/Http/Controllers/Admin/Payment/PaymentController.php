@@ -114,81 +114,132 @@ class PaymentController extends Controller
         }
         return view('admin.payment.deposit',compact('payments'));
     }
-
-    public function AddpaymentForm(Request $request){
-
-        if(Auth::guard('artists')->check()){
-            $artists = User::where('type', '=', 'artist')->get();
+    public function getPaymentMethods(Request $request)
+    {
+        $paymentMethods = [];
+        $artistId = $request->artist_id;
+    
+        if ($artistId) {
+            $artist = User::where('id', $artistId)->where('type', 'artist')->first();
+            if ($artist && $artist->artistData) {
+                $artistData = $artist->artistData;
+                $paymentMethods = explode(',', $artistData->payment_method);  // Split by comma into an array
+            }
         }
-        elseif(Auth::guard('admins')->check()){
-            $artists = User::where('type', '=', 'artist')->get();
-        }else{
-            $salespersonId = Auth::guard('sales')->id(); 
-            $artists = User::where('created_by', $salespersonId)->where('type', '=', 'artist')->get();
-        }
-
-        $placements = Placement::all();
-        return view('admin.payment.create',compact('placements','artists'));
+    
+        return response()->json($paymentMethods);
     }
+    
+    public function AddpaymentForm(Request $request)
+    {
+        $artistId = null;
+    
+        // Check if an artist is logged in and get their ID
+        if (Auth::guard('artists')->check()) {
+            $artistId = Auth::guard('artists')->id();
+        } elseif ($request->artist_id) {
+            // Get the artist_id from the form if available (in case of admin or sales)
+            $artistId = $request->artist_id;
+        }
+    
+        // Fetch the list of artists for admins or salespersons
+        if (Auth::guard('admins')->check()) {
+            $artists = User::where('type', '=', 'artist')->get();
+        } elseif (Auth::guard('sales')->check()) {
+            $salespersonId = Auth::guard('sales')->id();
+            $artists = User::where('created_by', $salespersonId)
+                           ->where('type', '=', 'artist')
+                           ->get();
+        }
+    
+        // Initialize payment methods array
+        $paymentMethods = [];
+    
+        // Fetch the selected artist's payment methods if artistId is set
+        if ($artistId) {
+            $artist = User::where('id', $artistId)->where('type', 'artist')->first();
+            if ($artist && $artist->artistData) {
+                $artistData = $artist->artistData;
+                $paymentMethods = explode(',', $artistData->payment_method);  // Split by comma into an array
+            }
+        }
+    
+        // Retrieve placements
+        $placements = Placement::all();
+    
+        // Pass payment methods and other data to the view
+        return view('admin.payment.create', compact('placements', 'artists', 'paymentMethods', 'artistId'));
+    }
+    
+    
+    
+    
+    
 
-    public function AddpaymentPost(Request $request){
+    public function AddpaymentPost(Request $request)
+    {
+        // Validate the request inputs
         $this->validate($request, [
-            'artist_id'          => 'required',
-            'customers_name'       => 'required',
-            'design'               => 'required',
-            'price'                => 'required',
-            'bill_image'           => 'image|mimes:jpeg,png,jpg,gif'
-        ],[
+            'artist_id'        => 'required',
+            'customers_name'   => 'required|string', // Ensuring it's a string
+            'design'           => 'required|string', // Ensuring it's a string
+            'price'            => 'required|numeric', // Ensure price is numeric
+            'deposit'          => 'nullable|numeric', // Ensure deposit is numeric
+            'tips'             => 'nullable|numeric', // Ensure tips is numeric
+            'fees'             => 'nullable|numeric', // Ensure fees is numeric
+            'total_due'       => 'nullable|numeric', // Ensure total_due is numeric
+            'bill_image'       => 'image|mimes:jpeg,png,jpg,gif'
+        ], [
             'artist_id.required' => 'Please select an artist',
             'customers_name.required' => 'Please enter customer name',
             'design.required' => 'Please enter Design',
             'price.required' => 'Please enter price',
-            'banner_url.required' => 'Please enter banner url',
             'bill_image.required' => 'Please upload Bill Document',
         ]);
-
-        if(Auth::guard('artists')->check()){
+    
+        // Determine the user ID based on the authenticated guard
+        if (Auth::guard('artists')->check()) {
             $userid = Auth::guard('artists')->user()->id;
-        }
-        elseif(Auth::guard('admins')->check()){
+        } elseif (Auth::guard('admins')->check()) {
             $userid = Auth::guard('admins')->user()->id;
-        }else{
+        } else {
             $userid = Auth::guard('sales')->id();
         }
-
+    
+        // Handle the bill image upload
+        $path = '';
         if ($request->hasFile('bill_image')) {
-            // $path = Storage::disk('local')->put($request->file('photo')->getClientOriginalName(),$request->file('photo')->get());
-            //$path = $request->file('bill_image')->store('/DepositSlip/1/smalls');
             $file = $request->file('bill_image');
             $filename = $file->getClientOriginalName();
-            $file->storeAs('public/DepositSlip/',$filename);
-            $path =  Storage::url('public/DepositSlip/'.$filename);
-
-        }else{
-            $path = '';
+            $file->storeAs('public/DepositSlip/', $filename);
+            $path = Storage::url('public/DepositSlip/' . $filename);
         }
-
+    
+        // Create a new payment record
         $pmodel = new PaymentModel();
-            $pmodel->user_id                                       = $userid;
-            $pmodel->date                                          = date('Y-m-d');
-            $pmodel->artist_id                                   = $request['artist_id'];
-            $pmodel->customers_name                                = $request['customers_name'];
-            $pmodel->design                                        = $request['design'];
-            $pmodel->placement                                     = $request['placement'];
-            $pmodel->price                                         = $request['price'];
-            $pmodel->deposit                                       = $request['deposit'];
-            $pmodel->tips                                          = $request['tips'];
-            $pmodel->fees                                          = $request['fees'];
-            $pmodel->total_due                                     = $request['total_due'];
-            $pmodel->payment_method                                = $request['payment_method'];
-            $pmodel->bill_image                                    = $path;
+        $pmodel->user_id          = $userid;
+        $pmodel->date             = now()->format('Y-m-d'); // Automatically set today's date
+        $pmodel->artist_id        = $request->artist_id;
+        $pmodel->customers_name    = $request->customers_name;
+        $pmodel->design           = $request->design;
+        $pmodel->placement        = $request->placement;
+        $pmodel->price            = $request->price;
+        $pmodel->deposit          = $request->deposit ?? 0; // Default to 0 if null
+        $pmodel->tips             = $request->tips ?? 0; // Default to 0 if null
+        $pmodel->fees             = $request->fees ?? 0; // Default to 0 if null
+        $pmodel->total_due        = $request->total_due ?? 0; // Default to 0 if null
+        $pmodel->payment_method   = $request->payment_method;
+        $pmodel->bill_image       = $path;
+    
+        // Save the payment model
         $pmodel->save();
-
+    
         return redirect()->back()->with('message', 'Payment added successfully.');
     }
+    
+    
 
     public function editpaymentForm(Request $request,$id){
-     
         if(Auth::guard('artists')->check()){
             $artists = User::where('type', '=', 'artist')->get();
         }
@@ -205,58 +256,64 @@ class PaymentController extends Controller
         return view('admin.payment.edit',compact('payments','placements','artists'));
     }
 
-    public function editpaymentPost(Request $request,$id){
+    public function editpaymentPost(Request $request, $id)
+    {
+        // Validate the incoming request
         $this->validate($request, [
-            'artist_id'          => 'required',
-            'customers_name'       => 'required',
-            'design'               => 'required',
-            'price'                => 'required'
-        ],[
+            'artist_id' => 'required',
+            'customers_name' => 'required',
+            'design' => 'required',
+            'price' => 'required'
+        ], [
             'artist_id.required' => 'Please select an artist',
             'customers_name.required' => 'Please enter customer name',
             'design.required' => 'Please enter Design',
             'price.required' => 'Please enter price',
             'banner_url.required' => 'Please enter banner url'
         ]);
-
-        if(Auth::guard('artists')->check()){
-            $userid = Auth::guard('artists')->user()->id;
-        }else{
-            $userid = Auth::user()->id;
+    
+        // Retrieve the payment model using the decrypted ID
+        $pmodel = PaymentModel::find(decrypt($id));
+    
+        // Check if the model was found
+        if (!$pmodel) {
+            return redirect()->back()->withErrors(['message' => 'Payment not found.']);
         }
-
+    
+        // Get the user_id from the PaymentModel instance
+        $userid = $pmodel->user_id;
+    
+        // Handle file upload if a new image is provided
         if ($request->hasFile('bill_image')) {
             $file = $request->file('bill_image');
             $filename = $file->getClientOriginalName();
-            $file->storeAs('public/DepositSlip/',$filename);
-            $path =  Storage::url('public/DepositSlip/'.$filename);
-        }else{
-            if($request->old_image_path !=''){
-                $path = $request->old_image_path;
-            }else{
-                $path = '';
-            }
+            $file->storeAs('public/DepositSlip/', $filename);
+            $path = Storage::url('public/DepositSlip/' . $filename);
+        } else {
+            // Use old image path if provided
+            $path = $request->old_image_path ?? ''; // Use null coalescing operator for cleaner code
         }
-
-        $pmodel = PaymentModel::find(decrypt($id));
-            $pmodel->user_id                                       = $userid;
-            $pmodel->date                                          = date('Y-m-d');
-            $pmodel->artist_id                                   = $request->input('artist_id');
-            $pmodel->customers_name                                = $request->input('customers_name');
-            $pmodel->design                                        = $request->input('design');
-            $pmodel->placement                                     = $request->input('placement');
-            $pmodel->price                                         = $request->input('price');
-            $pmodel->deposit                                       = $request->input('deposit');
-            $pmodel->tips                                          = $request->input('tips');
-            $pmodel->fees                                          = $request->input('fees');
-            $pmodel->total_due                                     = $request->input('total_due');
-            $pmodel->payment_method                                = $request->input('payment_method');
-            $pmodel->bill_image                                    = $path;
+    
+        // Update model fields
+        $pmodel->date = date('Y-m-d');
+        $pmodel->artist_id = $request->input('artist_id');
+        $pmodel->customers_name = $request->input('customers_name');
+        $pmodel->design = $request->input('design');
+        $pmodel->placement = $request->input('placement');
+        $pmodel->price = $request->input('price');
+        $pmodel->deposit = $request->input('deposit');
+        $pmodel->tips = $request->input('tips');
+        $pmodel->fees = $request->input('fees');
+        $pmodel->total_due = $request->input('total_due');
+        $pmodel->payment_method = $request->input('payment_method');
+        $pmodel->bill_image = $path;
+    
+        // Save the updated model
         $pmodel->save();
+    
         return redirect()->back()->with('message', 'Payment updated successfully.');
-
-
     }
+    
 
     public function deletepaymentForm(Request $request,$id){
         $pmodel = PaymentModel::find(decrypt($id));

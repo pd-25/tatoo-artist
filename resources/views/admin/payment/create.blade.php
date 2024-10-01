@@ -21,14 +21,15 @@
                                         @if (Auth::guard('artists')->check())
                                             <input type="text" class="form-control" value="{{ Auth::guard('artists')->user()->name }}" readonly>
                                             <input type="hidden" name="artist_id" value="{{ Auth::guard('artists')->user()->id }}">
+                                            <input type="hidden" id="artist-id" value="{{ Auth::guard('artists')->user()->id }}">
                                         @else
-                                        <select name="artist_id" class="form-control">
-                                            <option value="">select artist</option>
-                                            @foreach ($artists as $artist)
-                                                <option {{ old('artist_id') == $artist->id ? 'selected' : '' }}
-                                                    value="{{ $artist->id }}">{{ $artist->name }}</option>
-                                            @endforeach
-                                        </select>
+                                            <select name="artist_id" id="artist-select" class="form-control">
+                                                <option value="">Select artist</option>
+                                                @foreach ($artists as $artist)
+                                                    <option {{ old('artist_id') == $artist->id ? 'selected' : '' }}
+                                                        value="{{ $artist->id }}">{{ $artist->name }}</option>
+                                                @endforeach
+                                            </select>
                                         @endif
 
                                         @error('artist_id')
@@ -37,7 +38,6 @@
                                             </span>
                                         @enderror
                                     </div>
-
 
                                     <div class="form-group">
                                         <label>Design</label><span class="text-danger">*</span>
@@ -48,7 +48,6 @@
                                             </span>
                                         @enderror
                                     </div>
-
 
                                     <div class="form-group">
                                         <label>Price</label>
@@ -83,7 +82,6 @@
                                     <div class="form-group">
                                         <label>Deposit Slip</label>
                                         <input type="file" class="form-control" name="bill_image">
-
                                         @error('bill_image')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -94,7 +92,6 @@
                                 </div>
 
                                 <div class="col-md-6">
-
                                     <div class="form-group">
                                         <label>Customers Name</label><span class="text-danger">*</span>
                                         <input type="text" class="form-control" placeholder="Customers Name" name="customers_name" value="{{ old('customers_name') }}" required>
@@ -107,7 +104,6 @@
 
                                     <div class="form-group">
                                         <label>Placement</label>
-                                        {{-- <input type="text" class="form-control" placeholder="Placement" name="placement" value="{{ old('placement') }}"> --}}
                                         <select name="placement" class="form-control" value="{{ old('placement') }}">
                                             <option value="">select placement</option>
                                             @foreach ($placements as $placement)
@@ -132,8 +128,6 @@
                                         @enderror
                                     </div>
 
-
-
                                     <div class="form-group">
                                         <label>Fees</label>
                                         <input type="text" class="form-control" placeholder="Fees" name="fees" value="{{ old('fees') }}">
@@ -145,13 +139,11 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label>Total Due</label>
-                                        <select name="payment_method" class="form-control">
-                                            <option value="atm_debit">Atm/Debit</option>
-                                            <option value="cash">Cash</option>
-                                            <option value="credit_card">Credit Card</option>
-                                            <option value="gift_card">Gift Card</option>
+                                        <label>Payment Method</label>
+                                        <select name="payment_method" id="payment-method" class="form-control">
+                                            <option value="">Select Payment Method</option>
                                         </select>
+
                                         @error('payment_method')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -168,4 +160,49 @@
                 </div>
             </div>
         </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                // Check if the artist is logged in
+                var artistId = $('#artist-id').val();
+                if (artistId) {
+                    fetchPaymentMethods(artistId);
+                }
+
+                // Change event for artist selection
+                $('#artist-select').change(function() {
+                    var selectedArtistId = $(this).val();
+                    if (selectedArtistId) {
+                        fetchPaymentMethods(selectedArtistId);
+                    } else {
+                        $('#payment-method').empty().append('<option value="">Select Payment Method</option>');
+                    }
+                });
+
+                function fetchPaymentMethods(artistId) {
+                    $.ajax({
+                        url: '{{ route("admin.getPaymentMethods") }}', // Define a route to fetch payment methods
+                        type: 'GET',
+                        data: { artist_id: artistId },
+                        success: function(data) {
+                            var paymentMethodSelect = $('#payment-method');
+                            paymentMethodSelect.empty(); // Clear previous options
+                            paymentMethodSelect.append('<option value="">Select Payment Method</option>');
+
+                            if (data.length > 0) {
+                                $.each(data, function(index, method) {
+                                    paymentMethodSelect.append('<option value="' + method.toLowerCase().replace(/ /g, '_') + '">' + method.charAt(0).toUpperCase() + method.slice(1) + '</option>');
+                                });
+                            } else {
+                                paymentMethodSelect.append('<option value="">No Payment Methods Available</option>');
+                            }
+                        },
+                        error: function(xhr) {
+                            console.error(xhr);
+                        }
+                    });
+                }
+            });
+        </script>
     @endsection

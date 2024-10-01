@@ -48,7 +48,55 @@ class ArtworkRepository implements ArtworkInterface
 
         return $artworks;
     }
-
+    protected function resizeImage($originalImagePath, $resizedImagePath, $newWidth, $newHeight)
+    {
+        // Get the image type and file size
+        list($width, $height, $type) = getimagesize($originalImagePath);
+        $fileSize = filesize($originalImagePath);
+        
+        // Create an image resource from the original file
+        switch ($type) {
+            case IMAGETYPE_JPEG:
+                $srcImage = imagecreatefromjpeg($originalImagePath);
+                break;
+            case IMAGETYPE_PNG:
+                $srcImage = imagecreatefrompng($originalImagePath);
+                break;
+            case IMAGETYPE_GIF:
+                $srcImage = imagecreatefromgif($originalImagePath);
+                break;
+            default:
+                return false;
+        }
+    
+        // Calculate the new dimensions while keeping the aspect ratio
+        $aspectRatio = $width / $height;
+        if ($newWidth / $newHeight > $aspectRatio) {
+            $newWidth = $newHeight * $aspectRatio;
+        } else {
+            $newHeight = $newWidth / $aspectRatio;
+        }
+    
+        // Create a new blank image with new dimensions
+        $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
+        
+        // Resize the original image into the new image
+        imagecopyresampled($resizedImage, $srcImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+        
+        // Save the resized image temporarily
+        imagejpeg($resizedImage, $resizedImagePath, 100); // Save with maximum quality first
+        
+        // Check file size and apply compression if necessary
+        $finalFileSize = filesize($resizedImagePath);
+        if ($finalFileSize > 50 * 1024) { // If file size is greater than 50 KB
+            imagejpeg($resizedImage, $resizedImagePath, 75); // Reduce quality for JPEG
+        }
+    
+        // Free memory
+        imagedestroy($srcImage);
+        imagedestroy($resizedImage);
+    }
+    
     public function storeArtworkData(array $data)
     {
         $date = date('md') . substr(date('Y'), 2);
@@ -57,13 +105,52 @@ class ArtworkRepository implements ArtworkInterface
         $data['title'] = $username . '_' . $date . '_' . ($check_if_uploded + 1);
         
         if (isset($data['image']) && $data['image'] != null) {
-            $content_db = $data['title']. "." . $data['image']->getClientOriginalExtension();
-            $data['image']->storeAs("public/ArtworkImage", $content_db);
+            $content_db = $data['title'] . "." . $data['image']->getClientOriginalExtension();
+            
+            // Resizing the image before storing it
+            $originalImagePath = $data['image']->getPathName();
+            $resizedImagePath = storage_path("app/public/ArtworkImage/" . $content_db);
+            
+            // Call a helper function to resize the image
+            $this->resizeImage($originalImagePath, $resizedImagePath, 400, 400); // Adjust the size as needed
+            
+            // Save the image filename to the database
             $data['image'] = $content_db;
         }
-
+    
         return Artwork::create($data);
     }
+    
+    public function updateArtwork($data, $id)
+    {
+        $find = Artwork::where('id', $id)->first();
+        if ($find) {
+            if (isset($data['image']) && $data['image'] != null) {
+                // Delete the old image
+                File::delete(public_path("storage/ArtworkImage/" . $find->image));
+    
+                // Prepare the new image filename
+                $content_db = pathinfo($find->image, PATHINFO_FILENAME) . "." . $data['image']->getClientOriginalExtension();
+                
+                // Resize the new image before storing it
+                $originalImagePath = $data['image']->getPathName();
+                $resizedImagePath = storage_path("app/public/ArtworkImage/" . $content_db);
+    
+                // Call a helper function to resize the image
+                $this->resizeImage($originalImagePath, $resizedImagePath, 400, 400); // Adjust the size as needed
+                
+                // Update the image path in the data array
+                $data['image'] = $content_db;
+            }
+    
+            // Update the artwork data
+            return $find->update($data);
+        } else {
+            return 'No data';
+        }
+    }
+    
+    
 
     public function getSingleArtwork($id)
     {
@@ -75,25 +162,7 @@ class ArtworkRepository implements ArtworkInterface
         }
     }
 
-    public function updateArtwork($data, $id)
-    {
-        $find =  Artwork::where('id', $id)->first();
-        if ($find) {
-           
-            if (isset($data['image']) && $data['image'] != null) {
-                File::delete(public_path("storage/ArtworkImage/" . $find->image));
-                $content_db =  pathinfo($find->image, PATHINFO_FILENAME) . "." . $data['image']->getClientOriginalExtension();
-                $data['image']->storeAs("public/ArtworkImage", $content_db);
-                $data['image'] = $content_db;
-            }
-
-           
-            return $find->update($data);
-        } else {
-            return 'No data';
-        }
-    }
-
+  
     public function deleteArtwork($id){
         $find =  Artwork::where('id', $id)->first();
         if($find) {

@@ -148,6 +148,7 @@ Route::get('/customers/{id}', [ArtistController::class, 'editCustomer'])->name('
 Route::post('/customers/{id}', [ArtistController::class, 'updateCustomer'])->name('admin.updateCustomer');
 Route::delete('/customers/{id}', [ArtistController::class, 'destroyCustomer'])->name('admin.destroyCustomer');
 
+Route::get('/admin/get-payment-methods', [PaymentController::class, 'getPaymentMethods'])->name('admin.getPaymentMethods');
 
 
 
