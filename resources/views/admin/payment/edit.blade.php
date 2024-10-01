@@ -1,6 +1,8 @@
 @extends('admin.layout.main')
 @section('title', env('APP_NAME') . ' | Edit Payment')
 @section('content')
+<style>
+    </style>
     <div class="row justify-content-center">
         <div class="col-lg-11">
             <div class="card">
@@ -168,6 +170,7 @@
                             </div>
 
                             <button type="submit" class="btn btn-default">Update</button>
+                            <a href="{{ route('admin.paymentview', encrypt($payments->id)) }}" type="button" class="btn btn-primary" >Print</a>
                         </form>
                     </div>
                 </div>
