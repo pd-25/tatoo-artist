@@ -492,12 +492,10 @@ class DashboardController extends Controller
         $tatto->driving_licence_back                          = $driving_licence_back_path;
         $tatto->save();
 
-        $data['artistdata'] = DB::table('users')
-            ->where('id', $request['artist_id'])
-            ->first();
+        $data['artistdata'] = User::find($request['artist_id']);
             
         $data['tattodata'] = Tattoform::where('id', $tatto->id)->first();
-
+        return view('admin.email.tatto-submited-form', $data);
         // GET User Details
         $user = User::where('id', $request['user_id'])->first();
 
