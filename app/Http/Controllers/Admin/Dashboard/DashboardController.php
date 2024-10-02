@@ -495,7 +495,7 @@ class DashboardController extends Controller
         $data['artistdata'] = User::find($request['artist_id']);
             
         $data['tattodata'] = Tattoform::where('id', $tatto->id)->first();
-        return view('admin.email.tatto-submited-form', $data);
+        // return view('admin.email.tatto-submited-form', $data);
         // GET User Details
         $user = User::where('id', $request['user_id'])->first();
 
