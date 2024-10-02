@@ -48,7 +48,7 @@
                                         <td>
                                             {{ $payment->design }}
                                         </td>
-                                        <td> {{ $payment->placementData->title }}</td>
+                                        <td> {{ $payment->placementData->title ?? '' }}</td>
                                         <td>
                                             {{ $payment->price }}
                                         </td>
