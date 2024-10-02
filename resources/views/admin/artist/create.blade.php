@@ -706,7 +706,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Shop Address</label><span class="text-danger">*</span>
-                                        <input type="text" class="form-control" id="shop_address" placeholder="Shop Address" name="shop_address"> 
+                                        <input readonly type="text" class="form-control" id="shop_address" placeholder="Shop Address" name="shop_address"> 
                                         @error('shop_address')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -873,16 +873,18 @@
 
 
         <script>
-             // Function to initialize the autocomplete
-             function initAutocomplete() {
+            // Function to initialize the autocomplete
+            function initAutocomplete() {
                 // Create the autocomplete object, restricting the search to the US
                 var input = $('#autocomplete')[0];
                 var options = {
                     types: ['address'],
-                    componentRestrictions: { country: 'us' }
+                    componentRestrictions: {
+                        country: 'us'
+                    }
                 };
                 var autocomplete = new google.maps.places.Autocomplete(input, options);
-
+        
                 // Event listener for when a place is selected
                 autocomplete.addListener('place_changed', function() {
                     var place = autocomplete.getPlace();
@@ -890,15 +892,16 @@
                         console.log("No details available for input: '" + place.name + "'");
                         return;
                     }
-
+        
                     // Extracting address components
                     var addressComponents = place.address_components;
                     var country = '';
                     var state = '';
                     var city = '';
                     var zipCode = '';
-
-                    // Loop through each component to find country, state, city, and zip code
+                    var route = '';  // To store the street name
+        
+                    // Loop through each component to find country, state, city, zip code, and route
                     $.each(addressComponents, function(index, component) {
                         var componentType = component.types[0];
                         if (componentType === 'country') {
@@ -909,65 +912,81 @@
                             city = component.long_name;
                         } else if (componentType === 'postal_code') {
                             zipCode = component.long_name;
+                        } else if (componentType === 'route') {
+                            route = component.long_name; // Get the route name
                         }
                     });
-
+        
                     // Extract latitude and longitude
                     var latitude = place.geometry.location.lat();
                     var longitude = place.geometry.location.lng();
-
-                    if(country.length > 0){
+        
+                    // Fill in the form fields with the extracted values
+                    if (country.length > 0) {
                         $("#country").val(country);
                     }
-
-                    if(state.length > 0){
+        
+                    if (state.length > 0) {
                         $("#state").val(state);
                     }
-
-                    if(city.length > 0){
+        
+                    if (city.length > 0) {
                         $("#city").val(city);
                     }
-
-                    if(zipCode.length > 0){
+        
+                    if (zipCode.length > 0) {
                         $("#zipcode").val(zipCode);
                     }
-
+        
                     $("#latitude").val(latitude);
                     $("#longitude").val(longitude);
-                    $("#shop_address").val($("#autocomplete").val());
+                    
+                    // Set only the route name as the shop address
+                    $("#shop_address").val(route);
+        
                     // Display the extracted address components
                     console.log('Country:', country);
                     console.log('State:', state);
                     console.log('City:', city);
                     console.log('Zip Code:', zipCode);
+                    console.log('Route (Shop Address):', route);
                     console.log('Latitude:', latitude);
                     console.log('Longitude:', longitude);
                 });
             }
-
+        
             $(document).ready(function() {
+                // Phone number input mask
                 $('#phone').inputmask('(999) 999-9999');
-
-                $("#submitProfileUpdate").on("click",function(){
-                    $("#phone").inputmask({removeMaskOnSubmit: true});
+        
+                // Submit button functionality
+                $("#submitProfileUpdate").on("click", function() {
+                    $("#phone").inputmask({
+                        removeMaskOnSubmit: true
+                    });
                     $("#artistProfileUpdate").submit();
                 });
-            });
-              $("#autocomplete").on("change", function() {
+        
+                // Update shop address when the input changes
+                $("#autocomplete").on("change", function() {
                     $("#shop_address").val($(this).val());
                 });
-                  $("#hourly_rate").on("input", function() {
+        
+                // Limit input for hourly rate
+                $("#hourly_rate").on("input", function() {
                     var value = $(this).val();
                     if (value.length > 3) {
                         $(this).val(value.slice(0, 3));
                     }
                 });
-
+        
+                // Limit input for years in trade
                 $("#years_in_trade").on("input", function() {
                     var value = $(this).val();
                     if (value.length > 2) {
                         $(this).val(value.slice(0, 2));
                     }
                 });
+            });
         </script>
     @endsection

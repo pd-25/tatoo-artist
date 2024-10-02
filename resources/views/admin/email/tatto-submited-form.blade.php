@@ -19,7 +19,15 @@
                 <div class="container w100" style="text-align: center;">
                     <h2 class="text-center">TATTOO INFORMED CONSENT & MEDICAL HISTORY</h2>
                     <h2 class="text-center"> {{ $artistdata->name }} </h2>
-                    <h2 class="text-center"> {{$artistdata->address}}-{{$artistdata->zipcode }}<br>{{$artistdata->address2 }}</h2>
+
+                    <h5 class="text-center">
+                        {{ $artistdata->artistData->shop_address ?? '' }}
+                        @if($artistdata->address2) , {{ $artistdata->address2 }} @endif
+                        @if($artistdata->city) , {{ $artistdata->city }} @endif
+                        @if($artistdata->state) , {{ $artistdata->state }} @endif
+                        @if($artistdata->country) , {{ $artistdata->country }} @endif
+                        @if($artistdata->zipcode) - {{ $artistdata->zipcode }} @endif
+                    </h5>
                     <hr class="lin" />
                 </div>
             </div>

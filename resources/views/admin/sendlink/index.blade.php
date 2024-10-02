@@ -53,7 +53,14 @@
                 <div class="container">
                     <h5 class="text-center">TATTOO INFORMED CONSENT & MEDICAL HISTORY</h5>
                     <h5 class="text-center">{{$artistinfo->name}}</h5>
-                    <h5 class="text-center">{{$artistinfo->address  }}-{{$artistinfo->zipcode }}  <br>{{$artistinfo->address2 }} </h5>
+                    <h5 class="text-center">
+                        {{ $artistinfo->artistData->shop_address ?? '' }}
+                        @if($artistinfo->address2) , {{ $artistinfo->address2 }} @endif
+                        @if($artistinfo->city) , {{ $artistinfo->city }} @endif
+                        @if($artistinfo->state) , {{ $artistinfo->state }} @endif
+                        @if($artistinfo->country) , {{ $artistinfo->country }} @endif
+                        @if($artistinfo->zipcode) - {{ $artistinfo->zipcode }} @endif
+                    </h5>
                     <hr class="lin" />
                 </div>
             </div>
