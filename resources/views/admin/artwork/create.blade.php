@@ -37,7 +37,7 @@
                                                 <option value="">select artists</option>
                                                 @foreach ($artists as $artist)
                                                     <option data-zipcode="{{ $artist->zipcode }}" value="{{ $artist->id }}">
-                                                        {{ $artist->username }}</option>
+                                                        {{ $artist->name }}</option>
                                                 @endforeach
                                             </select>
                                             @endif

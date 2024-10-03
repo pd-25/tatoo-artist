@@ -15,7 +15,7 @@ class PaymentController extends Controller
 {
     public function getAcceptPayment(Request $request){
         if (Auth::guard('artists')->check()){
-            $payments = PaymentModel::with('placementData','artist')->where('user_id',Auth::guard('artists')->user()->id)->get();
+            $payments = PaymentModel::with('placementData','artist')->where('artist_id',Auth::guard('artists')->user()->id)->get();
         } 
         elseif(Auth::guard('admins')->check()){
             $payments = PaymentModel::with('placementData', 'user', 'artist')->get();
@@ -32,7 +32,7 @@ class PaymentController extends Controller
 
     public function getDepositSlips(Request $request){
         if (Auth::guard('artists')->check()){
-            $payments = PaymentModel::with('user','artist')->where('user_id',Auth::guard('artists')->user()->id)->get();
+            $payments = PaymentModel::with('user','artist')->where('artist_id',Auth::guard('artists')->user()->id)->get();
         }
         elseif (Auth::guard('admins')->check()){
             $payments = PaymentModel::with('user','artist')->get();
@@ -129,47 +129,49 @@ class PaymentController extends Controller
     
         return response()->json($paymentMethods);
     }
-    
     public function AddpaymentForm(Request $request)
-    {
-        $artistId = null;
-    
-        // Check if an artist is logged in and get their ID
-        if (Auth::guard('artists')->check()) {
-            $artistId = Auth::guard('artists')->id();
-        } elseif ($request->artist_id) {
-            // Get the artist_id from the form if available (in case of admin or sales)
-            $artistId = $request->artist_id;
-        }
-    
-        // Fetch the list of artists for admins or salespersons
-        if (Auth::guard('admins')->check()) {
-            $artists = User::where('type', '=', 'artist')->get();
-        } elseif (Auth::guard('sales')->check()) {
-            $salespersonId = Auth::guard('sales')->id();
-            $artists = User::where('created_by', $salespersonId)
-                           ->where('type', '=', 'artist')
-                           ->get();
-        }
-    
-        // Initialize payment methods array
-        $paymentMethods = [];
-    
-        // Fetch the selected artist's payment methods if artistId is set
-        if ($artistId) {
-            $artist = User::where('id', $artistId)->where('type', 'artist')->first();
-            if ($artist && $artist->artistData) {
-                $artistData = $artist->artistData;
-                $paymentMethods = explode(',', $artistData->payment_method);  // Split by comma into an array
-            }
-        }
-    
-        // Retrieve placements
-        $placements = Placement::all();
-    
-        // Pass payment methods and other data to the view
-        return view('admin.payment.create', compact('placements', 'artists', 'paymentMethods', 'artistId'));
+{
+    $artistId = null;
+
+    // Check if an artist is logged in and get their ID
+    if (Auth::guard('artists')->check()) {
+        $artistId = Auth::guard('artists')->id();
+        $artists = collect(); // Initialize an empty collection if the user is an artist
+    } elseif ($request->artist_id) {
+        // Get the artist_id from the form if available (in case of admin or sales)
+        $artistId = $request->artist_id;
+        $artists = collect(); // Ensure it's initialized even if no guard matches
     }
+
+    // Fetch the list of artists for admins or salespersons
+    if (Auth::guard('admins')->check()) {
+        $artists = User::where('type', '=', 'artist')->get();
+    } elseif (Auth::guard('sales')->check()) {
+        $salespersonId = Auth::guard('sales')->id();
+        $artists = User::where('created_by', $salespersonId)
+                       ->where('type', '=', 'artist')
+                       ->get();
+    }
+
+    // Initialize payment methods array
+    $paymentMethods = [];
+
+    // Fetch the selected artist's payment methods if artistId is set
+    if ($artistId) {
+        $artist = User::where('id', $artistId)->where('type', 'artist')->first();
+        if ($artist && $artist->artistData) {
+            $artistData = $artist->artistData;
+            $paymentMethods = explode(',', $artistData->payment_method);  // Split by comma into an array
+        }
+    }
+
+    // Retrieve placements
+    $placements = Placement::all();
+
+    // Pass payment methods and other data to the view
+    return view('admin.payment.create', compact('placements', 'artists', 'paymentMethods', 'artistId'));
+}
+
     
     
     

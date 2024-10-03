@@ -32,7 +32,7 @@
                                         <select name="user_id" class="form-control" value="{{ old('user_id') }}">
                                             <option value="">select artists</option>
                                             @foreach ($artists as $artist)
-                                                <option value="{{ $artist->id }}">{{ $artist->username }}</option>
+                                                <option value="{{ $artist->id }}">{{ $artist->name }}</option>
                                             @endforeach
                                         </select>
                                     @endif
