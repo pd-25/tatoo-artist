@@ -858,7 +858,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label >Shop Address</label><span class="text-danger">*</span>
-                                    <input readonly type="text" class="form-control" id="shop_address"
+                                    <input hidden readonly type="text" class="form-control" id="shop_address"
                                         placeholder="Shop Address" name="shop_address"
                                         value="{{ @$artistData->shop_address }}">
                                     @error('shop_address')
@@ -1161,7 +1161,9 @@
             var state = '';
             var city = '';
             var zipCode = '';
+            var streetNumber = '';
             var route = '';  // To store the street name
+            
 
             // Loop through each component to find country, state, city, zip code, and route
             $.each(addressComponents, function(index, component) {
@@ -1174,10 +1176,17 @@
                     city = component.long_name;
                 } else if (componentType === 'postal_code') {
                     zipCode = component.long_name;
+                } else if (componentType === 'street_number') {
+                    streetNumber = component.long_name; // Get street number
                 } else if (componentType === 'route') {
-                    route = component.long_name; // Get the route name
+                    route = component.long_name; // Get route name
                 }
             });
+
+            // Combine street number and route
+            if (streetNumber && route) {
+                route = streetNumber + ' ' + route;
+            }
 
             // Extract latitude and longitude
             var latitude = place.geometry.location.lat();

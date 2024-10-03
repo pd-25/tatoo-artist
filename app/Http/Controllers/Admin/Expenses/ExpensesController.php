@@ -57,10 +57,10 @@ class ExpensesController extends Controller
 
     public function AddexpensesPost(Request $request){
         $this->validate($request, [
-            'note'          => 'required',
+           
             'expense_items'       => 'required',
         ],[
-            'note.required' => 'Please enter note',
+            
             'expense_items.required' => 'Please select expense',
         ]);
 
