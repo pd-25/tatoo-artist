@@ -857,7 +857,7 @@
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label >Shop Address</label><span class="text-danger">*</span>
+                                    
                                     <input hidden readonly type="text" class="form-control" id="shop_address"
                                         placeholder="Shop Address" name="shop_address"
                                         value="{{ @$artistData->shop_address }}">

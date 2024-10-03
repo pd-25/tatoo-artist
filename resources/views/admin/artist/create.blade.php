@@ -705,7 +705,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Shop Address</label><span class="text-danger">*</span>
+                                        
                                         <input hidden readonly type="text" class="form-control" id="shop_address" placeholder="Shop Address" name="shop_address"> 
                                         @error('shop_address')
                                             <span class="text-danger" role="alert">
