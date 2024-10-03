@@ -114,8 +114,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Note</label><span class="text-danger">*</span>
-                                        <textarea name="note" class="form-control" style="height: 50px;" required> </textarea>
+                                        <label>Note</label>
+                                        <textarea name="note" class="form-control" style="height: 50px;" > </textarea>
                                         @error('note')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
