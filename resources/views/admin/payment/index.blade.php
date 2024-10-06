@@ -40,7 +40,7 @@
                                     <tr>
 
                                         <td>
-                                            {{ $payment->date }}
+                                            {{ date('m-d-Y',strtotime($payment->date))  }}
                                         </td>
                                         <td>
                                             {{ $payment->customers_name }}

@@ -113,7 +113,7 @@
                                             </td>
 
                                             <td>
-                                                {{ $payment->date }}
+                                                {{ date('m-d-Y',strtotime( $payment->date)) }}
                                             </td>
 
                                             <td>
@@ -177,7 +177,7 @@
             "showClose": true,
             "showClear": true,
             "showTodayButton": true,
-            "format": "DD/MM/YYYY",
+            "format": "MM/DD/YYYY",
         });
     </script>
 @endsection

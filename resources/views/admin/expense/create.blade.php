@@ -147,7 +147,7 @@
                 "showClose": true,
                 "showClear": true,
                 "showTodayButton": true,
-                "format": "DD/MM/YYYY",
+                "format": "MM/DD/YYYY",
             });
         </script>
     @endsection

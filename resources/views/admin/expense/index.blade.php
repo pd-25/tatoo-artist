@@ -3,7 +3,7 @@
 @section('content')
     <div class="row justify-content-center">
 
-        <div class="col-lg-10">
+        <div class="col-lg-11">
             <div class="card">
                 <div class="card-title pr">
                     <h4>All Expenses </h4>
@@ -17,19 +17,35 @@
                 </div>
                 <div class="card-body">
                     <form action="{{ route('admin.getExpenses') }}" method="GET" class="row g-3 d-flex justify-content-center">
-                        <div class="col-md-5">
-                            <label for="start_date" class="form-label">Start Date:</label>
-                            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
-                        </div>
-                    
-                        <div class="col-md-5">
-                            <label for="end_date" class="form-label">End Date:</label>
-                            <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
-                        </div>
-                    
-                        <div class="col-md-2 d-flex align-items-end mb-1 justify-content-center">
-                            <button type="submit" class="btn btn-primary">Filter</button>
-                        </div>
+                        
+                            <div class="col-md-5">
+                                <label for="id_end_time"><b>Start Date:</b></label>
+                                <div class="input-group date datepicker">
+                                    <input type="text" name="start_date" value="{{ old('start_date') }}" class="form-control" required>
+                                    <div class="input-group-addon input-group-append">
+                                        <div class="input-group-text">
+                                            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                        </div>
+                                    </div>
+                                </div>   
+                            </div>
+
+                            <div class="col-md-5">
+                                <label for="id_end_time"><b>End Date:</b></label>
+                                <div class="input-group date datepicker">
+                                    <input type="text" name="end_date" class="form-control" value="{{ old('end_date') }}" required>
+                                    <div class="input-group-addon input-group-append">
+                                        <div class="input-group-text">
+                                            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                        </div>
+                                    </div>
+                                </div>   
+                            </div>
+
+                            <div class="col-md-2 d-flex align-items-end mb-1 justify-content-center">
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                            </div>
+                        
                     </form>
                     
                     
@@ -58,7 +74,7 @@
                                                 {{ $expenses->user->name ?? '' }}
                                             </td>
                                             <td>
-                                                {{ date('jS F, Y', strtotime($expenses->created_at)) }}
+                                                {{ date('m-d-Y',strtotime($expenses->created_at))  }}
                                             </td>
                                             <td>
                                                 {{ ucfirst($expenses->payment_method) }}
@@ -68,7 +84,7 @@
                                             </td>
                                             <td>{{ ucfirst($expenses->expense_items) }}</td>
                                             <td>
-                                                {{ date('jS F, Y', strtotime($expenses->transaction_date)) }}
+                                                {{  date('m-d-Y',strtotime($expenses->transaction_date)) }}
                                             </td>
                                             <td>
 
@@ -104,6 +120,15 @@
         </div>
 
     </div>
+    <style>
+ 
+
+
+.table-condensed {
+    width: 100% !important; /* Ensure the calendar fits the new width */
+}
+
+        </style>
 @endsection
 
 @section('script')
@@ -127,5 +152,21 @@
                 }
             });
         }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script>
+        $(function() {
+            $('#datetimepicker1').datetimepicker();
+        });
+
+        $('.datepicker').datetimepicker({
+            "allowInputToggle": true,
+            "showClose": true,
+            "showClear": true,
+            "showTodayButton": true,
+            "format": "MM/DD/YYYY",
+        });
     </script>
 @endsection

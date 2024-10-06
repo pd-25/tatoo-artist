@@ -286,13 +286,13 @@
                     <div class="col-md-6">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon3">Today's Date</span>
-                            <span class="opec">{{ date('d-m-Y',strtotime($tattodata->todaysdate)) }}</span>
+                            <span class="opec">{{ date('m-d-Y',strtotime($tattodata->todaysdate)) }}</span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon3">Birth Date</span>
-                            <span class="opec">{{ date('d-m-Y',strtotime($tattodata->birthdate)) }}</span>
+                            <span class="opec">{{ date('m-d-Y',strtotime($tattodata->birthdate)) }}</span>
                         </div>
                     </div>
                 </div>

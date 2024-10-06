@@ -69,7 +69,7 @@
                 <hr>
                 <div class="row d-flex justify-content-between">
                     <div class="signature text-left">
-                        <p><strong>Date:</strong> {{ $payments->date ?? 'N/A' }} 
+                        <p><strong>Date:</strong> {{  date('m-d-Y',strtotime($payments->date))  }} 
                         <br><strong>Signature:</strong>
                         </p>
                     </div>

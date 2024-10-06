@@ -45,7 +45,7 @@
                                     <div class="form-group">
                                         <label for="id_end_time">Trabsaction Date:</label>
                                         <div class="input-group date" id="datepicker">
-                                            <input type="text" name="transaction_date" class="form-control" value="{{isset($expenses) ? date('d/m/Y', strtotime(trim(str_replace('/', '-', $expenses->transaction_date)))) : '';}}" required>
+                                            <input type="text" name="transaction_date" class="form-control" value="{{isset($expenses) ? date('m/d/Y', strtotime(trim(str_replace('/', '-', $expenses->transaction_date)))) : '';}}" required>
                                             <div class="input-group-addon input-group-append">
                                                 <div class="input-group-text">
                                                     <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
@@ -146,7 +146,7 @@
                 "showClose": true,
                 "showClear": true,
                 "showTodayButton": true,
-                "format": "DD/MM/YYYY",
+                "format": "MM/DD/YYYY",
             });
         </script>
     @endsection

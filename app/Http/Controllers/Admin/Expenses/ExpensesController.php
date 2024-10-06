@@ -17,6 +17,11 @@ class ExpensesController extends Controller
     public function __construct(ArtistInterface $artistInterface){
         $this->artistInterface = $artistInterface;
     }
+    public function formatDate($requestDate){
+        $date = explode('/',$requestDate);
+        $formattedDate = $date[2].'-'.$date[0].'-'.$date[1];
+        return $formattedDate;
+    }
 
     public function getExpenses(Request $request)
     {
@@ -24,8 +29,8 @@ class ExpensesController extends Controller
     
         // Check if start_date and end_date are provided in the request
         if ($request->filled('start_date') && $request->filled('end_date')) {
-            $startDate = $request->start_date;
-            $endDate = $request->end_date;
+            $startDate = $this->formatDate( $request->start_date);
+            $endDate = $this->formatDate( $request->end_date);;
     
             // Filter by transaction_date based on the start and end date
             $query->whereBetween('transaction_date', [$startDate, $endDate]);
@@ -49,12 +54,7 @@ class ExpensesController extends Controller
         return view('admin.expense.create',$data);
     }
 
-    public function formatDate($requestDate){
-        $date = explode('/',$requestDate);
-        $formattedDate = $date[2].'-'.$date[1].'-'.$date[0];
-        return $formattedDate;
-    }
-
+ 
     public function AddexpensesPost(Request $request){
         $this->validate($request, [
            
@@ -69,10 +69,11 @@ class ExpensesController extends Controller
         // }else{
         //     $userid = Auth::guard('admins')->user()->id;
         // }
-
+//   dd($request->all());
+// dd($this->formatDate( $request['transaction_date']));
         $emodel = new ExpenseModel();
         $emodel->user_id                                       = $request['user_id'];
-        $emodel->transaction_date                              = $this->formatDate($request['transaction_date']);
+        $emodel->transaction_date                              = $this->formatDate( $request['transaction_date']);
         $emodel->payment_method                                = $request['payment_method'];
         $emodel->amount                                        = $request['amount'];
         $emodel->note                                          = $request['note'];

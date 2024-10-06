@@ -52,14 +52,14 @@ class PaymentController extends Controller
         // Format the start and end dates from request
         if ($request->has('start_date')) {
             $requestStartDate = explode('/',$request->start_date);
-            $startDate = $requestStartDate[2].'-'.$requestStartDate[1].'-'.$requestStartDate[0];
+            $startDate = $requestStartDate[2].'-'.$requestStartDate[0].'-'.$requestStartDate[1];
         }else{
             $startDate = null;
         }
 
         if ($request->has('end_date')) {
             $requestEndDate = explode('/',$request->end_date);
-            $endDate = $requestEndDate[2].'-'.$requestEndDate[1].'-'.$requestEndDate[0];
+            $endDate = $requestEndDate[2].'-'.$requestEndDate[0].'-'.$requestEndDate[1];
         }else{
             $endDate = null;
         }
