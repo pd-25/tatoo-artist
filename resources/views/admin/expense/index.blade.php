@@ -121,11 +121,16 @@
 
     </div>
     <style>
- 
+        .datepicker {
+    width: 400px !important; /* Adjust the width of the calendar popup */
+}
 
+.datepicker-dropdown {
+    width: 350px !important; /* Adjust the width of the dropdown itself */
+}
 
 .table-condensed {
-    width: 100% !important; /* Ensure the calendar fits the new width */
+    width: 80% !important; /* Ensure the calendar fits the new width */
 }
 
         </style>
