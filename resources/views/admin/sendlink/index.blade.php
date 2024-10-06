@@ -489,19 +489,47 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="input-group mb-3">
+                                <div class="input-group mb-3 datepicker">
                                     <span class="input-group-text" id="basic-addon3">Today's Date</span>
-                                    <input type="date" name="todaysdate" class="form-control uppercase" id="basic-url"
+                                    <input type="text" name="todaysdate" class="form-control uppercase" id="todaysdate"
                                         aria-describedby="basic-addon3" required />
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="input-group mb-3">
+                                <div class="input-group mb-3 datepicker">
                                     <span class="input-group-text" id="basic-addon3">Birth Date</span>
-                                    <input type="date" name="birthdate" class="form-control uppercase" id="basic-url"
+                                    <input type="text" name="birthdate" class="form-control uppercase" id="birthdate"
                                         aria-describedby="basic-addon3" required />
                                 </div>
                             </div>
+                            
+                            <!-- jQuery, Moment.js, and Bootstrap Datetimepicker JS -->
+                            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+                            
+                            <script>
+                                $(document).ready(function () {
+                                    // Initialize datetimepickers
+                                    $('#todaysdate').datetimepicker({
+                                        format: 'MM/DD/YYYY',
+                                        allowInputToggle: true,
+                                        showClose: true,
+                                        showClear: true,
+                                        showTodayButton: true,
+                                    });
+                            
+                                    $('#birthdate').datetimepicker({
+                                        format: 'MM/DD/YYYY',
+                                        allowInputToggle: true,
+                                        showClose: true,
+                                        showClear: true,
+                                        showTodayButton: true,
+                                    });
+                                });
+                            </script>
+                            
                         </div>
                         <div class="row">
                             <div class="col-md-12">
@@ -609,7 +637,6 @@
         </div>
 
     </form>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script>
         $(document).ready(function () {

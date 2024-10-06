@@ -402,6 +402,11 @@ class DashboardController extends Controller
             return view('admin.sendlink.error', compact('errorMsg1', 'errorMsg2'));
         }
     }
+    public function formatDate($requestDate){
+        $date = explode('/',$requestDate);
+        $formattedDate = $date[2].'-'.$date[0].'-'.$date[1];
+        return $formattedDate;
+    }
     public function userformsubmit(Request $request)
     {
         /*
@@ -482,8 +487,8 @@ class DashboardController extends Controller
         $tatto->venereal_disease                              = $request['venereal_disease'];
         $tatto->herpes_infection_at_proposed_procedure_site   = $request['herpes_infection_at_proposed_procedure_site'];
         $tatto->name                                          = $request['name'];
-        $tatto->todaysdate                                    = $request['todaysdate'];
-        $tatto->birthdate                                     = $request['birthdate'];
+        $tatto->todaysdate                                    = $this->formatDate($request['todaysdate']);
+        $tatto->birthdate                                     = $this->formatDate($request['birthdate']);
         $tatto->phone                                         = $request['phone'];
         $tatto->address                                       = $request['address'];
         $tatto->stateid                                       = $request['stateid'];
