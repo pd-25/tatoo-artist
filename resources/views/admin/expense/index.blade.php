@@ -121,19 +121,30 @@
 
     </div>
     <style>
-        .datepicker {
-    width: 400px !important; /* Adjust the width of the calendar popup */
+        .form-control {
+  display: block;
+  width: 100%;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
-
-.datepicker-dropdown {
-    width: 350px !important; /* Adjust the width of the dropdown itself */
+select.form-control:not([size]):not([multiple]) {
+  height: calc(2.25rem + 2px);
 }
-
-.table-condensed {
-    width: 80% !important; /* Ensure the calendar fits the new width */
+.form-control {
+  height: 42px !important;
+  border-radius: 0px;
+  box-shadow: none !important;
+  border-color: #e7e7e7;
+  font-family: 'Roboto', sans-serif;
 }
-
-        </style>
+          </style>
 @endsection
 
 @section('script')
@@ -158,9 +169,12 @@
             });
         }
     </script>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
     <script>
         $(function() {
             $('#datetimepicker1').datetimepicker();

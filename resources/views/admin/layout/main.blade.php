@@ -28,6 +28,7 @@
     <link href="{{ asset('admin-asset/css/lib/bootstrap.min.css') }}" rel="stylesheet">
 
     <link href="{{ asset('admin-asset/css/style.css') }}" rel="stylesheet">
+    
 </head>
 
 <body>
