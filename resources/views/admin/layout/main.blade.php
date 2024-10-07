@@ -42,6 +42,7 @@
 
                     @if (Auth::guard('admins')->check() || Auth::guard('sales')->check()) 
                         <li><a href="{{ route('admin.dashboard') }}"><i class="ti-desktop"></i>Dashboard </a></li>
+                        
                     @elseif (Auth::guard('artists')->check())
                         <li><a href="{{ route('artists.dashboard') }}"><i class="ti-desktop"></i>Dashboard </a></li> 
                        
@@ -49,17 +50,19 @@
                         <li><a href="{{ route('admin.dashboard') }}"><i class="ti-desktop"></i>Dashboard </a></li> 
 
                     @endif       
-
-                    @if (Auth::guard('artists')->check())
+                    @if (Auth::guard('admins')->check())
                     <li><a href="{{ route('admin.customers') }}"><i class="ti-desktop"></i>Customers </a></li>
+
+                    @endif
+                    @if (Auth::guard('artists')->check())
+                    
 
                     
                         <li><a href="{{ route('artists.profile') }}"><i class="ti-user"></i>Profile </a></li>
-                        <li><a href="{{ url('/user/artist-profile#profileHours') }}"><i class="ti-time"></i>Hours </a></li>
+                        {{-- <li><a href="{{ url('/user/artist-profile#profileHours') }}"><i class="ti-time"></i>Hours </a></li> --}}
                     @else
                        
-                            <li><a href="{{ route('admin.customers') }}"><i class="ti-desktop"></i>Customers </a></li>
-                       
+                           
 
                         <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Artist Management <span
                                     class="sidebar-collapse-icon ti-angle-down"></span></a>
@@ -125,7 +128,7 @@
                     <li><a href="{{ route('admin.getAppointment') }}"><i class="ti-calendar"></i>Appointment </a></li>
                     <li><a href="{{ route('admin.deposit-slips') }}"><i class="ti-calendar"></i>Deposit Slips </a></li>
                     
-                    <li><a href="{{ route('admin.getAcceptPayment') }}"><i class="ti-credit-card"></i>Accept Payment</a></li>
+                    {{-- <li><a href="{{ route('admin.getAcceptPayment') }}"><i class="ti-credit-card"></i>Accept Payment</a></li> --}}
                     <li><a href="{{ route('admin.getExpenses') }}"><i class="ti-money"></i>Manage Expenses</a></li>
                    
                     @endif

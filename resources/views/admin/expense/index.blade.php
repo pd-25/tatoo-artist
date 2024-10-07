@@ -61,7 +61,7 @@
                                     <th>Payment Method</th>
                                     <th>Amount</th>
                                     <th>Expenses</th>
-                                    <th>Transaaction Date</th>
+                                    <th>Transaction Date</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -86,7 +86,7 @@
                                             <td>
                                                 {{  date('m-d-Y',strtotime($expenses->transaction_date)) }}
                                             </td>
-                                            <td>
+                                            <td style="display: flex; gap:3px; justify-content:flex-end">
 
                                                 <a href="{{ route('admin.editexpensesForm', encrypt($expenses->id)) }}"><i
                                                         class="ti-pencil btn btn-sm btn-primary"></i></a>

@@ -25,7 +25,12 @@
                     
                     @endif
                     <li><strong>Artist Name:</strong> {{ $payments->artist->name ?? 'N/A' }}</li>
-                    <li><strong>Address:</strong> #{{ $payments->artist->address ?? 'N/A' }}-{{$payments->artist->zipcode}}<br>{{$payments->artist->address2}}</li>
+                    <li><strong>Address:</strong> # {{ $payments->artist->artistData->shop_address ?? '' }}
+                        @if($payments->artist->address2) , {{ $payments->artist->address2 }} @endif
+                        @if($payments->artist->city) , {{ $payments->artist->city }} @endif
+                        @if($payments->artist->state) , {{ $payments->artist->state }} @endif
+                        @if($payments->artist->country) , {{ $payments->artist->country }} @endif
+                        @if($payments->artist->zipcode) - {{ $payments->artist->zipcode }} @endif</li>
                     
                 </ul>
                 </div>

@@ -116,7 +116,7 @@
                                         <select name="placement" class="form-control">
                                             <option value="">Select Placement</option>
                                             @foreach ($placements as $placement)
-                                                <option {{ old('placement', $payments->placement_id) == $placement->id ? 'selected' : '' }}
+                                                <option {{ old('placement', $payments->placement) == $placement->id ? 'selected' : '' }}
                                                     value="{{ $placement->id }}">{{ $placement->title }}</option>
                                             @endforeach
                                         </select>
