@@ -108,6 +108,7 @@ Route::post('/add-expenses-post', [ExpensesController::class, 'AddexpensesPost']
 Route::get('/edit-expenses/{id}', [ExpensesController::class, 'editexpensesForm'])->name('admin.editexpensesForm');
 Route::post('/edit-expenses-post/{id}', [ExpensesController::class, 'editexpensesPost'])->name('admin.editexpensesPost');
 Route::delete('/expenses-delete/{id}', [ExpensesController::class, 'deleteexpensesForm'])->name('admin.deleteexpensesForm');
+Route::get('/expenses/print', [ExpensesController::class, 'printExpenses'])->name('admin.printExpenses');
 
 
 

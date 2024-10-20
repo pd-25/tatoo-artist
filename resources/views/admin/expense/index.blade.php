@@ -17,36 +17,52 @@
                 </div>
                 <div class="card-body">
                     <form action="{{ route('admin.getExpenses') }}" method="GET" class="row g-3 d-flex justify-content-center">
-                        
-                            <div class="col-md-5">
-                                <label for="id_end_time"><b>Start Date:</b></label>
-                                <div class="input-group date datepicker">
-                                    <input type="text" name="start_date" value="{{ old('start_date') }}" class="form-control" required>
-                                    <div class="input-group-addon input-group-append">
-                                        <div class="input-group-text">
-                                            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                                        </div>
+                        <div class="col-md-3">
+                            <label for="start_date"><b>Start Date:</b></label>
+                            <div class="input-group date datepicker">
+                                <input type="text" name="start_date" value="{{ old('start_date') }}" class="form-control" required>
+                                <div class="input-group-addon input-group-append">
+                                    <div class="input-group-text">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                                     </div>
-                                </div>   
+                                </div>
                             </div>
-
-                            <div class="col-md-5">
-                                <label for="id_end_time"><b>End Date:</b></label>
-                                <div class="input-group date datepicker">
-                                    <input type="text" name="end_date" class="form-control" value="{{ old('end_date') }}" required>
-                                    <div class="input-group-addon input-group-append">
-                                        <div class="input-group-text">
-                                            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                                        </div>
+                        </div>
+                    
+                        <div class="col-md-3">
+                            <label for="end_date"><b>End Date:</b></label>
+                            <div class="input-group date datepicker">
+                                <input type="text" name="end_date" class="form-control" value="{{ old('end_date') }}" required>
+                                <div class="input-group-addon input-group-append">
+                                    <div class="input-group-text">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                                     </div>
-                                </div>   
+                                </div>
                             </div>
-
-                            <div class="col-md-2 d-flex align-items-end mb-1 justify-content-center">
-                                <button type="submit" class="btn btn-primary">Filter</button>
-                            </div>
-                        
+                        </div>
+                    
+                        <!-- New Expense Items Filter -->
+                        <div class="col-md-3">
+                            <label for="expense_items"><b>Expense Item:</b></label>
+                            <select name="expense_items" class="form-control" required>
+                                <option value="all">ALL</option>
+                                <option value="advertising">Advertising</option>
+                                <option value="ink">Ink</option>
+                                <option value="tools">Tools</option>
+                                <option value="clothing">Clothing</option>
+                                <option value="insurance">Insurance</option>
+                                <option value="ccfees">CC Fees</option>
+                            </select>
+                        </div>
+                    
+                        <!-- Filter and Print Buttons -->
+                        <div class="col-md-3 d-flex align-items-end mb-2 justify-content-center ">
+                            <button type="submit" class="btn btn-primary w-100 m-1">Filter</button>
+                            <a href="{{ route('admin.printExpenses', request()->query()) }}" class="m-1 btn btn-secondary no-print w-100">Print</a>
+                        </div>
                     </form>
+                    
+                    
                     
                     
                     

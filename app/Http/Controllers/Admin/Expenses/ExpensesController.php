@@ -22,6 +22,35 @@ class ExpensesController extends Controller
         $formattedDate = $date[2].'-'.$date[0].'-'.$date[1];
         return $formattedDate;
     }
+    public function printExpenses(Request $request)
+{
+    $query = ExpenseModel::with('user');
+
+    // Check if start_date and end_date are provided in the request
+    if ($request->filled('start_date') && $request->filled('end_date')) {
+        $startDate = $this->formatDate($request->start_date);
+        $endDate = $this->formatDate($request->end_date);
+    
+        // Filter by transaction_date based on the start and end date
+        $query->whereBetween('transaction_date', [$startDate, $endDate]);
+    }
+    
+    // Filter by expense_items if not 'all'
+    if ($request->filled('expense_items') && $request->expense_items != 'all') {
+        $query->where('expense_items', $request->expense_items);
+    }
+    
+    // If user is an artist, filter only their expenses
+    if (Auth::guard('artists')->check()) {
+        $query->where('user_id', Auth::guard('artists')->user()->id);
+    }
+
+    // Fetch the filtered or full list of expenses
+    $expenses = $query->get();
+
+    return view('admin.expense.printexpnce', compact('expenses'));
+}
+
 
     public function getExpenses(Request $request)
     {
@@ -29,12 +58,18 @@ class ExpensesController extends Controller
     
         // Check if start_date and end_date are provided in the request
         if ($request->filled('start_date') && $request->filled('end_date')) {
-            $startDate = $this->formatDate( $request->start_date);
-            $endDate = $this->formatDate( $request->end_date);;
-    
+            $startDate = $this->formatDate($request->start_date);
+            $endDate = $this->formatDate($request->end_date);
+        
             // Filter by transaction_date based on the start and end date
             $query->whereBetween('transaction_date', [$startDate, $endDate]);
         }
+        
+        // Filter by expense_items if not 'all'
+        if ($request->filled('expense_items') && $request->expense_items != 'all') {
+            $query->where('expense_items', $request->expense_items);
+        }
+        
     
         // If user is an artist, filter only their expenses
         if (Auth::guard('artists')->check()) {
