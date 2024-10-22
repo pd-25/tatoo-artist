@@ -70,7 +70,7 @@
                     <td>${{ $payment->tips }}</td>
                     <td>${{ $payment->total_due }}</td>
                     <td>{{ $payment->customers_name }}</td>
-                    <td>{{ $payment->placement->title ?? 'N/A' }}</td>
+                    <td>{{ $payment->placementData->title ?? 'N/A' }}</td>
                     <td>${{ $payment->deposit }}</td>
                     <td>${{ $payment->fees }}</td>
                     <td>{{ ucwords(str_replace('_', ' ', $payment->payment_method)) }}</td>
