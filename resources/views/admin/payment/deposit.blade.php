@@ -39,7 +39,7 @@
                       <!-- Filter and Print Buttons -->
                       <div class="ccol-lg-2 col-md-2 col-sm-12 d-flex align-items-end mb-2 justify-content-center ">
                         <button type="submit" class="btn btn-primary w-100 m-1 ">Search</button>
-                        <a href="{{ route('admin.printDepositPDF', ['start_date' => old('start_date'), 'end_date' => old('end_date')]) }}" target="_blank" class="m-1 btn btn-secondary no-print w-100">Print PDF</a>
+                        <a href="{{ route('admin.printDepositPDF', ['start_date' => old('start_date'), 'end_date' => old('end_date')]) }}" target="_blank" class="m-1 btn btn-secondary no-print w-100" style="color:white">Print PDF</a>
                         
                         
                     </div>
