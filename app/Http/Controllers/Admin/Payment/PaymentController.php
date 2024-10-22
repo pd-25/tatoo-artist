@@ -114,6 +114,31 @@ class PaymentController extends Controller
         }
         return view('admin.payment.deposit',compact('payments'));
     }
+    public function printDepositPDF(Request $request)
+{
+    // Get the date filters from the request
+    $startDate = $request->input('start_date');
+    $endDate = $request->input('end_date');
+    
+    // Retrieve filtered payments (similar to your existing method)
+    $query = PaymentModel::with('user');
+    
+    if ($startDate) {
+        $startDateFormatted = Carbon::createFromFormat('m/d/Y', $startDate)->format('Y-m-d');
+        $query->where('date', '>=', $startDateFormatted);
+    }
+
+    if ($endDate) {
+        $endDateFormatted = Carbon::createFromFormat('m/d/Y', $endDate)->format('Y-m-d');
+        $query->where('date', '<=', $endDateFormatted);
+    }
+
+    $payments = $query->get();
+
+    // Pass the payments data to a PDF view
+    return view('admin.payment.reportprint', compact('payments', 'startDate', 'endDate'));
+}
+
     public function getPaymentMethods(Request $request)
     {
         $paymentMethods = [];

@@ -101,7 +101,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Amount</label><span class="text-danger">*</span>
-                                        <input type="text" class="form-control" name="amount" placeholder="Enter amount" required>
+                                        <input type="number" class="form-control" name="amount" placeholder="Enter amount" required>
                                         @error('amount')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>

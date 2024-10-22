@@ -30,22 +30,37 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $totalAmount = 0;
+                @endphp
                 @forelse($expenses as $key => $expense)
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $expense->expense_items }}</td>
-                        <td>{{ $expense->transaction_date }}</td>
-                        <td>{{ $expense->amount }}</td>
+                        <td>{{ date('m-d-Y', strtotime($expense->transaction_date)) }}</td>
+                        <td>$ {{ $expense->amount }}</td>
                         <td>{{ $expense->payment_method }}</td>
                         <td>{{ $expense->expense_items }}</td>
                         <td>{{ $expense->user->name }}</td>
                     </tr>
+                    @php
+                        $totalAmount += $expense->amount;
+                    @endphp
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center">No Expenses Found</td>
+                        <td colspan="7" class="text-center">No Expenses Found</td>
                     </tr>
                 @endforelse
             </tbody>
+            
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="text-right"><strong>Total Amount</strong></td>
+                    <td colspan="4">$ {{ $totalAmount }}</td>
+                </tr>
+            </tfoot>
+            
+            
         </table>
 
         <div class="text-center no-print">

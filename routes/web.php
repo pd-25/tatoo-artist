@@ -87,6 +87,8 @@ Route::get('/get-quote', [DashboardController::class, 'getQuote'])->name('admin.
 Route::get('/get-appointment', [DashboardController::class, 'getAppointment'])->name('admin.getAppointment');
 Route::get('/get-deposit-slips', [PaymentController::class, 'getDepositSlips'])->name('admin.deposit-slips');
 Route::post('/get-filter-deposit', [PaymentController::class, 'getFilteredDeposits'])->name('admin.filterDeposite');
+Route::get('/print-deposit-pdf', [PaymentController::class, 'printDepositPDF'])->name('admin.printDepositPDF');
+
 Route::post('/send-link', [DashboardController::class, 'SendLink'])->name('admin.SendLink');
 Route::get('/form-link-url/{user_id}/{artist_id}/{dbid}', [DashboardController::class, 'formlinkurl'])->name('admin.formlinkurl');
 Route::get('/success', [DashboardController::class, 'success'])->name('admin.success');
