@@ -72,7 +72,7 @@ class PaymentController extends Controller
         $request->flash();
 
         if (Auth::guard('artists')->check()){
-            $query = PaymentModel::where('user_id',Auth::guard('artists')->user()->id);
+            $query = PaymentModel::where('artist_id',Auth::guard('artists')->user()->id);
 
             if(!empty($startDate)):
                 $query->where('date', '>=', $startDate);
@@ -133,7 +133,7 @@ class PaymentController extends Controller
     
         // Query logic for different user guards
         if (Auth::guard('artists')->check()) {
-            $query = PaymentModel::where('user_id', Auth::guard('artists')->user()->id);
+            $query = PaymentModel::where('artist_id', Auth::guard('artists')->user()->id);
     
             if (!empty($startDate)) {
                 $query->where('date', '>=', $startDate);
