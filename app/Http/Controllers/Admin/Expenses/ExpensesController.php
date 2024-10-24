@@ -110,7 +110,8 @@ class ExpensesController extends Controller
         $emodel->user_id                                       = $request['user_id'];
         $emodel->transaction_date                              = $this->formatDate( $request['transaction_date']);
         $emodel->payment_method                                = $request['payment_method'];
-        $emodel->amount                                        = $request['amount'];
+        $emodel->amount                                        = number_format((float)$request['amount'], 2, '.', '');
+
         $emodel->note                                          = $request['note'];
         $emodel->expense_items                                 = $request['expense_items'];
         $emodel->created_at                                    = date('Y-m-d h:i:s');
@@ -145,7 +146,8 @@ class ExpensesController extends Controller
         $emodel->user_id                                       = $request['user_id'];;
         $emodel->transaction_date                              = $this->formatDate($request['transaction_date']);
         $emodel->payment_method                                = $request['payment_method'];
-        $emodel->amount                                        = $request['amount'];
+        $emodel->amount                                        = number_format((float)$request['amount'], 2, '.', '');
+
         $emodel->note                                          = $request->input('note');
         $emodel->expense_items                                 = $request->input('expense_items');
         $emodel->updated_at                                    = date('Y-m-d h:i:s');
