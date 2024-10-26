@@ -148,7 +148,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Payment Method</label>
-                                        <select name="payment_method" id="payment-method" class="form-control">
+                                        <select required name="payment_method" id="payment-method" class="form-control">
                                             <option value="">Select Payment Method</option>
                                             @if($payments->payment_method)
                                                 <option value="{{ $payments->payment_method }}" selected>
