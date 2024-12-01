@@ -133,10 +133,10 @@
                     <li><a href="{{ route('admin.getExpenses') }}"><i class="ti-money"></i>Manage Expenses</a></li>
                    
                     @endif
-                    @if (Auth::guard('artists')->check())
+                    {{-- @if (Auth::guard('artists')->check())
                     <li><a href="{{ url('/user/artist-profile#companyLogo') }}"><i class="ti-image"></i> Comapany Logo </a></li>
  
-                     @endif
+                     @endif --}}
                     {{-- <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Order Management <span
                                 class="sidebar-collapse-icon ti-angle-down"></span></a>
                         <ul>
@@ -148,7 +148,7 @@
                         </ul>
                     </li> --}}
 
-
+                    <li><a href="{{route('admin.subscriptions')}}"><i class="ti-calendar"></i> Subscription</a></li>
 
 
                     <li>
@@ -167,7 +167,7 @@
                             </a>
                         @endif
                     
-                                          </li>
+                      </li>
                     
                 </ul>
             </div>

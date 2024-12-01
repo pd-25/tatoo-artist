@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Sales\SalesController;
 use App\Http\Controllers\Admin\Artworks\ArtworkController;
 use App\Http\Controllers\Admin\Banner\BannerController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
+use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\artist\ArtworkController as ArtistArtworkController;
 use App\Http\Controllers\artist\AuthController;
 use App\Http\Controllers\artist\BannerController as ArtistBannerController;
@@ -68,7 +69,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminCheck'], function () {
     Route::get('/customers/{id}', [ArtistController::class, 'editCustomer'])->name('admin.editCustomer');
     Route::post('/customers/{id}', [ArtistController::class, 'updateCustomer'])->name('admin.updateCustomer');
     Route::delete('/customers/{id}', [ArtistController::class, 'destroyCustomer'])->name('admin.destroyCustomer');
-    
+
     Route::delete('/delete-comment/{id}', [ArtworkController::class, 'deleteComment'])->name('comment.delete');
 
     Route::resource('banners', BannerController::class);
@@ -144,14 +145,23 @@ Route::group(['prefix' => 'user'], function () {
     Route::post('/carousel-upload', [ArtistBannerController::class, 'uploadArtistWiseBanner'])->name('artists.uploadArtistWiseBanner');
     Route::delete('/carousel-delete/{id}', [ArtistBannerController::class, 'destroyBanner'])->name('artists.destroyBanner');
 
-Route::get('/add-customer', [ArtistController::class, 'addCustomer'])->name('admin.addCustomer');
-Route::post('/store-customer', [ArtistController::class, 'storeCustomer'])->name('admin.storeCustomer');
-Route::get('/customers', [ArtistController::class, 'customers'])->name('admin.customers');
-Route::get('/customers/{id}', [ArtistController::class, 'editCustomer'])->name('admin.editCustomer');
-Route::post('/customers/{id}', [ArtistController::class, 'updateCustomer'])->name('admin.updateCustomer');
-Route::delete('/customers/{id}', [ArtistController::class, 'destroyCustomer'])->name('admin.destroyCustomer');
+    Route::get('/add-customer', [ArtistController::class, 'addCustomer'])->name('admin.addCustomer');
+    Route::post('/store-customer', [ArtistController::class, 'storeCustomer'])->name('admin.storeCustomer');
+    Route::get('/customers', [ArtistController::class, 'customers'])->name('admin.customers');
+    Route::get('/customers/{id}', [ArtistController::class, 'editCustomer'])->name('admin.editCustomer');
+    Route::post('/customers/{id}', [ArtistController::class, 'updateCustomer'])->name('admin.updateCustomer');
+    Route::delete('/customers/{id}', [ArtistController::class, 'destroyCustomer'])->name('admin.destroyCustomer');
 
-Route::get('/admin/get-payment-methods', [PaymentController::class, 'getPaymentMethods'])->name('admin.getPaymentMethods');
+    Route::get('/admin/get-payment-methods', [PaymentController::class, 'getPaymentMethods'])->name('admin.getPaymentMethods');
+    Route::get('/admin/subscriptions', [SubscriptionController::class, 'index'])->name('admin.subscriptions');
+
+    Route::get('/admin/subscriptions/create', [SubscriptionController::class, 'create'])->name('admin.subscriptions.create');
+    Route::post('/subscriptions', [SubscriptionController::class, 'store'])->name('subscriptions.store');
+    // Route to display the subscription edit form
+Route::get('/admin/subscriptions/{id}/edit', [SubscriptionController::class, 'edit'])->name('subscriptions.edit');
+
+// Route to handle the subscription update form submission
+Route::put('/admin/subscriptions/{id}', [SubscriptionController::class, 'update'])->name('subscriptions.update');
 
 
 
