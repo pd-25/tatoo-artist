@@ -346,4 +346,24 @@ public function index(Request $re)
             return back()->with('msg', 'No artwork found.');
         }
     }
+
+    public function accounthold($id)
+    {
+        // Retrieve the current status of account_hold
+        $user = User::find($id);
+        
+        // Toggle the account_hold value
+        $user->account_hold = $user->account_hold == 1 ? 0 : 1;
+    
+        // Save the updated status
+        $user->save();
+        
+        // Determine the message based on the new account_hold status
+        $message = $user->account_hold == 1 ? 'Account is now hold.' : 'Account hold has been released.';
+    
+        // Redirect with a success message
+        return back()->with('msg', $message);
+    }
+    
+    
 }

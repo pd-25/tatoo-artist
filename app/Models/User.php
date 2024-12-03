@@ -22,7 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'walkin',
-        'username','phone','address', 'address2', 'country','state','city','zipcode','latitude','longitude','profile_image','banner_image', 'type', 'created_by'
+        'username','phone','address', 'address2', 'country','state','city','zipcode','latitude','longitude','profile_image','banner_image', 'type', 'created_by','account_hold'
     ];
 
     /**

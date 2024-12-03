@@ -12,16 +12,28 @@ use Illuminate\Queue\SerializesModels;
 class AdminMail extends Mailable
 {
     use Queueable, SerializesModels;
+    
     public $userEmail;
+    public $subscriptionData;
+    public $salesdata;
+    public $mailsubject ;
 
-    public function __construct($userEmail)
+    public function __construct($userEmail, $subscriptionData,$salesdata,$mailsubject)
     {
         $this->userEmail = $userEmail;
+        $this->subscriptionData = $subscriptionData;
+        $this->salesdata = $salesdata;
+        $this->mailsubject = $mailsubject;
     }
 
     public function build()
     {
-        return $this->view('emails.salesjoning') // your view for the email
-                    ->with('userEmail', $this->userEmail);
+        return $this->subject($this->mailsubject)
+        ->view('emails.salesjoning')
+        ->with([
+            'userdata' => $this->userEmail,
+            'subscriptionData' => $this->subscriptionData,
+            'salesdata' => $this->salesdata,
+        ]);
     }
 }

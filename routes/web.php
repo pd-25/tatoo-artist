@@ -60,6 +60,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::group(['prefix' => 'admin', 'middleware' => 'adminCheck'], function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::resource('artists', ArtistController::class);
+    Route::post('/artisthold/{id}', [ArtistController::class, 'accounthold'])->name('artist.hold');
+
+
     Route::resource('artworks', ArtworkController::class);
 
     Route::resource('sales', SalesController::class);

@@ -46,7 +46,13 @@
                                     @foreach ($artists as $index => $artist)
                                 
                                         <tr>
-                                            <td>{{ $index+1 }}</td>
+                                            <td>{{ $index+1 }} 
+                                                <br>
+                                                @if($artist->account_hold == 1)
+                                                    <span class="badge bg-danger">Account is Hold</span>
+                                                @endif
+                                                
+                                            </td>
                                             <td>
                                                 {{ $artist->name }}
                                                 
@@ -78,25 +84,31 @@
                                             </span>
                                             </td> --}}
                                             <td>
-                                                <a href="{{ route('artists.show', encrypt($artist->id)) }}"><i
-                                                    class="ti-eye btn btn-sm btn-success"></i></a>
-                                                <a href="{{ route('artists.edit', encrypt($artist->id)) }}"><i
-                                                        class="ti-pencil btn btn-sm btn-primary"></i></a>
-                                                        <a href="{{ route('admin.impersonateartist', $artist->id) }}">        
-                                                            <i class="ti-power-off btn btn-sm btn-info"></i>
-                                                        </a>  
-                                                <form method="POST"
-                                                    action="{{ route('artists.destroy', encrypt($artist->id)) }}"
-                                                    class="action-icon">
+                                                <a href="{{ route('artists.show', encrypt($artist->id)) }}">
+                                                    <i class="ti-eye btn btn-sm btn-success"></i>
+                                                </a>
+                                                <a href="{{ route('artists.edit', encrypt($artist->id)) }}">
+                                                    <i class="ti-pencil btn btn-sm btn-primary"></i>
+                                                </a>
+                                                <a href="{{ route('admin.impersonateartist', $artist->id) }}">
+                                                    <i class="ti-power-off btn btn-sm btn-info"></i>
+                                                </a>  <br>
+                                                <form action="{{ route('artist.hold', $artist->id) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('POST')
+                                                    <button type="submit" class="btn btn-sm btn-info">
+                                                        <i class="ti-lock"></i>
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="{{ route('artists.destroy', encrypt($artist->id)) }}" class="action-icon" style="display:inline;">
                                                     @csrf
                                                     <input name="_method" type="hidden" value="DELETE">
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-danger  delete-icon show_confirm"
-                                                        data-toggle="tooltip" title='Delete'>
+                                                    <button type="submit" class="btn btn-sm btn-danger delete-icon show_confirm" data-toggle="tooltip" title='Delete'>
                                                         <i class="ti-trash"></i>
                                                     </button>
                                                 </form>
                                             </td>
+                                            
 
                                         </tr>
                                     @endforeach

@@ -58,16 +58,16 @@ class SubscriptionController extends Controller
 
 
         $userId = auth()->guard('artists')->user();
-        $userEmail = $userId ->email;
+        $userEmail = $userId ;
 
         // Find the sales email where the 'created_by' is the same as the current user ID
-        $salesEmail = User::where('id', '=', $userId->created_by)
-        ->first()->email;
+        $salesdata = User::where('id', '=', $userId->created_by)
+        ->first();
 
         $adminEmail = 'sweetdevelopers.sales@gmail.com'; // Admin email address
 
         // Validate the incoming data
-        $request->validate([
+        $validated =  $request->validate([
             'user_id' => 'required|integer|exists:users,id',
             'subscription_plan' => 'required|string|max:255',
             'status' => 'required|string',
@@ -81,16 +81,18 @@ class SubscriptionController extends Controller
         ]);
 
         // Create the subscription
-        Subscription::create($request->all());
+        $subscription = Subscription::create($validated);
+        $subscriptionData = array_merge($validated, ['created_at' => $subscription->created_at]);
 
         // Send the welcome email to the user
-        Mail::to($userEmail)->send(new WelcomeMail($userEmail));
+        // Mail::to($userEmail)->send(new WelcomeMail($userEmail));
+        $mailsubject = $userEmail->name . ' - Subscription Joining for ' . $validated['subscription_plan'];
 
         // Send the sales email
-        Mail::to($salesEmail)->send(new SalesMail($userEmail));
+        Mail::to($salesdata->email)->send(new SalesMail($userEmail,$subscriptionData,$salesdata,$mailsubject ));
 
         // Send the admin email
-        Mail::to($adminEmail)->send(new AdminMail($userEmail));
+        Mail::to($adminEmail)->send(new AdminMail($userEmail,$subscriptionData,$salesdata,$mailsubject ));
 
         // Redirect to the index page with a success message
         return redirect()->route('admin.subscriptions')->with('success', 'Subscription created successfully!');
@@ -111,21 +113,27 @@ class SubscriptionController extends Controller
 }
 public function update(Request $request, $id)
 {
+    // Ensure the user is logged in as an artist
     if (!auth()->guard('artists')->check()) {
-        // Redirect back with an error message
         return redirect()->back()->with('error', 'You are not registered as an artist. Please log in as an artist to update the subscription.');
     }
 
-    $subscription = Subscription::findOrFail($id);
+    // Retrieve the authenticated user
     $userId = auth()->guard('artists')->user();
-    $userEmail = $userId->email;
+    $userEmail = $userId;
 
-    // Find the sales email where the 'created_by' is the same as the current user ID
-    $salesEmail = User::where('id', '=', $userId->created_by)->first()->email;
+    // Retrieve the subscription
+    $subscription = Subscription::findOrFail($id);
+
+    // Retrieve sales data
+    $salesdata = User::where('id', $userId->created_by)->first();
+    if (!$salesdata) {
+        return redirect()->back()->with('error', 'Sales representative data not found.');
+    }
 
     $adminEmail = 'sweetdevelopers.sales@gmail.com'; // Admin email address
 
-    // Validate the incoming data
+    // Validate the incoming request
     $request->validate([
         'user_id' => 'required|integer|exists:users,id',
         'subscription_plan' => 'required|string|max:255',
@@ -142,18 +150,20 @@ public function update(Request $request, $id)
     // Update the subscription
     $subscription->update($request->all());
 
-    // Send the updated subscription email to the user
-    Mail::to($userEmail)->send(new WelcomeMail($userEmail));
+    // Prepare subscription data for the emails
+    $subscriptionData = $subscription->toArray();
+    $mailsubject = $subscriptionData['status'] . ' Subscription by ' . $userId->name;
 
     // Send the sales email
-    Mail::to($salesEmail)->send(new SalesMail($userEmail));
+    Mail::to($salesdata->email)->send(new SalesMail($userEmail, $subscriptionData, $salesdata,$mailsubject ));
 
     // Send the admin email
-    Mail::to($adminEmail)->send(new AdminMail($userEmail));
+    Mail::to($adminEmail)->send(new AdminMail($userEmail, $subscriptionData, $salesdata,$mailsubject ));
 
-    // Redirect to the index page with a success message
+    // Redirect to the subscriptions index page with a success message
     return redirect()->route('admin.subscriptions')->with('success', 'Subscription updated successfully!');
 }
+
 
 
 }
