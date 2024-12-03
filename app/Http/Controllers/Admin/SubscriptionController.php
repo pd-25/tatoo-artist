@@ -155,7 +155,7 @@ public function update(Request $request, $id)
     $mailsubject = $subscriptionData['status'] . ' Subscription by ' . $userId->name;
 
     // Send the sales email
-    Mail::to($salesdata->email)->send(new SalesMail($userEmail, $subscriptionData, $salesdata,$mailsubject ));
+    // Mail::to($salesdata->email)->send(new SalesMail($userEmail, $subscriptionData, $salesdata,$mailsubject ));
 
     // Send the admin email
     Mail::to($adminEmail)->send(new AdminMail($userEmail, $subscriptionData, $salesdata,$mailsubject ));
