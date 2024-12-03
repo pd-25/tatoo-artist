@@ -129,7 +129,8 @@ Route::get('/walk-in', [DashboardController::class, 'getWalkIn'])->name('artists
 
 Route::post('userlogin', [AuthController::class, 'userlogin'])->name('userlogin');
 // 'middleware' => 'artistCheck'
-Route::group(['prefix' => 'user'], function () {
+// 'middleware' => 'artistCheck'
+Route::group(['prefix' => 'user','middleware' => 'ArtistBlockChack'], function () {
     Route::get('/artist-dashboard', [ArtistDashboardController::class, 'index'])->name('artists.dashboard');
     Route::get('/artist-profile', [ArtistDashboardController::class, 'profile'])->name('artists.profile');
     Route::put('/artist-profile/{id}', [ArtistController::class, 'update'])->name('artists.profileUpdate');
@@ -167,7 +168,12 @@ Route::get('/admin/subscriptions/{id}/edit', [SubscriptionController::class, 'ed
 Route::put('/admin/subscriptions/{id}', [SubscriptionController::class, 'update'])->name('subscriptions.update');
 
 
-
-
 });
 
+Route::get('artistblock', function () {
+    if(Auth::guard('artists')->user()->account_hold == 1) {
+        return view('block');
+    }
+    return redirect()->route('artists.dashboard');
+  
+})->name('artistblock');
