@@ -149,6 +149,11 @@ Route::group(['prefix' => 'user','middleware' => 'ArtistBlockChack'], function (
     Route::post('/carousel-upload', [ArtistBannerController::class, 'uploadArtistWiseBanner'])->name('artists.uploadArtistWiseBanner');
     Route::delete('/carousel-delete/{id}', [ArtistBannerController::class, 'destroyBanner'])->name('artists.destroyBanner');
 
+
+});
+
+Route::group(['prefix' => 'user'], function () {
+    
     Route::get('/add-customer', [ArtistController::class, 'addCustomer'])->name('admin.addCustomer');
     Route::post('/store-customer', [ArtistController::class, 'storeCustomer'])->name('admin.storeCustomer');
     Route::get('/customers', [ArtistController::class, 'customers'])->name('admin.customers');
@@ -166,8 +171,6 @@ Route::get('/admin/subscriptions/{id}/edit', [SubscriptionController::class, 'ed
 
 // Route to handle the subscription update form submission
 Route::put('/admin/subscriptions/{id}', [SubscriptionController::class, 'update'])->name('subscriptions.update');
-
-
 });
 
 Route::get('artistblock', function () {
