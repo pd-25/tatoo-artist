@@ -66,17 +66,22 @@
 
                         <div class="form-group mb-3">
                             <label for="ach_type">ACH Type</label>
-                            <input type="text" id="ach_type" name="ach_type" class="form-control" value="{{ old('ach_type', $subscription->ach_type) }}" placeholder="Enter Account Type">
+                            <select id="ach_type" name="ach_type" class="form-control" >
+                            <option value="">Select Status</option>
+                            <option value="Checking" @selected($subscription->ach_type == 'Checking')>Checking</option>
+                            <option value="Savings" @selected($subscription->ach_type == 'Savings')>Savings</option>
+                            
+                        </select>
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="ach_routing_number">ACH Routing Number</label>
-                            <input type="text" id="ach_routing_number" name="ach_routing_number" class="form-control" value="{{ old('ach_routing_number', $subscription->ach_routing_number) }}" placeholder="Enter Routing Number">
+                            <input type="number" id="ach_routing_number" name="ach_routing_number" class="form-control" value="{{ old('ach_routing_number', $subscription->ach_routing_number) }}" placeholder="Enter Routing Number">
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="ach_account_number">ACH Account Number</label>
-                            <input type="text" id="ach_account_number" name="ach_account_number" class="form-control" value="{{ old('ach_account_number', $subscription->ach_account_number) }}" placeholder="Enter Account Number">
+                            <input type="number" id="ach_account_number" name="ach_account_number" class="form-control" value="{{ old('ach_account_number', $subscription->ach_account_number) }}" placeholder="Enter Account Number">
                         </div>
                     </div>
 
@@ -112,5 +117,35 @@
             }
         });
     });
+    document.addEventListener('DOMContentLoaded', () => {
+        // Select the input by class or ID
+        const phoneInput = document.querySelector('#zell_phone');
+        
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function () {
+                formatPhone(this);
+            });
+        }
+    });
+
+    function formatPhone(input) {
+        // Remove all non-digit characters
+        let value = input.value.replace(/\D/g, "");
+
+        // Limit the input to 10 digits
+        value = value.substring(0, 10);
+
+        // Format the value as (999) 999-9999
+        if (value.length > 6) {
+            value = `(${value.substring(0, 3)}) ${value.substring(3, 6)}-${value.substring(6)}`;
+        } else if (value.length > 3) {
+            value = `(${value.substring(0, 3)}) ${value.substring(3)}`;
+        } else if (value.length > 0) {
+            value = `(${value}`;
+        }
+
+        // Update the input value
+        input.value = value;
+    }
 </script>
 @endsection

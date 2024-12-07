@@ -64,7 +64,7 @@ class SubscriptionController extends Controller
         $salesdata = User::where('id', '=', $userId->created_by)
         ->first();
 
-        $adminEmail = 'sweetdevelopers.sales@gmail.com'; // Admin email address
+        $adminEmail = 'tattoome1@yahoo.com'; // Admin email address
 
         // Validate the incoming data
         $validated =  $request->validate([
@@ -131,7 +131,7 @@ public function update(Request $request, $id)
         return redirect()->back()->with('error', 'Sales representative data not found.');
     }
 
-    $adminEmail = 'sweetdevelopers.sales@gmail.com'; // Admin email address
+    $adminEmail = 'tattoome1@yahoo.com'; // Admin email address
 
     // Validate the incoming request
     $request->validate([

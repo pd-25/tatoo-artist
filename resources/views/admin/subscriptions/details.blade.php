@@ -25,26 +25,28 @@
                         
                         <p><strong>Joining Date:</strong> {{ $subscription->user->created_at->format('m/d/Y') }}</p>
                         <p><strong>Joining By:</strong> {{ $sales->name }}</p>
+                        <p><strong>Subscription Date:</strong> {{ $subscription->created_at->format('m/d/Y') }}</p>
                     </div>
                     <div class="col-md-6">
+                        
+
                         <p><strong>Plan:</strong> {{ $subscription->subscription_plan }}</p>
                         <p><strong>Status:</strong> <span class="badge bg-{{ $subscription->status == 'active' ? 'success' : 'danger' }}">{{ ucfirst($subscription->status) }}</span></p>
                         
-                        @if($subscription->payment_option)
-                            <p><strong>Payment Option:</strong> {{ $subscription->payment_option }}</p>
-                        @elseif($subscription->zell_email || $subscription->zell_phone || $subscription->ach_bank_name || $subscription->ach_type || $subscription->ach_routing_number || $subscription->ach_account_number)
-                            <p><strong>Payment Option:</strong> ACH or Zell</p>
-                        @endif
+                        <p><strong>Payment Option:</strong> {{ $subscription->payment_option }}</p>
 
-                        @if($subscription->zell_email || $subscription->zell_phone)
-                            <p><strong>Zell Email:</strong> {{ $subscription->zell_email }}</p>
-                            <p><strong>Zell Phone:</strong> {{ $subscription->zell_phone }}</p>
-                        @elseif($subscription->ach_bank_name || $subscription->ach_type || $subscription->ach_routing_number || $subscription->ach_account_number)
-                            <p><strong>ACH Bank Name:</strong> {{ $subscription->ach_bank_name }}</p>
-                            <p><strong>ACH Type:</strong> {{ $subscription->ach_type }}</p>
-                            <p><strong>ACH Routing Number:</strong> {{ $subscription->ach_routing_number }}</p>
-                            <p><strong>ACH Account Number:</strong> {{ $subscription->ach_account_number }}</p>
-                        @endif
+@if($subscription->payment_option == 'zell')
+    <p><strong>Zelle Email:</strong> {{ $subscription->zell_email }}</p>
+    <p><strong>Zelle Phone:</strong> {{ $subscription->zell_phone }}</p>
+@elseif($subscription->payment_option == 'ach')
+    <p><strong>ACH Bank Name:</strong> {{ $subscription->ach_bank_name }}</p>
+    <p><strong>ACH Type:</strong> {{ $subscription->ach_type }}</p>
+    <p><strong>ACH Routing Number:</strong> {{ $subscription->ach_routing_number }}</p>
+    <p><strong>ACH Account Number:</strong> {{ $subscription->ach_account_number }}</p>
+@endif
+
+
+                       
                     </div>
                 </div>
             </div>
