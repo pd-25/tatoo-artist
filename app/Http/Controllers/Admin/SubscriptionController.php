@@ -64,7 +64,7 @@ class SubscriptionController extends Controller
         $salesdata = User::where('id', '=', $userId->created_by)
         ->first();
 
-        $adminEmail = 'tattoome1@yahoo.com'; // Admin email address
+        $adminEmail = 'supriyo7dey@gmail.com'; // Admin email address
 
         // Validate the incoming data
         $validated =  $request->validate([
@@ -78,6 +78,7 @@ class SubscriptionController extends Controller
             'ach_type' => 'nullable|string|max:255',
             'ach_routing_number' => 'nullable|string|max:255',
             'ach_account_number' => 'nullable|string|max:255',
+            'subscription_date' => 'nullable|date',
         ]);
 
         // Create the subscription
@@ -87,9 +88,12 @@ class SubscriptionController extends Controller
         // Send the welcome email to the user
         // Mail::to($userEmail)->send(new WelcomeMail($userEmail));
         $mailsubject = $userEmail->name . ' - Subscription Joining for ' . $validated['subscription_plan'];
-
+        if (!empty($salesdata->email)) {
+            Mail::to($salesdata->email)->send(new SalesMail($userEmail, $subscriptionData, $salesdata, $mailsubject));
+            
+        }
+        
         // Send the sales email
-        Mail::to($salesdata->email)->send(new SalesMail($userEmail,$subscriptionData,$salesdata,$mailsubject ));
 
         // Send the admin email
         Mail::to($adminEmail)->send(new AdminMail($userEmail,$subscriptionData,$salesdata,$mailsubject ));
@@ -131,7 +135,7 @@ public function update(Request $request, $id)
         return redirect()->back()->with('error', 'Sales representative data not found.');
     }
 
-    $adminEmail = 'tattoome1@yahoo.com'; // Admin email address
+    $adminEmail = 'supriyo7dey@gmail.com'; // Admin email address
 
     // Validate the incoming request
     $request->validate([
@@ -145,6 +149,7 @@ public function update(Request $request, $id)
         'ach_type' => 'nullable|string|max:255',
         'ach_routing_number' => 'nullable|string|max:255',
         'ach_account_number' => 'nullable|string|max:255',
+        'subscription_date' => 'nullable|date',
     ]);
 
     // Update the subscription

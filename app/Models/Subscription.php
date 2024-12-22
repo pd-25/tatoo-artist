@@ -32,6 +32,7 @@ class Subscription extends Model
         'ach_type',
         'ach_routing_number',
         'ach_account_number',
+        'subscription_date',
     ];
 
     /**
@@ -43,4 +44,7 @@ class Subscription extends Model
     {
         return $this->belongsTo(User::class);
     }
+    protected $casts = [
+        'subscription_date' => 'datetime',
+    ];
 }

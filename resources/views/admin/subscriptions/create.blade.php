@@ -1,11 +1,11 @@
 @extends('admin.layout.main')
 
-@section('title', env('APP_NAME').' | Create Subscription')
+@section('title', env('APP_NAME') . ' | Create Subscription')
 
 @section('content')
 <div class="row justify-content-center">
-  
-        <div class="col-lg-11">
+
+    <div class="col-lg-11">
         <div class="card">
             <div class="card-title text-center">
                 <h4>Create Subscription</h4>
@@ -13,55 +13,70 @@
             <div class="card-body">
                 <form action="{{ route('subscriptions.store') }}" method="POST">
                     @csrf
-                    
-                        <input type="hidden" id="user_id" name="user_id" class="form-control" placeholder="Enter User ID" value="{{ $userId}}" required>
-                    
 
-                    <div class="form-group mb-3">
-                        <label for="subscription_plan">Subscription Plan</label>
-                        <select id="subscription_plan" name="subscription_plan" class="form-control" required>
-                            <option value="">Select Status</option>
-                            <option value="Starter Plan - $50" @selected($subscriptionPlan == 'Starter Plan - $50')>Starter Plan - $50</option>
-                            <option value="Professional Plan - $100" @selected($subscriptionPlan == 'Professional Plan - $100')>Professional Plan - $100</option>
-                            <option value="Elite Plan - $300" @selected($subscriptionPlan == 'Elite Plan - $300')>Elite Plan - $300</option>
-                        </select>
-                        
+                    <input type="hidden" id="user_id" name="user_id" class="form-control" placeholder="Enter User ID"
+                        value="{{ $userId}}" required>
+
+
+                        <div class="form-group mb-3">
+                        <div id="password-section">
+                            <label for="password">Enter Password (use for sales person)</label>
+
+                            <div class="d-flex gap-2">
+                                <div class="" style="width: 90%;">
+                                    <input type="password" id="password" class="form-control" placeholder="Password">
+                                </div>
+                                <div onclick="unlockDateField()" class="btn-primary" style="width: 10%; text-align: center; padding: 10px; border-radius: 5px; margin-left: 10px;">
+                                  Unlock
+                                </div>
+
+                            </div>
+                            <p id="error-message" style="color: red; display: none;">Incorrect password!</p>
+
+                        </div>
                     </div>
-                    <div class="form-group mb-3">
-                    <div id="password-section">
-        <label for="password">Enter Password (use for sales person):</label>
-        <input type="password" id="password" class="form-control" placeholder="Password">
-        <button onclick="unlockDateField()">Unlock</button>
-        <p id="error-message" style="color: red; display: none;">Incorrect password!</p>
-    </div>
-    </div>
-    <div id="form-container"></div>
+                    <div id="form-container"></div>
+                    <div id="form-container"></div>
 
-    <script>
-        function unlockDateField() {
-            const passwordInput = document.getElementById('password').value;
-            const correctPassword = 'secure123'; // Set your desired password here
-            const errorMessage = document.getElementById('error-message');
-            const formContainer = document.getElementById('form-container');
+                    <script>
+                        function unlockDateField() {
+                            const passwordInput = document.getElementById('password').value;
+                            const correctPassword = 'secure123'; // Set your desired password here
+                            const errorMessage = document.getElementById('error-message');
+                            const formContainer = document.getElementById('form-container');
 
-            if (passwordInput === correctPassword) {
-                errorMessage.style.display = 'none';
+                            if (passwordInput === correctPassword) {
+                                errorMessage.style.display = 'none';
 
-                // Add date field dynamically
-                formContainer.innerHTML = `
-                    <div>
+                                // Add date field dynamically
+                                formContainer.innerHTML = `
+                    <div class="datepicker">
                         <label for="date">Select Subscription Date</label>
-                        <input type="date" class="form-control" id="date">
+                        <input type="date" name="subscription_date" class="form-control" id="date">
                     </div>
                 `;
 
-                // Optionally, clear the password input and hide the password section
-                document.getElementById('password-section').style.display = 'none';
-            } else {
-                errorMessage.style.display = 'block';
-            }
-        }
-    </script>
+                                // Optionally, clear the password input and hide the password section
+                                document.getElementById('password-section').style.display = 'none';
+                            } else {
+                                errorMessage.style.display = 'block';
+                            }
+                        }
+                    </script>
+
+                    <script>
+                        $(function () {
+                            $('#datetimepicker1').datetimepicker();
+                        });
+
+                        $('.datepicker').datetimepicker({
+                            "allowInputToggle": true,
+                            "showClose": true,
+                            "showClear": true,
+                            "showTodayButton": true,
+                            "format": "MM/DD/YYYY",
+                        });
+                    </script>
 
                     <div class="form-group mb-3">
                         <label for="status">Status</label>
@@ -85,12 +100,14 @@
                     <div id="zelle_fields" class="d-none">
                         <div class="form-group mb-3">
                             <label for="zell_email">Zelle Email</label>
-                            <input type="email" id="zell_email" name="zell_email" class="form-control" placeholder="Enter Zelle Email">
+                            <input type="email" id="zell_email" name="zell_email" class="form-control"
+                                placeholder="Enter Zelle Email">
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="zell_phone">Zelle Phone</label>
-                            <input type="text" id="zell_phone" name="zell_phone" class="form-control" placeholder="Enter Zelle Phone">
+                            <input type="text" id="zell_phone" name="zell_phone" class="form-control"
+                                placeholder="Enter Zelle Phone">
                         </div>
                     </div>
 
@@ -98,27 +115,30 @@
                     <div id="ach_fields" class="d-none">
                         <div class="form-group mb-3">
                             <label for="ach_bank_name">ACH Bank Name</label>
-                            <input type="text" id="ach_bank_name" name="ach_bank_name" class="form-control" placeholder="Enter Bank Name">
+                            <input type="text" id="ach_bank_name" name="ach_bank_name" class="form-control"
+                                placeholder="Enter Bank Name">
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="ach_type">ACH Type</label>
-                            <select id="ach_type" name="ach_type" class="form-control" >
+                            <select id="ach_type" name="ach_type" class="form-control">
                                 <option value="">Select Status</option>
                                 <option value="Checking">Checking</option>
-                                <option value="Savings" >Savings</option>
+                                <option value="Savings">Savings</option>
                             </select>
-                           
+
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="ach_routing_number">ACH Routing Number</label>
-                            <input type="text" id="ach_routing_number" name="ach_routing_number" class="form-control" placeholder="Enter Routing Number">
+                            <input type="text" id="ach_routing_number" name="ach_routing_number" class="form-control"
+                                placeholder="Enter Routing Number">
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="ach_account_number">ACH Account Number</label>
-                            <input type="number" id="ach_account_number" name="ach_account_number" class="form-control" placeholder="Enter Account Number">
+                            <input type="number" id="ach_account_number" name="ach_account_number" class="form-control"
+                                placeholder="Enter Account Number">
                         </div>
                     </div>
 
@@ -128,7 +148,7 @@
                 </form>
             </div>
         </div>
-       
+
     </div>
 </div>
 
@@ -158,7 +178,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         // Select the input by class or ID
         const phoneInput = document.querySelector('#zell_phone');
-        
+
         if (phoneInput) {
             phoneInput.addEventListener('input', function () {
                 formatPhone(this);
