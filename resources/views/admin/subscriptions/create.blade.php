@@ -41,7 +41,7 @@
                     <script>
                         function unlockDateField() {
                             const passwordInput = document.getElementById('password').value;
-                            const correctPassword = 'secure123'; // Set your desired password here
+                            const correctPassword = '12345'; // Set your desired password here
                             const errorMessage = document.getElementById('error-message');
                             const formContainer = document.getElementById('form-container');
 
