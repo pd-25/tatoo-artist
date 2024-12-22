@@ -27,6 +27,41 @@
                         </select>
                         
                     </div>
+                    <div class="form-group mb-3">
+                    <div id="password-section">
+        <label for="password">Enter Password (use for sales person):</label>
+        <input type="password" id="password" class="form-control" placeholder="Password">
+        <button onclick="unlockDateField()">Unlock</button>
+        <p id="error-message" style="color: red; display: none;">Incorrect password!</p>
+    </div>
+    </div>
+    <div id="form-container"></div>
+
+    <script>
+        function unlockDateField() {
+            const passwordInput = document.getElementById('password').value;
+            const correctPassword = 'secure123'; // Set your desired password here
+            const errorMessage = document.getElementById('error-message');
+            const formContainer = document.getElementById('form-container');
+
+            if (passwordInput === correctPassword) {
+                errorMessage.style.display = 'none';
+
+                // Add date field dynamically
+                formContainer.innerHTML = `
+                    <div>
+                        <label for="date">Select Subscription Date</label>
+                        <input type="date" class="form-control" id="date">
+                    </div>
+                `;
+
+                // Optionally, clear the password input and hide the password section
+                document.getElementById('password-section').style.display = 'none';
+            } else {
+                errorMessage.style.display = 'block';
+            }
+        }
+    </script>
 
                     <div class="form-group mb-3">
                         <label for="status">Status</label>
