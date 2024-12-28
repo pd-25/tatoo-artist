@@ -84,6 +84,16 @@ class SubscriptionController extends Controller
         // Create the subscription
         $subscription = Subscription::create($validated);
         $subscriptionData = array_merge($validated, ['created_at' => $subscription->created_at]);
+    //   $data['user_id'] => auth()->guard('artists')->id();
+    //     $data['transaction_date'] => $subscription->subscription_date
+    //     $data['payment_method'] => $subscription->payment_option
+    //     $data['amount'] => auth()->guard('artists')->id();
+    //     $data['expense_items'] => auth()->guard('artists')->id();
+    //     $data['expense_items'] => auth()->guard('artists')->id();
+    //     $data['expense_items'] => auth()->guard('artists')->id();
+    //     $data['note'] => auth()->guard('artists')->id();
+        
+    //     $expenseCreate = Expense::c
 
         // Send the welcome email to the user
         // Mail::to($userEmail)->send(new WelcomeMail($userEmail));

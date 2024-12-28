@@ -84,7 +84,7 @@
                             "showClose": true,
                             "showClear": true,
                             "showTodayButton": true,
-                            "format": "MM/DD/YYYY",
+                            "format": "DD/MM/YYYY",
                         });
                     </script>
 
@@ -101,7 +101,7 @@
                         <label for="payment_option">Payment Option</label>
                         <select id="payment_option" name="payment_option" class="form-control" required>
                             <option value="">Select Payment Option</option>
-                            <option value="zell" @selected($subscription->payment_option == 'zell')>Zelle</option>
+                            <option value="zelle" @selected($subscription->payment_option == 'zelle')>Zelle</option>
                             <option value="ach" @selected($subscription->payment_option == 'ach')>ACH</option>
                         </select>
                     </div>
@@ -147,14 +147,17 @@
                             <label for="ach_routing_number">ACH Routing Number</label>
                             <input type="number" id="ach_routing_number" name="ach_routing_number" class="form-control"
                                 value="{{ old('ach_routing_number', $subscription->ach_routing_number) }}"
-                                placeholder="Enter Routing Number">
+                                placeholder="Enter Routing Number" maxlength="9"
+                                oninput="validateLengthRouting(this)"
+                                
+                                >
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="ach_account_number">ACH Account Number</label>
                             <input type="number" id="ach_account_number" name="ach_account_number" class="form-control"
                                 value="{{ old('ach_account_number', $subscription->ach_account_number) }}"
-                                placeholder="Enter Account Number">
+                                placeholder="Enter Account Number" minlength="8" maxlength="18" oninput="validateLengthforacount(this)">
                         </div>
                     </div>
 
@@ -178,7 +181,7 @@
             const value = paymentOption.value;
 
             // Show/hide fields based on selected payment option
-            if (value === 'zell') {
+            if (value === 'zelle') {
                 zelleFields.classList.remove('d-none');
                 achFields.classList.add('d-none');
             } else if (value === 'ach') {
@@ -219,6 +222,26 @@
 
         // Update the input value
         input.value = value;
+    }
+</script>
+
+<script>
+    function validateLengthforacount(input) {
+        const value = input.value;
+        if (value.length < 8 || value.length > 18) {
+            input.setCustomValidity("Account number must be between 8 and 18 digits.");
+        } else {
+            input.setCustomValidity("");
+        }
+    }
+    function validateLengthRouting(input) {
+    const value = input.value;
+    if (value.length !== 9) {
+        input.setCustomValidity("Routing number must be exactly 9 digits.");
+    } else {
+        input.setCustomValidity(""); // Clears any previous error message
+    }
+
     }
 </script>
 @endsection

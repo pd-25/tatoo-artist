@@ -35,7 +35,7 @@
                         
                         <p><strong>Payment Option:</strong> {{ $subscription->payment_option }}</p>
 
-@if($subscription->payment_option == 'zell')
+@if($subscription->payment_option == 'zelle')
     <p><strong>Zelle Email:</strong> {{ $subscription->zell_email }}</p>
     <p><strong>Zelle Phone:</strong> {{ $subscription->zell_phone }}</p>
 @elseif($subscription->payment_option == 'ach')
