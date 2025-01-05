@@ -182,7 +182,10 @@ public function update(Request $request, $id)
 
 public function cronCreateExpance() {
     // Fetch all subscriptions with status "Renew"
-    $subscriptionList = Subscription::where("status", "=", "Renew")->get();
+    $subscriptionList = Subscription::where("status", "=", "Renew")
+    ->whereNotNull("subscription_date")
+    ->get();
+
 
     // Initialize counters for success and failure
     $successCount = 0;
