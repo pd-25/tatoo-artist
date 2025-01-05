@@ -181,11 +181,10 @@ public function update(Request $request, $id)
 }
 
 public function cronCreateExpance() {
-    // Fetch all subscriptions with status "Renew"
+    // Fetch subscriptions with status "Renew" and subscription_date not null
     $subscriptionList = Subscription::where("status", "=", "Renew")
-    ->whereNotNull("subscription_date")
-    ->get();
-
+        ->whereNotNull("subscription_date")
+        ->get();
 
     // Initialize counters for success and failure
     $successCount = 0;
@@ -193,20 +192,33 @@ public function cronCreateExpance() {
 
     foreach ($subscriptionList as $subscription) {
         try {
-            // Create a new ExpenseModel entry
-            $expance = new ExpenseModel();
+            // Check if subscription_date matches the 28-day cycle
+            $subscriptionDate = \Carbon\Carbon::parse($subscription->subscription_date);
+            $currentDate = \Carbon\Carbon::now();
+           
 
-            // Set the fields for the ExpenseModel
-            $expance->user_id = $subscription->user_id;
-            $expance->amount = $subscription->subscription_plan; // Assuming there's an amount field in Subscription
-            $expance->note = "Expense for subscription";
-            $expance->payment_method = $subscription->payment_option;
-            $expance->transaction_date = now();
-            $expance->expense_items = "advertising";
+            // Calculate the difference in days
+            $daysDifference = $subscriptionDate->diffInDays($currentDate);
+            // dd($daysDifference);
 
-            // Save the ExpenseModel
-            $expance->save();
-            $successCount++;
+
+            // Proceed only if the difference is a multiple of 28 days
+            if ($daysDifference % 28 === 0) {
+                // Create a new ExpenseModel entry
+                $expance = new ExpenseModel();
+
+                // Set the fields for the ExpenseModel
+                $expance->user_id = $subscription->user_id;
+                $expance->amount = $subscription->subscription_plan;
+                $expance->note = "Expense for subscription";
+                $expance->payment_method = $subscription->payment_option;
+                $expance->transaction_date = now();
+                $expance->expense_items = "advertising";
+
+                // Save the ExpenseModel
+                $expance->save();
+                $successCount++;
+            }
         } catch (\Exception $e) {
             // Increment fail count if an exception occurs
             $failCount++;
