@@ -21,9 +21,9 @@
                         <label for="subscription_plan">Subscription Plan</label>
                         <select id="subscription_plan" name="subscription_plan" class="form-control" required>
                             <option value="">Select Status</option>
-                            <option value="Starter Plan - $50" @selected($subscriptionPlan == 'Starter Plan - $50')>Starter Plan - $50</option>
-                            <option value="Professional Plan - $100" @selected($subscriptionPlan == 'Professional Plan - $100')>Professional Plan - $100</option>
-                            <option value="Elite Plan - $300" @selected($subscriptionPlan == 'Elite Plan - $300')>Elite Plan - $300</option>
+                            <option value="50" @selected($subscriptionPlan == 'Starter Plan - $50')>Starter Plan - $50</option>
+                            <option value="100" @selected($subscriptionPlan == 'Professional Plan - $100')>Professional Plan - $100</option>
+                            <option value="300" @selected($subscriptionPlan == 'Elite Plan - $300')>Elite Plan - $300</option>
                         </select>
                         
                     </div>

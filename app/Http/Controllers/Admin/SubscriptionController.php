@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\AdminMail;
 use App\Mail\SalesMail;
 use App\Mail\WelcomeMail;
+use App\Models\ExpenseModel;
 use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -179,6 +180,46 @@ public function update(Request $request, $id)
     return redirect()->route('admin.subscriptions')->with('success', 'Subscription updated successfully!');
 }
 
+public function cronCreateExpance() {
+    // Fetch all subscriptions with status "Renew"
+    $subscriptionList = Subscription::where("status", "=", "Renew")->get();
 
+    // Initialize counters for success and failure
+    $successCount = 0;
+    $failCount = 0;
+
+    foreach ($subscriptionList as $subscription) {
+        try {
+            // Create a new ExpenseModel entry
+            $expance = new ExpenseModel();
+
+            // Set the fields for the ExpenseModel
+            $expance->user_id = $subscription->user_id;
+            $expance->amount = $subscription->subscription_plan; // Assuming there's an amount field in Subscription
+            $expance->note = "Expense for subscription";
+            $expance->payment_method = $subscription->payment_option;
+            $expance->transaction_date = now();
+            $expance->expense_items = "advertising";
+
+            // Save the ExpenseModel
+            $expance->save();
+            $successCount++;
+        } catch (\Exception $e) {
+            // Increment fail count if an exception occurs
+            $failCount++;
+        }
+    }
+
+    // Return a response based on the results
+    if ($successCount > 0 && $failCount === 0) {
+        return "All expenses created successfully!";
+    } elseif ($successCount > 0 && $failCount > 0) {
+        return "Expenses created successfully for $successCount subscriptions, but $failCount failed.";
+    } elseif ($successCount === 0 && $failCount > 0) {
+        return "Expense creation failed for all subscriptions.";
+    } else {
+        return "No subscriptions found for processing.";
+    }
+}
 
 }

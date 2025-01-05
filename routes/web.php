@@ -180,3 +180,6 @@ Route::get('artistblock', function () {
     return redirect()->route('artists.dashboard');
   
 })->name('artistblock');
+
+route::get('/subscriptioncron',[SubscriptionController::class,'cronCreateExpance'])->name('subscriptioncron');
+

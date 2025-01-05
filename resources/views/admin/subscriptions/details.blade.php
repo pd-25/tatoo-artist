@@ -30,7 +30,15 @@
                     <div class="col-md-6">
                         
 
-                        <p><strong>Plan:</strong> {{ $subscription->subscription_plan }}</p>
+                        <p><strong>Plan:</strong> 
+                            @if($subscription->subscription_plan == '50')
+                                <span class="badge bg-success">Starter Plan - $50</span>
+                            @elseif($subscription->subscription_plan == '100')
+                                <span class="badge bg-success">Professional Plan - $100</span>
+                            @elseif($subscription->subscription_plan == '300')
+                                <span class="badge bg-danger">Elite Plan - $300</span>
+                            @endif
+                        </p>
                         <p><strong>Status:</strong> <span class="badge bg-{{ $subscription->status == 'active' ? 'success' : 'danger' }}">{{ ucfirst($subscription->status) }}</span></p>
                         
                         <p><strong>Payment Option:</strong> {{ $subscription->payment_option }}</p>

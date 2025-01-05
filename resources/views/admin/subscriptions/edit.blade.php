@@ -21,11 +21,11 @@
                         <label for="subscription_plan">Subscription Plan</label>
                         <select id="subscription_plan" name="subscription_plan" class="form-control" required>
                             <option value="">Select Status</option>
-                            <option value="Starter Plan - $50" @selected($subscription->subscription_plan == 'Starter Plan - $50')>Starter Plan - $50</option>
-                            <option value="Professional Plan - $100"
-                                @selected($subscription->subscription_plan == 'Professional Plan - $100')>Professional
+                            <option value="50" @selected($subscription->subscription_plan == '50')>Starter Plan - $50</option>
+                            <option value="100"
+                                @selected($subscription->subscription_plan == '100')>Professional
                                 Plan - $100</option>
-                            <option value="Elite Plan - $300" @selected($subscription->subscription_plan == 'Elite Plan - $300')>Elite Plan - $300</option>
+                            <option value="300" @selected($subscription->subscription_plan == '300')>Elite Plan - $300</option>
                         </select>
                     </div>
 
