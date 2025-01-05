@@ -203,7 +203,7 @@ public function cronCreateExpance() {
 
 
             // Proceed only if the difference is a multiple of 28 days
-            if ($daysDifference % 28 === 0) {
+            if ($daysDifference % 30 === 0) {
                 // Create a new ExpenseModel entry
                 $expance = new ExpenseModel();
 
