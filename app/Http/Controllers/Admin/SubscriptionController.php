@@ -213,6 +213,7 @@ public function cronCreateExpance() {
                 $expance->note = "Expense for subscription";
                 $expance->payment_method = $subscription->payment_option;
                 $expance->transaction_date = now();
+                $expance->created_at  = now();
                 $expance->expense_items = "advertising";
 
                 // Save the ExpenseModel
