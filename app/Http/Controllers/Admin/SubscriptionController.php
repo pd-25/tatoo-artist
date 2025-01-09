@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Mail\AdminMail;
-use App\Mail\SalesMail;
-use App\Mail\WelcomeMail;
+use App\Mail\SubscriptionMail;
 use App\Models\ExpenseModel;
 use App\Models\Subscription;
 use App\Models\User;
@@ -85,29 +83,19 @@ class SubscriptionController extends Controller
         // Create the subscription
         $subscription = Subscription::create($validated);
         $subscriptionData = array_merge($validated, ['created_at' => $subscription->created_at]);
-    //   $data['user_id'] => auth()->guard('artists')->id();
-    //     $data['transaction_date'] => $subscription->subscription_date
-    //     $data['payment_method'] => $subscription->payment_option
-    //     $data['amount'] => auth()->guard('artists')->id();
-    //     $data['expense_items'] => auth()->guard('artists')->id();
-    //     $data['expense_items'] => auth()->guard('artists')->id();
-    //     $data['expense_items'] => auth()->guard('artists')->id();
-    //     $data['note'] => auth()->guard('artists')->id();
-        
-    //     $expenseCreate = Expense::c
-
-        // Send the welcome email to the user
-        // Mail::to($userEmail)->send(new WelcomeMail($userEmail));
-        $mailsubject = $userEmail->name . ' - Subscription Joining for ' . $validated['subscription_plan'];
+   
+   
+        // $mailsubject = 'New Artist'. $userEmail->name . ' - Subscription Joining for ' . $validated['subscription_plan'];
+        $mailsubject = 'New Artist';
         if (!empty($salesdata->email)) {
-            Mail::to($salesdata->email)->send(new SalesMail($userEmail, $subscriptionData, $salesdata, $mailsubject));
+            Mail::to($salesdata->email)->send(new SubscriptionMail($userEmail, $subscriptionData, $salesdata, $mailsubject));
             
         }
         
         // Send the sales email
 
         // Send the admin email
-        Mail::to($adminEmail)->send(new AdminMail($userEmail,$subscriptionData,$salesdata,$mailsubject ));
+        Mail::to($adminEmail)->send(new SubscriptionMail($userEmail,$subscriptionData,$salesdata,$mailsubject ));
 
         // Redirect to the index page with a success message
         return redirect()->route('admin.subscriptions')->with('success', 'Subscription created successfully!');
@@ -168,13 +156,13 @@ public function update(Request $request, $id)
 
     // Prepare subscription data for the emails
     $subscriptionData = $subscription->toArray();
-    $mailsubject = $subscriptionData['status'] . ' Subscription by ' . $userId->name;
+    $mailsubject = 'Artist '.$subscriptionData['status'];
 
     // Send the sales email
-    Mail::to($salesdata->email)->send(new SalesMail($userEmail, $subscriptionData, $salesdata,$mailsubject ));
+    Mail::to($salesdata->email)->send(new SubscriptionMail($userEmail, $subscriptionData, $salesdata,$mailsubject ));
 
     // Send the admin email
-    Mail::to($adminEmail)->send(new AdminMail($userEmail, $subscriptionData, $salesdata,$mailsubject ));
+    Mail::to($adminEmail)->send(new SubscriptionMail($userEmail, $subscriptionData, $salesdata,$mailsubject ));
 
     // Redirect to the subscriptions index page with a success message
     return redirect()->route('admin.subscriptions')->with('success', 'Subscription updated successfully!');
