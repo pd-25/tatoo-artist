@@ -49,30 +49,30 @@ class DashboardController extends Controller
         //Total artwork count
         $totalSalesPerson = User::where('type', 'sales')->count();
 
-//artist
-$totalSubscriber = '';
-$totalAppointment = '';
-$havesubscription = '';
-$totalArtwork='';
+        //artist
+        $totalSubscriber = '';
+        $totalAppointment = '';
+        $havesubscription = '';
+        $totalArtwork = '';
 
-if (Auth::guard('artists')->check()) {
-    $artistId = auth()->guard('artists')->id();
-    $totalArtwork = $this->artworkInterface->getArtistWiseArtwork($artistId)->count();
-    
-    $sid = Subscription::where('user_id', $artistId)->first();
-    $havesubscription = $sid->subscription_plan ?? '0';
+        if (Auth::guard('artists')->check()) {
+            $artistId = auth()->guard('artists')->id();
+            $totalArtwork = $this->artworkInterface->getArtistWiseArtwork($artistId)->count();
 
-    $totalAppointment = Appointment::where('artist_id', $artistId)->count();
-} elseif (Auth::guard('admins')->check()) {
-    $totalSubscriber = Subscription::count();
-    $totalAppointment = Appointment::count();
-} else {
-    $salespersonId = Auth::guard('sales')->id();
-    $artists = User::where('created_by', $salespersonId)->pluck('id');
+            $sid = Subscription::where('user_id', $artistId)->first();
+            $havesubscription = $sid->subscription_plan ?? '0';
 
-    $totalSubscriber = Subscription::whereIn('user_id', $artists)->count();
-    $totalAppointment = Appointment::whereIn('artist_id', $artists)->count();
-}
+            $totalAppointment = Appointment::where('artist_id', $artistId)->count();
+        } elseif (Auth::guard('admins')->check()) {
+            $totalSubscriber = Subscription::count();
+            $totalAppointment = Appointment::count();
+        } else {
+            $salespersonId = Auth::guard('sales')->id();
+            $artists = User::where('created_by', $salespersonId)->pluck('id');
+
+            $totalSubscriber = Subscription::whereIn('user_id', $artists)->count();
+            $totalAppointment = Appointment::whereIn('artist_id', $artists)->count();
+        }
 
 
 
@@ -251,9 +251,9 @@ if (Auth::guard('artists')->check()) {
                 $totalExpensesAmountData[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' => $totalExpensesAmount);
             }
 
-            
-            
-            
+
+
+
 
             return view(
                 'admin.dashboard.dashboard',
