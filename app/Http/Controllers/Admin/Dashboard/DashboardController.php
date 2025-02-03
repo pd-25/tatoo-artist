@@ -26,7 +26,7 @@ class DashboardController extends Controller
 
     private $artworkInterface, $artistInterface, $artistController;
 
-    public function __construct(ArtistInterface $artistInterface, ArtistController $artistController , ArtworkInterface $artworkInterface)
+    public function __construct(ArtistInterface $artistInterface, ArtistController $artistController, ArtworkInterface $artworkInterface)
     {
         $this->artistInterface = $artistInterface;
         $this->artistController = $artistController;
@@ -44,11 +44,37 @@ class DashboardController extends Controller
 
         // Count the total number of artists
         $totalArtists = $this->artistInterface->getAllArtistss($request)->count();
-        
+
 
         //Total artwork count
         $totalSalesPerson = User::where('type', 'sales')->count();
-        
+
+//artist
+$totalSubscriber = '';
+$totalAppointment = '';
+$havesubscription = '';
+$totalArtwork='';
+
+if (Auth::guard('artists')->check()) {
+    $artistId = auth()->guard('artists')->id();
+    $totalArtwork = $this->artworkInterface->getArtistWiseArtwork($artistId)->count();
+    
+    $sid = Subscription::where('user_id', $artistId)->first();
+    $havesubscription = $sid->subscription_plan ?? '0';
+
+    $totalAppointment = Appointment::where('artist_id', $artistId)->count();
+} elseif (Auth::guard('admins')->check()) {
+    $totalSubscriber = Subscription::count();
+    $totalAppointment = Appointment::count();
+} else {
+    $salespersonId = Auth::guard('sales')->id();
+    $artists = User::where('created_by', $salespersonId)->pluck('id');
+
+    $totalSubscriber = Subscription::whereIn('user_id', $artists)->count();
+    $totalAppointment = Appointment::whereIn('artist_id', $artists)->count();
+}
+
+
 
 
 
@@ -92,85 +118,81 @@ class DashboardController extends Controller
         //     ->where('quotes.quote_type', '0')
         //     ->count();
         $totalArtist1 = $totalArtist2 = $totalArtist3 = 0;
-$totalsalesprice1 = $totalsalesprice2 = $totalsalesprice3 = 0;
-$totalQuotes1 = $totalQuotes2 = $totalQuotes3 = 0;
-if(Auth::guard('artists')->check()){
+        $totalsalesprice1 = $totalsalesprice2 = $totalsalesprice3 = 0;
+        $totalQuotes1 = $totalQuotes2 = $totalQuotes3 = 0;
+        if (Auth::guard('artists')->check()) {
+        } elseif (Auth::guard('admins')->check()) {
+            // Admin: Fetch all data
+            $totalArtist1 = Subscription::where('subscription_plan', '50')->count();
+            $totalsalesprice1 = DB::table('payments')
+                ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+                ->where('subscriptions.subscription_plan', '50')->sum('payments.price');
+            $totalQuotes1 = DB::table('quotes')
+                ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+                ->where('subscriptions.subscription_plan', '50')
+                ->where('quotes.quote_type', '0')
+                ->count();
 
-}
-elseif (Auth::guard('admins')->check()) {
-    // Admin: Fetch all data
-    $totalArtist1 = Subscription::where('subscription_plan', '50')->count();
-    $totalsalesprice1 = DB::table('payments')
-        ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-        ->where('subscriptions.subscription_plan', '50')->sum('payments.price');
-    $totalQuotes1 = DB::table('quotes')
-        ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-        ->where('subscriptions.subscription_plan', '50')
-        ->where('quotes.quote_type', '0')
-        ->count();
+            $totalArtist2 = Subscription::where('subscription_plan', '100')->count();
+            $totalsalesprice2 = DB::table('payments')
+                ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+                ->where('subscriptions.subscription_plan', '100')->sum('payments.price');
+            $totalQuotes2 = DB::table('quotes')
+                ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+                ->where('subscriptions.subscription_plan', '100')
+                ->where('quotes.quote_type', '0')
+                ->count();
 
-    $totalArtist2 = Subscription::where('subscription_plan', '100')->count();
-    $totalsalesprice2 = DB::table('payments')
-        ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-        ->where('subscriptions.subscription_plan', '100')->sum('payments.price');
-    $totalQuotes2 = DB::table('quotes')
-        ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-        ->where('subscriptions.subscription_plan', '100')
-        ->where('quotes.quote_type', '0')
-        ->count();
+            $totalArtist3 = Subscription::where('subscription_plan', '300')->count();
+            $totalsalesprice3 = DB::table('payments')
+                ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+                ->where('subscriptions.subscription_plan', '300')->sum('payments.price');
+            $totalQuotes3 = DB::table('quotes')
+                ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+                ->where('subscriptions.subscription_plan', '300')
+                ->where('quotes.quote_type', '0')
+                ->count();
+        } else {
+            // Salesperson: Fetch data for artists they created
+            $salespersonId = Auth::guard('sales')->id();
+            $artists = User::where('created_by', $salespersonId)->pluck('id');
 
-    $totalArtist3 = Subscription::where('subscription_plan', '300')->count();
-    $totalsalesprice3 = DB::table('payments')
-        ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-        ->where('subscriptions.subscription_plan', '300')->sum('payments.price');
-    $totalQuotes3 = DB::table('quotes')
-        ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-        ->where('subscriptions.subscription_plan', '300')
-        ->where('quotes.quote_type', '0')
-        ->count();
+            $totalArtist1 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '50')->count();
+            $totalsalesprice1 = DB::table('payments')
+                ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+                ->whereIn('subscriptions.user_id', $artists)
+                ->where('subscriptions.subscription_plan', '50')->sum('payments.price');
+            $totalQuotes1 = DB::table('quotes')
+                ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+                ->whereIn('subscriptions.user_id', $artists)
+                ->where('subscriptions.subscription_plan', '50')
+                ->where('quotes.quote_type', '0')
+                ->count();
 
-} else {
-    // Salesperson: Fetch data for artists they created
-    $salespersonId = Auth::guard('sales')->id();
-    $artists = User::where('created_by', $salespersonId)->pluck('id');
+            $totalArtist2 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '100')->count();
+            $totalsalesprice2 = DB::table('payments')
+                ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+                ->whereIn('subscriptions.user_id', $artists)
+                ->where('subscriptions.subscription_plan', '100')->sum('payments.price');
+            $totalQuotes2 = DB::table('quotes')
+                ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+                ->whereIn('subscriptions.user_id', $artists)
+                ->where('subscriptions.subscription_plan', '100')
+                ->where('quotes.quote_type', '0')
+                ->count();
 
-    $totalArtist1 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '50')->count();
-    $totalsalesprice1 = DB::table('payments')
-        ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-        ->whereIn('subscriptions.user_id', $artists)
-        ->where('subscriptions.subscription_plan', '50')->sum('payments.price');
-    $totalQuotes1 = DB::table('quotes')
-        ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-        ->whereIn('subscriptions.user_id', $artists)
-        ->where('subscriptions.subscription_plan', '50')
-        ->where('quotes.quote_type', '0')
-        ->count();
-
-    $totalArtist2 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '100')->count();
-    $totalsalesprice2 = DB::table('payments')
-        ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-        ->whereIn('subscriptions.user_id', $artists)
-        ->where('subscriptions.subscription_plan', '100')->sum('payments.price');
-    $totalQuotes2 = DB::table('quotes')
-        ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-        ->whereIn('subscriptions.user_id', $artists)
-        ->where('subscriptions.subscription_plan', '100')
-        ->where('quotes.quote_type', '0')
-        ->count();
-
-    $totalArtist3 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '300')->count();
-    $totalsalesprice3 = DB::table('payments')
-        ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-        ->whereIn('subscriptions.user_id', $artists)
-        ->where('subscriptions.subscription_plan', '300')->sum('payments.price');
-    $totalQuotes3 = DB::table('quotes')
-        ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-        ->whereIn('subscriptions.user_id', $artists)
-        ->where('subscriptions.subscription_plan', '300')
-        ->where('quotes.quote_type', '0')
-        ->count();
-
-} 
+            $totalArtist3 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '300')->count();
+            $totalsalesprice3 = DB::table('payments')
+                ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+                ->whereIn('subscriptions.user_id', $artists)
+                ->where('subscriptions.subscription_plan', '300')->sum('payments.price');
+            $totalQuotes3 = DB::table('quotes')
+                ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+                ->whereIn('subscriptions.user_id', $artists)
+                ->where('subscriptions.subscription_plan', '300')
+                ->where('quotes.quote_type', '0')
+                ->count();
+        }
 
 
         $selectedyear =  date('Y');
@@ -192,7 +214,7 @@ elseif (Auth::guard('admins')->check()) {
                 $WALKInDataCount = DB::table('quotes')
                     ->select('quotes.*')
                     ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-                    ->where('quotes.artist_id', Auth::guard('artists')->user()->id)
+                    ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
                     ->where('quotes.quote_type', '0')
                     ->where('quotes.created_at', '>=', $first_date_this_month)
                     ->where('quotes.created_at', '<=', $last_date_this_month)
@@ -203,7 +225,7 @@ elseif (Auth::guard('admins')->check()) {
                 $QuotesDataCount = DB::table('quotes')
                     ->select('quotes.*')
                     ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-                    ->where('quotes.artist_id', Auth::guard('artists')->user()->id)
+                    ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
                     ->where('quotes.quote_type', '1')
                     ->where('quotes.created_at', '>=', $first_date_this_month)
                     ->where('quotes.created_at', '<=', $last_date_this_month)
@@ -214,7 +236,7 @@ elseif (Auth::guard('admins')->check()) {
                 // Sales Amount
                 $totalSalesDeposit = DB::table('payments')
                     ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-                    ->where('payments.artist_id', Auth::guard('artists')->user()->id)
+                    ->where('payments.artist_id', Auth::guard('sales')->user()->id)
                     ->where('payments.date', '>=', $first_date_this_month)
                     ->where('payments.date', '<=', $last_date_this_month)
                     ->sum('payments.deposit');
@@ -222,45 +244,17 @@ elseif (Auth::guard('admins')->check()) {
 
                 // Expenses Amount
                 $totalExpensesAmount = DB::table('expense')
-                    ->where('expense.user_id', Auth::guard('artists')->user()->id)
+                    ->where('expense.user_id', Auth::guard('sales')->user()->id)
                     ->where('expense.transaction_date', '>=', $first_date_this_month)
                     ->where('expense.transaction_date', '<=', $last_date_this_month)
                     ->sum('expense.amount');
                 $totalExpensesAmountData[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' => $totalExpensesAmount);
             }
 
-            //artist
-            $totalArtwork =  $this->artworkInterface->getArtistWiseArtwork(auth()->guard('artists')->id())->count();
-        $havesubscription='';
-        if(Auth::guard('artists')->check()){
-            $sid = Subscription::where('user_id', auth()->guard('artists')->user()->id)->first();
-            $havesubscription = $sid->subscription_plan ?? '0';
-        }
-        $totalAppointment = '' ;
-        if (Auth::guard('artists')->check()) {
-            $totalAppointment = Appointment::where('artist_id', auth()->guard('artists')->id())->with('user', 'artist')->count();
-        } elseif (Auth::guard('admins')->check()) {
-            $totalAppointment = Appointment::with('user', 'artist')->count();
-        } else {
+            
+            
+            
 
-            $salespersonId = Auth::guard('sales')->id();
-            $artists = User::where('created_by', $salespersonId)->get();
-
-            $totalAppointment = Appointment::with('user', 'artist')->whereIn('artist_id', $artists->pluck('id'))->count();
-        }
-        $totalSubscriber = '';
-        if(Auth::guard('artists')->check()){
-
-        }elseif(Auth::guard('admins')->check()){
-            $totalSubscriber = Subscription::count();
-
-        }else{
-            $salespersonId = Auth::guard('sales')->id();
-            $artists = User::where('created_by', $salespersonId)->get();
-            $totalSubscriber = Subscription::with('user', 'artist')->whereIn('user_id', $artists->pluck('id'))->count();
-
-        }
-             
             return view(
                 'admin.dashboard.dashboard',
                 compact(
@@ -298,7 +292,6 @@ elseif (Auth::guard('admins')->check()) {
                 compact(
                     'totalUsers',
                     'totalArtists',
-                    'totalSubscriber',
                     'totalSalesPerson',
                     'totalArtist1',
                     'totalArtist2',
@@ -313,10 +306,11 @@ elseif (Auth::guard('admins')->check()) {
                     'QuotesData',
                     'totalSalesDepositAmount',
                     'totalExpensesAmountData',
-                    
-                  
-                    
-                    
+                    'totalSubscriber',
+
+
+
+
                 )
             );
         }
