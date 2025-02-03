@@ -80,29 +80,41 @@
 
 
 
+
 <div class="row justify-content-center">
     <div class="col-lg-11">
         <div class="card">
             <div class="card-title pr">
-                <h4>All</h4>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>All</h4>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <a href="{{route('artists.getWalkInArchive')}}" class="btn btn-primary m-1">Archives</a>
+                        <button class="btn btn-primary m-1 d-none" id="moveToArchives">Move to Archives</button>
+                    </div>
+                </div>
+
+                <div id="alert-container"></div>
 
                 @if (Session::has('msg'))
                     <p class="alert alert-info">{{ Session::get('msg') }}</p>
+                    
                 @endif
             </div>
-          
+
             <div class="ajax-loader">
                 <img src="https://i.stack.imgur.com/MnyxU.gif" class="img-responsive" />
             </div>
+            
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table student-data-table m-t-20">
                         <thead style="text-align: center;">
                             <tr>
+                                <th><input type="checkbox" id="selectAll"></th>
                                 <th>SN.</th>
-                                
                                 <th>User Email</th>
-                                
                                 <th>Artist Name</th>
                                 <th>Actions</th>
                             </tr>
@@ -110,58 +122,38 @@
                         <tbody style="text-align: center;">
                             @if (count($quotes) > 0)
                                 @foreach ($quotes as $index => $quote)
-                                    @if ($quote->quote_type != 0)
-                                        @php
-                                            $availability = date('jS F, Y', strtotime($quote->availability));
-                                            $quote_created_at = date('jS F, Y', strtotime($quote->created_at));
-                                            $escapedDescription = htmlspecialchars(
-                                                $quote->description,
-                                                ENT_QUOTES,
-                                                'UTF-8',
-                                            );
-                                            $formattedPhoneNumber = sprintf(
-                                                '(%s) %s-%s',
-                                                substr(@$quote->user->phone, 0, 3),
-                                                substr(@$quote->user->phone, 3, 3),
-                                                substr(@$quote->user->phone, 6, 4),
-                                            );
-                                        @endphp
-
-                                        <tr>
+                                    {{-- @if ($quote->quote_type == 1 && $quote->isarchive == 0) --}}
+                                        <tr data-id="{{ $quote->id }}">
+                                            <td><input type="checkbox" class="quoteCheckbox" value="{{ $quote->id }}"></td>
                                             <td>{{ $index + 1 }}</td>
-                                            {{-- <td>{{ @$quote->user->name }}</td> --}}
                                             <td>{{ @$quote->user->email }}</td>
-                                            {{-- <td>{{ @$formattedPhoneNumber }}</td> --}}
                                             <td>{{ @$quote->artist->name }}</td>
                                             <td>
                                                 @if ($quote->link_send_status == 0)
-                                                <button class="btn btn-sm btn-primary"
-                                                    onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Send
-                                                    Link</button>
-                                            @elseif($quote->link_send_status == 1)
-                                                <button class="btn btn-sm btn-warning"
-                                                    onclick="AgainSendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Again
-                                                    Send Link</button>
-                                            @else
-                                                <a href="{{ $quote->pdf_path }}" class="btn btn-sm btn-success"
-                                                    target="_blank">View Link</a>
-                                            @endif
+                                                    <button class="btn btn-sm btn-primary"
+                                                        onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Send Link</button>
+                                                @elseif($quote->link_send_status == 1)
+                                                    <button class="btn btn-sm btn-warning"
+                                                        onclick="AgainSendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Again Send Link</button>
+                                                @else
+                                                    <a href="{{ $quote->pdf_path }}" class="btn btn-sm btn-success"
+                                                        target="_blank">View Link</a>
+                                                @endif
 
-                                            <form method="POST"
-                                            action="{{ route('quote.delete', encrypt($quote->id)) }}"
-                                            class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="btn btn-sm btn-danger delete-icon show_confirm"
-                                                data-toggle="tooltip" title="Delete">
-                                                <i class="ti-trash"></i> Delete
-                                            </button>
-                                        </form>
+                                                <form method="POST"
+                                                    action="{{ route('quote.delete', encrypt($quote->id)) }}"
+                                                    class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="btn btn-sm btn-danger delete-icon show_confirm"
+                                                        data-toggle="tooltip" title="Delete">
+                                                        <i class="ti-trash"></i> Delete
+                                                    </button>
+                                                </form>
                                             </td>
-                                            
                                         </tr>
-                                    @endif
+                                    {{-- @endif --}}
                                 @endforeach
                             @else
                                 <tr>
@@ -172,11 +164,78 @@
                             @endif
                         </tbody>
                     </table>
+                    {{ $quotes->links() }}
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const selectAll = document.getElementById("selectAll");
+    const checkboxes = document.querySelectorAll(".quoteCheckbox");
+    const moveToArchives = document.getElementById("moveToArchives");
+
+    function toggleMoveToArchives() {
+        const selectedIds = Array.from(checkboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value); 
+
+        moveToArchives.classList.toggle("d-none", selectedIds.length === 0);
+
+        // Store selected IDs in a data attribute
+        moveToArchives.setAttribute("data-selected", JSON.stringify(selectedIds));
+    }
+
+    selectAll.addEventListener("change", function() {
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = selectAll.checked;
+        });
+        toggleMoveToArchives();
+    });
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", toggleMoveToArchives);
+    });
+
+    moveToArchives.addEventListener("click", function() {
+        const selectedIds = JSON.parse(moveToArchives.getAttribute("data-selected") || "[]");
+        
+        if (selectedIds.length > 0) {
+            console.log("Selected IDs: ", selectedIds);
+            // Send these IDs to the server via AJAX or form submission
+            fetch("{{ route('quote.moveToArchives') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ ids: selectedIds })
+            }).then(response => response.json())
+            .then(data => {
+            if (data.success) {
+                // Show Bootstrap alert
+                const alertDiv = document.createElement("div");
+                alertDiv.className = "alert alert-info";
+                alertDiv.innerHTML = data.success;
+                document.getElementById("alert-container").appendChild(alertDiv);
+
+                // Remove alert after 3 seconds
+                setTimeout(() => {
+                    alertDiv.remove();
+                    location.reload();
+                }, 3000);
+            } else {
+                alert("Something went wrong!");
+            }
+        })
+        .catch(error => console.error("Error:", error));
+        }
+    });
+});
+</script>
+
 
 
 

@@ -3,65 +3,17 @@
 @section('content')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" rel="stylesheet">
     <div class="row justify-content-center">
-
-        <div class="col-lg-11">
-            <div class="card">
-                <div class="card-title pr">
-                    <h4>Search Data based on date</h4>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('admin.filterDeposite') }}" method="POST" enctype="multipart/form-data" name="paymentform">
-                        @csrf
-                        <div class="row d-flex justify-content-between">
-                            <div class="col-lg-5 col-md-5 col-sm-12">
-                                <label for="start_date"><b>Start Date:</b></label>
-                                <div class="input-group date datepicker">
-                                    <input type="text" id="start_date" name="start_date" value="{{ old('start_date') }}" class="form-control" required>
-                                    <div class="input-group-addon input-group-append">
-                                        <div class="input-group-text">
-                                            <i class="fa fa-calendar"></i>
-                                        </div>
-                                    </div>
-                                </div>   
-                            </div>
-                    
-                            <div class="col-lg-5 col-md-5 col-sm-12">
-                                <label for="end_date"><b>End Date:</b></label>
-                                <div class="input-group date datepicker">
-                                    <input type="text" id="end_date" name="end_date" class="form-control" value="{{ old('end_date') }}" required>
-                                    <div class="input-group-addon input-group-append">
-                                        <div class="input-group-text">
-                                            <i class="fa fa-calendar"></i>
-                                        </div>
-                                    </div>
-                                </div>   
-                            </div>
-                      <!-- Filter and Print Buttons -->
-                      <div class="ccol-lg-2 col-md-2 col-sm-12 d-flex align-items-end mb-2 justify-content-center ">
-                        <button type="submit" class="btn btn-primary w-100 m-1 ">Search</button>
-                        <a href="{{ route('admin.printDepositPDF', ['start_date' => old('start_date'), 'end_date' => old('end_date')]) }}" target="_blank" class="m-1 btn btn-secondary no-print w-100" style="color:white">Print PDF</a>
-                        
-                        
-                    </div>
-                          
-                        </div> 
-                    </form>
-                        
-                </div>    
-            </div>
-        </div>    
-
         <div class="col-lg-11">
             <div class="card">
                 <div class="card-title pr">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h4>All Deposits of Payments</h4>
+                            <h4>All Deposits Payments Archives </h4>
                         </div>
                         <div class="d-flex align-items-center">
-                             <a href="{{ route('admin.AddpaymentForm') }}" target="_blank" class="btn  btn-success">Add Payment</a>
-                            <a href="{{route('deposit.getArchives')}}" class="btn btn-primary m-1">Archives</a>
-                            <button class="btn btn-primary m-1 d-none" id="moveToArchives">Move to Archives</button>
+                             <!-- <a href="{{ route('admin.AddpaymentForm') }}" target="_blank" class="btn  btn-success">Add Payment</a> -->
+                            <a href="{{route('admin.deposit-slips')}}" class="btn btn-primary m-1">Back</a>
+                            <!-- <button class="btn btn-primary m-1 d-none" id="moveToArchives">Move to Archives</button> -->
                         </div>
                     </div>
                     <div id="alert-container"></div>
@@ -77,7 +29,7 @@
                         <table class="table student-data-table m-t-20">
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" id="selectAll"></th>
+                                    <!-- <th><input type="checkbox" id="selectAll"></th> -->
                                     <th>SL No</th>
                                     <th>Customer Name</th>
                                     <th>Price</th>
@@ -94,7 +46,7 @@
                                 @if(count($payments)>0)
                                     @foreach ($payments as $index=> $payment)
                                         <tr>
-                                            <td><input type="checkbox" class="quoteCheckbox" value="{{ $payment->id }}"></td>
+                                            <!-- <td><input type="checkbox" class="quoteCheckbox" value="{{ $payment->id }}"></td> -->
 
                                             <td>{{ $index+1 }}</td>
                                             <td>{{ $payment->customers_name }}</td>

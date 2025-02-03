@@ -1,6 +1,124 @@
 @extends('admin.layout.main')
 @section('title', env('APP_NAME').' | Dashboard'  )
 
+<link href="https://canvasjs.com/assets/css/jquery-ui.1.11.2.min.css" rel="stylesheet" />
+<script>
+window.onload = function () {
+
+var chart = new CanvasJS.Chart("chartContainer1", {
+	animationEnabled: true,
+	title:{
+		text: "Activity"
+	},	
+	axisY: {
+		title: "Walk In",
+		titleFontColor: "#4F81BC",
+		lineColor: "#4F81BC",
+		labelFontColor: "#4F81BC",
+		tickColor: "#4F81BC"
+	},
+	axisY2: {
+		title: "Quotes",
+		titleFontColor: "#C0504E",
+		lineColor: "#C0504E",
+		labelFontColor: "#C0504E",
+		tickColor: "#C0504E"
+	},	
+	toolTip: {
+		shared: true
+	},
+	legend: {
+		cursor:"pointer",
+		itemclick: toggleDataSeries
+	},
+	data: [{
+		type: "column",
+		name: "Walk In",
+		legendText: "Walk In",
+		showInLegend: true, 
+		// dataPoints:[
+		// 	{ label: "Jan", y: 266.21 },
+		// ]
+        dataPoints:<?php echo json_encode($WALKInData); ?>
+	},
+	{
+		type: "column",	
+		name: "Quotes",
+		legendText: "Quotes",
+		//axisYType: "secondary",
+		showInLegend: true,
+		// dataPoints:[
+		// 	{ label: "Jan", y: 10.46 },
+		// ]
+        dataPoints:<?php echo json_encode($QuotesData); ?>
+	}]
+});
+chart.render();
+
+
+
+var chart2 = new CanvasJS.Chart("chartContainer2", {
+	animationEnabled: true,
+	title:{
+		text: "Sales VS Expenses"
+	},	
+	axisY: {
+		title: "Sales",
+		titleFontColor: "#4F81BC",
+		lineColor: "#4F81BC",
+		labelFontColor: "#4F81BC",
+		tickColor: "#4F81BC"
+	},
+	axisY2: {
+		title: "Expenses",
+		titleFontColor: "#C0504E",
+		lineColor: "#C0504E",
+		labelFontColor: "#C0504E",
+		tickColor: "#C0504E"
+	},	
+	toolTip: {
+		shared: true
+	},
+	legend: {
+		cursor:"pointer",
+		itemclick: toggleDataSeries
+	},
+	data: [{
+		type: "column",
+		name: "Sales",
+		legendText: "Sales",
+		showInLegend: true, 
+		// dataPoints:[
+		// 	{ label: "Jan", y: 266.21 },
+		// ]
+        dataPoints:<?php echo json_encode($totalSalesDepositAmount); ?>
+	},
+	{
+		type: "column",	
+		name: "Expenses",
+		legendText: "Expenses",
+		//axisYType: "secondary",
+		showInLegend: true,
+		// dataPoints:[
+		// 	{ label: "Jan", y: 10.46 },
+		// ]
+        dataPoints:<?php echo json_encode($totalExpensesAmountData); ?>
+	}]
+});
+chart2.render();
+
+function toggleDataSeries(e) {
+	if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+		e.dataSeries.visible = false;
+	}
+	else {
+		e.dataSeries.visible = true;
+	}
+	chart.render();
+}
+
+}
+</script>
 @section('content')
 <div class="container-fluid">
     <div class="row">
@@ -91,6 +209,130 @@
                     </div>
                 </div>
             </div>
+
+            @if (Auth::guard('admins')->check())
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="stat-widget-one">
+                        <h3 class="text-center">Tire 1 Artists</h3><hr>
+                        <div style="display: flex; justify-content: space-around">
+                            <div class="stat-digit">Artists</div>
+                            <div class="stat-digit">{{ @$totalArtist1 }}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-around">
+                            <div class="stat-digit">Sales</div>
+                            <div class="stat-digit">{{ @$totalsalesprice1 }}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-around">
+                            <div class="stat-digit">Quotes</div>
+                            <div class="stat-digit">{{ @$totalQuotes1 }}</div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="stat-widget-one">
+                        <h3 class="text-center">Tire 2 Artists</h3><hr>
+                        <div style="display: flex; justify-content: space-around">
+                            <div class="stat-digit">Artists</div>
+                            <div class="stat-digit">{{ @$totalArtist2 }}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-around">
+                            <div class="stat-digit">Sales</div>
+                            <div class="stat-digit">{{ @$totalsalesprice2 }}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-around">
+                            <div class="stat-digit">Quotes</div>
+                            <div class="stat-digit">{{ @$totalQuotes2 }}</div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="stat-widget-one">
+                        <h3 class="text-center">Tire 3 Artists</h3><hr>
+                        <div style="display: flex; justify-content: space-around">
+                            <div class="stat-digit">Artists</div>
+                            <div class="stat-digit">{{ @$totalArtist3 }}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-around">
+                            <div class="stat-digit">Sales</div>
+                            <div class="stat-digit">{{ @$totalsalesprice3 }}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-around">
+                            <div class="stat-digit">Quotes</div>
+                            <div class="stat-digit">{{ @$totalQuotes3 }}</div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            @endif
+
+
+            @if (Auth::guard('sales')->check())
+            <div class="col-lg-11">
+                <div class="card">
+
+                    <div class="card-body">
+                        <form action="{{ route('admin.dashboard') }}" method="GET" enctype="multipart/form-data" name="reportform">
+                            <div class="row d-flex justify-content-between">
+                                {{-- <div class="col-lg-5 col-md-5 col-sm-12">
+                                    <label for="start_date"><b>Start Month:</b></label>
+                                    <div class="input-group date datepicker">
+                                        <input type="date" id="start_date" name="start_date" value="" class="form-control" required="" />
+                                    </div>
+                                </div>
+            
+                                <div class="col-lg-5 col-md-5 col-sm-12">
+                                    <label for="end_date"><b>End Month:</b></label>
+                                    <div class="input-group date datepicker">
+                                        <input type="date" id="end_date" name="end_date" class="form-control" value="" required="" />
+                                    </div>
+                                </div> --}}
+
+                                <div class="col-lg-5 col-md-5 col-sm-12">
+                                    <label for="end_date"><b>Select Year:</b></label>
+                                    <div class="input-group">
+                                        <select name="selected_year" class="form-control">
+                                            <option value="">Select Year</option>
+                                            <option value="{{ date('Y') }}" @if(@$_GET['selected_year'] ==  date('Y')) selected @else selected  @endif >{{ date('Y') }}</option>
+                                            <option value="{{ date('Y', strtotime('-1 year')) }}" @if(@$_GET['selected_year'] ==  date('Y', strtotime('-1 year'))) selected @endif >{{ date('Y', strtotime('-1 year')) }}</option>
+                                            <option value="{{ date('Y', strtotime('-2 year')) }}" @if(@$_GET['selected_year'] ==  date('Y', strtotime('-2 year'))) selected @endif >{{ date('Y', strtotime('-2 year')) }}</option>
+                                            <option value="{{ date('Y', strtotime('-3 year')) }}" @if(@$_GET['selected_year'] ==  date('Y', strtotime('-3 year'))) selected @endif >{{ date('Y', strtotime('-3 year')) }}</option>
+                                            <option value="{{ date('Y', strtotime('-4 year')) }}" @if(@$_GET['selected_year'] ==  date('Y', strtotime('-4 year'))) selected @endif >{{ date('Y', strtotime('-4 year')) }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Filter and Print Buttons -->
+                                <div class="ccol-lg-2 col-md-2 col-sm-12 d-flex align-items-end  justify-content-center">
+                                    <button type="submit" class="btn btn-outline-danger  w-100 m-1">Refresh</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="resizable" style="height: 370px;border:1px solid gray;">
+                                <div id="chartContainer1" style="height: 100%; width: 100%;"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="resizable" style="height: 370px;border:1px solid gray;">
+                                <div id="chartContainer2" style="height: 100%; width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            
+            @endif
+
             {{-- <div class="col-lg-3">
                 <div class="card">
                     <div class="stat-widget-one">
@@ -643,4 +885,10 @@
         </div>
     </section>
 </div>
+@endsection
+
+@section('script')
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://canvasjs.com/assets/script/jquery-ui.1.11.2.min.js"></script>
+<script src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
 @endsection

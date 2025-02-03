@@ -18,6 +18,7 @@ use App\Models\PaymentModel;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Subscription;
 
 class DashboardController extends Controller
 {
@@ -34,7 +35,7 @@ class DashboardController extends Controller
     //     $this->middleware('auth');
     // }
 
-    public function index()
+    public function index(Request $request)
     {
         //Total user count
         $totalUsers = User::count();
@@ -45,7 +46,150 @@ class DashboardController extends Controller
         //Total artwork count
         $totalArtworks = Artwork::count();
 
-        return view('admin.dashboard.dashboard', compact('totalUsers', 'totalArtists', 'totalArtworks'));
+        // Total Artists1 count
+        $totalArtist1 = Subscription::where('subscription_plan', '50')->count();
+
+        $totalsalesprice1 = DB::table('payments')
+            ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+            ->where('subscriptions.subscription_plan', '50')->sum('payments.price');
+
+        $totalQuotes1 = DB::table('quotes')
+            ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+            ->where('subscriptions.subscription_plan', '50')
+            ->where('quotes.quote_type', '0')
+            ->count();
+
+        // Total Artists2 count
+        $totalArtist2 = Subscription::where('subscription_plan', '100')->count();
+
+        $totalsalesprice2 = DB::table('payments')
+            ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+            ->where('subscriptions.subscription_plan', '100')->sum('payments.price');
+
+        $totalQuotes2 = DB::table('quotes')
+            ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+            ->where('subscriptions.subscription_plan', '100')
+            ->where('quotes.quote_type', '0')
+            ->count();
+
+        // Total Artists3 count
+        $totalArtist3 = Subscription::where('subscription_plan', '300')->count();
+
+        $totalsalesprice3 = DB::table('payments')
+            ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+            ->where('subscriptions.subscription_plan', '300')->sum('payments.price');
+
+        $totalQuotes3 = DB::table('quotes')
+            ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+            ->where('subscriptions.subscription_plan', '300')
+            ->where('quotes.quote_type', '0')
+            ->count();
+
+        $selectedyear =  date('Y');
+        // FOR CHART LINK https://canvasjs.com/javascript-charts/multiple-axis-column-chart/
+        if (!empty(Auth::guard('sales')->user()->id)) {
+            if ($request->selected_year == '') {
+                $selectedyear =  date('Y');
+            } else {
+                $selectedyear = $request->selected_year;
+            }
+
+            $months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+            foreach ($months as $month) {
+
+                $first_date_this_month = date($selectedyear . '-' . $month . '-01 00:00:00');
+                $last_date_this_month  = date("Y-m-t 23:59:59", strtotime($first_date_this_month));
+
+                // WALK IN 
+                $WALKInDataCount = DB::table('quotes')
+                    ->select('quotes.*')
+                    ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+                    ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
+                    ->where('quotes.quote_type', '0')
+                    ->where('quotes.created_at', '>=', $first_date_this_month)
+                    ->where('quotes.created_at', '<=', $last_date_this_month)
+                    ->count();
+                $WALKInData[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' => $WALKInDataCount);
+
+                //Quotes
+                $QuotesDataCount = DB::table('quotes')
+                    ->select('quotes.*')
+                    ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+                    ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
+                    ->where('quotes.quote_type', '1')
+                    ->where('quotes.created_at', '>=', $first_date_this_month)
+                    ->where('quotes.created_at', '<=', $last_date_this_month)
+                    ->count();
+
+                $QuotesData[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' => $QuotesDataCount);
+
+                // Sales Amount
+                $totalSalesDeposit = DB::table('payments')
+                    ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+                    ->where('payments.artist_id', Auth::guard('sales')->user()->id)
+                    ->where('payments.date', '>=', $first_date_this_month)
+                    ->where('payments.date', '<=', $last_date_this_month)
+                    ->sum('payments.deposit');
+                $totalSalesDepositAmount[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' => $totalSalesDeposit);
+
+                // Expenses Amount
+                $totalExpensesAmount = DB::table('expense')
+                    ->where('expense.user_id', Auth::guard('sales')->user()->id)
+                    ->where('expense.transaction_date', '>=', $first_date_this_month)
+                    ->where('expense.transaction_date', '<=', $last_date_this_month)
+                    ->sum('expense.amount');
+                $totalExpensesAmountData[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' => $totalExpensesAmount);
+            }
+
+            return view(
+                'admin.dashboard.dashboard',
+                compact(
+                    'totalUsers',
+                    'totalArtists',
+                    'totalArtworks',
+                    'totalArtist1',
+                    'totalArtist2',
+                    'totalArtist3',
+                    'totalsalesprice1',
+                    'totalsalesprice2',
+                    'totalsalesprice3',
+                    'totalQuotes1',
+                    'totalQuotes2',
+                    'totalQuotes3',
+                    'WALKInData',
+                    'QuotesData',
+                    'totalSalesDepositAmount',
+                    'totalExpensesAmountData'
+                )
+            );
+        } else {
+            $WALKInData = array('label' => 0, 'y' => 0);
+            $QuotesData = array('label' => 0, 'y' => 0);
+            $totalSalesDepositAmount = array('label' => 0, 'y' => 0);
+            $totalExpensesAmountData = array('label' => 0, 'y' => 0);
+
+            return view(
+                'admin.dashboard.dashboard',
+                compact(
+                    'totalUsers',
+                    'totalArtists',
+                    'totalArtworks',
+                    'totalArtist1',
+                    'totalArtist2',
+                    'totalArtist3',
+                    'totalsalesprice1',
+                    'totalsalesprice2',
+                    'totalsalesprice3',
+                    'totalQuotes1',
+                    'totalQuotes2',
+                    'totalQuotes3',
+                    'WALKInData',
+                    'QuotesData',
+                    'totalSalesDepositAmount',
+                    'totalExpensesAmountData'
+                )
+            );
+        }
     }
     //for sales
     public function impersonate($salesExeID)
@@ -131,19 +275,35 @@ class DashboardController extends Controller
         return redirect()->route('sales.index');
     }
 
+    public function qouteArchiveMove(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        if (empty($ids)) {
+            return response()->json(['error' => 'No quotes selected.'], 400);
+        }
+
+        // Update the `isarchive` field to 1 for the given IDs
+        Quote::whereIn('id', $ids)->update(['isarchive' => 1]);
+
+        return response()->json(['success' => 'Quotes moved to archives!']);
+    }
 
     public function getWalkIn()
     {
 
         if (Auth::guard('artists')->check()) {
-            $data['quotes'] = Quote::where('artist_id', auth()->guard('artists')->id())->with('user', 'artist')->get();
+            $data['quotes'] = Quote::where('artist_id', auth()->guard('artists')->id())->with('user', 'artist')->where('isarchive', 0)
+    ->where('quote_type', 1)->paginate('10');
         } elseif (Auth::guard('admins')->check()) {
-            $data['quotes'] = Quote::with('user', 'artist')->get();
+            $data['quotes'] = Quote::with('user', 'artist')->where('isarchive', 0)
+    ->where('quote_type', 1)->paginate('10');
         } else {
             $salespersonId = Auth::guard('sales')->id();
             $artists = User::where('created_by', $salespersonId)->get();
 
-            $data['quotes'] = Quote::with('user', 'artist')->whereIn('artist_id', $artists->pluck('id'))->get();
+            $data['quotes'] = Quote::with('user', 'artist')->whereIn('artist_id', $artists->pluck('id'))->where('isarchive', 0)
+    ->where('quote_type', 1)->paginate('10');
         }
 
         //get customer id
@@ -184,20 +344,82 @@ class DashboardController extends Controller
         // Get all artist for the select dropdown
 
         $data['artists'] = $this->artistInterface->getAllArtistss();
-        return view("admin.walkin",$data);
+        return view("admin.walkin", $data);
+    }
+    public function getWalkinArchives()
+    { 
+        {
+
+            if (Auth::guard('artists')->check()) {
+                $data['quotes'] = Quote::where('artist_id', auth()->guard('artists')->id())->with('user', 'artist')->where('isarchive', 1)
+    ->where('quote_type', 1)->paginate('10');
+            } elseif (Auth::guard('admins')->check()) {
+                $data['quotes'] = Quote::with('user', 'artist')->where('isarchive', 1)
+    ->where('quote_type', 1)->paginate('10');
+            } else {
+                $salespersonId = Auth::guard('sales')->id();
+                $artists = User::where('created_by', $salespersonId)->get();
+
+                $data['quotes'] = Quote::with('user', 'artist')->whereIn('artist_id', $artists->pluck('id'))->where('isarchive', 1)
+    ->where('quote_type', 1)->paginate('10');
+            }
+
+            //get customer id
+            if (Auth::guard('admins')->check()) {
+                // Admin can view all customers
+                $customerQuery = User::select('users.*', 'creator.name as creator_name')
+                    ->leftJoin('users as creator', 'users.created_by', '=', 'creator.id')
+                    ->where('users.type', 'Customer')
+                    ->orderBy('users.id', 'DESC');
+
+                $data['customers'] = $customerQuery->get();
+            } elseif (Auth::guard('sales')->check()) {
+                $salesUserId = Auth::guard('sales')->id();
+
+                // Get customers created by this sales user
+                $customerQuery = User::select('users.*', 'creator.name as creator_name')
+                    ->leftJoin('users as creator', 'users.created_by', '=', 'creator.id')
+                    ->where('users.type', 'Customer')
+                    ->where(function ($query) use ($salesUserId) {
+                        $query->where('users.created_by', $salesUserId)
+                            ->orWhereIn('users.created_by', function ($subQuery) use ($salesUserId) {
+                                $subQuery->select('id')
+                                    ->from('users')
+                                    ->where('created_by', $salesUserId);
+                            });
+                    })
+                    ->orderBy('users.id', 'DESC');
+
+                $data['customers'] = $customerQuery->get();
+            } else {
+                // For other users (like artists), just fetch their own created customers
+                $data['customers'] = User::where('type', 'Customer')
+                    ->where('created_by', Auth::guard('artists')->id())
+                    ->orderBy('id', 'DESC')
+                    ->get();
+            }
+
+            // Get all artist for the select dropdown
+
+            $data['artists'] = $this->artistInterface->getAllArtistss();
+            return view("admin.walkinArchive", $data);
+        }
     }
 
     public function getQuote(Request $request)
     {
         if (Auth::guard('artists')->check()) {
-            $data['quotes'] = Quote::where('artist_id', auth()->guard('artists')->id())->with('user', 'artist')->get();
+            $data['quotes'] = Quote::where('artist_id', auth()->guard('artists')->id())->with('user', 'artist')->where('isarchive', 0)
+    ->where('quote_type', 0)->paginate('10');
         } elseif (Auth::guard('admins')->check()) {
-            $data['quotes'] = Quote::with('user', 'artist')->get();
+            $data['quotes'] = Quote::with('user', 'artist')->where('isarchive', 0)
+    ->where('quote_type', 0)->paginate('10');
         } else {
             $salespersonId = Auth::guard('sales')->id();
             $artists = User::where('created_by', $salespersonId)->get();
 
-            $data['quotes'] = Quote::with('user', 'artist')->whereIn('artist_id', $artists->pluck('id'))->get();
+            $data['quotes'] = Quote::with('user', 'artist')->whereIn('artist_id', $artists->pluck('id'))->where('isarchive', 0)
+    ->where('quote_type', 0)->paginate('10');
         }
 
         //get customer id
@@ -240,6 +462,65 @@ class DashboardController extends Controller
         $data['artists'] = $this->artistInterface->getAllArtistss();
         return view('admin.quote', $data);
     }
+    public function getQuoteArchives()
+    { 
+        {
+
+            if (Auth::guard('artists')->check()) {
+                $data['quotes'] = Quote::where('artist_id', auth()->guard('artists')->id())->with('user', 'artist')->where('isarchive', 1)
+    ->where('quote_type', 0)->paginate('10');
+            } elseif (Auth::guard('admins')->check()) {
+                $data['quotes'] = Quote::with('user', 'artist')->where('isarchive', 1)
+    ->where('quote_type', 0)->paginate('10');
+            } else {
+                $salespersonId = Auth::guard('sales')->id();
+                $artists = User::where('created_by', $salespersonId)->get();
+
+                $data['quotes'] = Quote::with('user', 'artist')->whereIn('artist_id', $artists->pluck('id'))->where('isarchive', 1)
+    ->where('quote_type', 0)->paginate('10');
+            }
+
+            //get customer id
+            if (Auth::guard('admins')->check()) {
+                // Admin can view all customers
+                $customerQuery = User::select('users.*', 'creator.name as creator_name')
+                    ->leftJoin('users as creator', 'users.created_by', '=', 'creator.id')
+                    ->where('users.type', 'Customer')
+                    ->orderBy('users.id', 'DESC');
+
+                $data['customers'] = $customerQuery->get();
+            } elseif (Auth::guard('sales')->check()) {
+                $salesUserId = Auth::guard('sales')->id();
+
+                // Get customers created by this sales user
+                $customerQuery = User::select('users.*', 'creator.name as creator_name')
+                    ->leftJoin('users as creator', 'users.created_by', '=', 'creator.id')
+                    ->where('users.type', 'Customer')
+                    ->where(function ($query) use ($salesUserId) {
+                        $query->where('users.created_by', $salesUserId)
+                            ->orWhereIn('users.created_by', function ($subQuery) use ($salesUserId) {
+                                $subQuery->select('id')
+                                    ->from('users')
+                                    ->where('created_by', $salesUserId);
+                            });
+                    })
+                    ->orderBy('users.id', 'DESC');
+
+                $data['customers'] = $customerQuery->get();
+            } else {
+                // For other users (like artists), just fetch their own created customers
+                $data['customers'] = User::where('type', 'Customer')
+                    ->where('created_by', Auth::guard('artists')->id())
+                    ->orderBy('id', 'DESC')
+                    ->get();
+            }
+
+            // Get all artist for the select dropdown
+
+            $data['artists'] = $this->artistInterface->getAllArtistss();
+            return view("admin.quoteArchive", $data);
+        }
+    }
     public function storeQuote(Request $request)
     {
         $request->validate([
@@ -256,22 +537,52 @@ class DashboardController extends Controller
     public function getAppointment()
     {
         if (Auth::guard('artists')->check()) {
-            $data['appointments'] = Appointment::where('artist_id', auth()->guard('artists')->id())->with('user', 'artist')->get();
+            $data['appointments'] = Appointment::where('artist_id', auth()->guard('artists')->id())->with('user', 'artist')->where('isarchive',0)->paginate('10');
         } elseif (Auth::guard('admins')->check()) {
-            $data['appointments'] = Appointment::with('user', 'artist')->get();
+            $data['appointments'] = Appointment::with('user', 'artist')->where('isarchive',0)->paginate('10');
         } else {
 
             $salespersonId = Auth::guard('sales')->id();
             $artists = User::where('created_by', $salespersonId)->get();
 
-            $data['appointments'] = Appointment::with('user', 'artist')->whereIn('artist_id', $artists->pluck('id'))->get();
+            $data['appointments'] = Appointment::with('user', 'artist')->whereIn('artist_id', $artists->pluck('id'))->where('isarchive',0)->paginate('10');
         }
 
         //dd($data['quotes']);
 
         return view('admin.appointment', $data);
     }
+    public function appointmentArchiveMove(Request $request)
+    {
+        $ids = $request->input('ids', []);
 
+        if (empty($ids)) {
+            return response()->json(['error' => 'No quotes selected.'], 400);
+        }
+
+        // Update the `isarchive` field to 1 for the given IDs
+        Appointment::whereIn('id', $ids)->update(['isarchive' => 1]);
+
+        return response()->json(['success' => 'Quotes moved to archives!']);
+    }
+    public function getAppointmentArchives()
+    {
+        if (Auth::guard('artists')->check()) {
+            $data['appointments'] = Appointment::where('artist_id', auth()->guard('artists')->id())->with('user', 'artist')->where('isarchive',1)->paginate('10');
+        } elseif (Auth::guard('admins')->check()) {
+            $data['appointments'] = Appointment::with('user', 'artist')->where('isarchive',1)->paginate('10');
+        } else {
+
+            $salespersonId = Auth::guard('sales')->id();
+            $artists = User::where('created_by', $salespersonId)->get();
+
+            $data['appointments'] = Appointment::with('user', 'artist')->whereIn('artist_id', $artists->pluck('id'))->where('isarchive',  1)->paginate('10');
+        }
+
+        //dd($data['quotes']);
+
+        return view('admin.appointmentArchive', $data);
+    }
 
     function SendLink(Request $request)
     {
@@ -303,9 +614,9 @@ class DashboardController extends Controller
                     $message->subject('TATTOO INFORMED CONSENT & MEDICAL HISTORY');
                 });
                 Quote::where('id', $newQuote->id)
-                ->update([
-                    'link_send_status' => '1'
-                ]);
+                    ->update([
+                        'link_send_status' => '1'
+                    ]);
             } catch (\Throwable $th) {
                 Log::debug($th->getMessage());
             }
@@ -402,9 +713,10 @@ class DashboardController extends Controller
             return view('admin.sendlink.error', compact('errorMsg1', 'errorMsg2'));
         }
     }
-    public function formatDate($requestDate){
-        $date = explode('/',$requestDate);
-        $formattedDate = $date[2].'-'.$date[0].'-'.$date[1];
+    public function formatDate($requestDate)
+    {
+        $date = explode('/', $requestDate);
+        $formattedDate = $date[2] . '-' . $date[0] . '-' . $date[1];
         return $formattedDate;
     }
     public function userformsubmit(Request $request)
@@ -498,7 +810,7 @@ class DashboardController extends Controller
         $tatto->save();
 
         $data['artistdata'] = User::find($request['artist_id']);
-            
+
         $data['tattodata'] = Tattoform::where('id', $tatto->id)->first();
         // return view('admin.email.tatto-submited-form', $data);
         // GET User Details

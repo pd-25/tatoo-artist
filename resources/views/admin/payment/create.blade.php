@@ -50,8 +50,8 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label>Price</label>
-                                        <input type="number" class="form-control" placeholder="Price" name="price" value="{{ old('price') }}">
+                                        <label>Price</label><span class="text-danger">*</span>
+                                        <input type="number" class="form-control" placeholder="Price" name="price" id="price" value="{{ old('price') }}" required>
                                         @error('price')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -71,7 +71,7 @@
 
                                     <div class="form-group">
                                         <label>Total Due</label>
-                                        <input type="number" class="form-control" placeholder="Total Due" name="total_due" value="{{ old('total_due') }}">
+                                        <input type="number" class="form-control" placeholder="Total Due" name="total_due" id="total_due" value="{{ old('total_due') }}">
                                         @error('total_due')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -120,7 +120,7 @@
 
                                     <div class="form-group">
                                         <label>Deposit</label>
-                                        <input type="number" class="form-control" placeholder="Deposit" name="deposit" value="{{ old('deposit') }}">
+                                        <input type="number" class="form-control" placeholder="Deposit" name="deposit" id="deposit" value="{{ old('deposit') }}">
                                         @error('deposit')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -203,6 +203,21 @@
                         }
                     });
                 }
+
+                $("#deposit").on("keyup",function(event) {
+                    $price = $("#price").val();
+                    $deposit = $("#deposit").val();
+                    if($price == ""){
+                        alert("Please enter price");
+                        return false;
+                    }
+
+                    if($price != '' && $deposit !=''){
+                        $("#total_due").attr("value",($price - $deposit));
+                    }
+                });
             });
+
+
         </script>
     @endsection

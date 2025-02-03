@@ -29,18 +29,46 @@ class PaymentController extends Controller
         //dd($payments);
         return view('admin.payment.index',compact('payments'));
     }
+    public function depositArchiveMove(Request $request)
+    {
+        $ids = $request->input('ids', []);
 
-    public function getDepositSlips(Request $request){
+        if (empty($ids)) {
+            return response()->json(['error' => 'No quotes selected.'], 400);
+        }
+
+        // Update the `isarchive` field to 1 for the given IDs
+        PaymentModel::whereIn('id', $ids)->update(['isarchive' => 1]);
+
+        return response()->json(['success' => 'Moved to archives sucessfully!']);
+    }
+    public function getDepositSlipsArchives(Request $request){
         if (Auth::guard('artists')->check()){
-            $payments = PaymentModel::with('user','artist')->where('artist_id',Auth::guard('artists')->user()->id)->get();
+            $payments = PaymentModel::with('user','artist')->where('artist_id',Auth::guard('artists')->user()->id)->where('isarchive',1)->orderBy('id','desc')->paginate('10');
         }
         elseif (Auth::guard('admins')->check()){
-            $payments = PaymentModel::with('user','artist')->get();
+            $payments = PaymentModel::with('user','artist')->where('isarchive',1)->orderBy('id','desc')->paginate('10');
         }else{
             $salespersonId = Auth::guard('sales')->id(); 
             $artists = User::where('created_by', $salespersonId)->get();
             
-            $payments = PaymentModel::with('user','artist')->whereIn('artist_id', $artists->pluck('id'))->get();
+            $payments = PaymentModel::with('user','artist')->whereIn('artist_id', $artists->pluck('id'))->where('isarchive',1)->orderBy('id','desc')->paginate('10');
+        }
+
+        //dd($payments);
+        return view('admin.payment.depositArchives',compact('payments'));
+    }
+    public function getDepositSlips(Request $request){
+        if (Auth::guard('artists')->check()){
+            $payments = PaymentModel::with('user','artist')->where('artist_id',Auth::guard('artists')->user()->id)->where('isarchive',0)->orderBy('id','desc')->paginate('10');
+        }
+        elseif (Auth::guard('admins')->check()){
+            $payments = PaymentModel::with('user','artist')->where('isarchive',0)->orderBy('id','desc')->paginate('10');
+        }else{
+            $salespersonId = Auth::guard('sales')->id(); 
+            $artists = User::where('created_by', $salespersonId)->get();
+            
+            $payments = PaymentModel::with('user','artist')->whereIn('artist_id', $artists->pluck('id'))->where('isarchive',0)->orderBy('id','desc')->paginate('10');
         }
 
         //dd($payments);

@@ -8,12 +8,12 @@
                 <div class="card-title pr">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h4>All Expenses </h4>
+                            <h4>All Expenses Archives</h4>
                         </div>
                         <div class="d-flex align-items-center">
-                            <a href="{{ route('admin.AddexpensesForm') }}" class="btn btn-success">Add Expenses</a>
-                            <a href="{{route('expenses.getExpensesArchive')}}" class="btn btn-primary m-1">Archives</a>
-                            <button class="btn btn-primary m-1 d-none" id="moveToArchives">Move to Archives</button>
+                            {{-- <a href="{{ route('admin.AddexpensesForm') }}" class="btn btn-success">Add Expenses</a> --}}
+                            <a href="{{route('admin.getExpenses')}}" class="btn btn-primary m-1">Back</a>
+                            {{-- <button class="btn btn-primary m-1 d-none" id="moveToArchives">Move to Archives</button> --}}
                         </div>
                     </div>
                     <div id="alert-container"></div>
@@ -23,7 +23,7 @@
                 </div>
                 
                 <div class="card-body">
-                    <form action="{{ route('admin.getExpenses') }}" method="GET" class="row g-3 d-flex justify-content-center">
+                    {{-- <form action="{{ route('admin.getExpenses') }}" method="GET" class="row g-3 d-flex justify-content-center">
                         <div class="col-md-3">
                             <label for="start_date"><b>Start Date:</b></label>
                             <div class="input-group date datepicker">
@@ -67,7 +67,7 @@
                             <button type="submit" class="btn btn-primary w-100 m-1">Filter</button>
                             <a href="{{ route('admin.printExpenses', request()->query()) }}" class="m-1 btn btn-secondary no-print w-100">Print</a>
                         </div>
-                    </form>
+                    </form> --}}
                     
                     
                     
@@ -78,7 +78,7 @@
                         <table class="table student-data-table m-t-20">
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" id="selectAll"></th>
+                                    {{-- <th><input type="checkbox" id="selectAll"></th> --}}
                                     <th>SL No</th>
                                     <th>Artist</th>
                                     <th>Date</th>
@@ -93,7 +93,7 @@
                                 @if(count($expense)>0)
                                     @foreach ($expense as $index => $expenses)
                                         <tr>
-                                            <td><input type="checkbox" class="quoteCheckbox" value="{{ $expenses->id }}"></td>
+                                            {{-- <td><input type="checkbox" class="quoteCheckbox" value="{{ $expenses->id }}"></td> --}}
                                             <td>{{$index+1}}</td>
                                             <td>
                                                 {{ $expenses->user->name ?? '' }}

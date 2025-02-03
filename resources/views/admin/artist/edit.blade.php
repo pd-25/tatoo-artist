@@ -500,7 +500,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Water Available</label><span class="text-danger">*</span>
+                                    <label>Water Available</label>
                                     <select name="water_available" class="form-control"
                                         value="{{ old('certified_professionals') }}">
                                         <option selected disabled>select option</option>
@@ -542,7 +542,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Masks Worn</label><span class="text-danger">*</span>
+                                    <label>Masks Worn</label>
                                     <select name="mask_worn" class="form-control" value="{{ old('mask_worn') }}">
                                         <option selected disabled>select option</option>
                                         <option value="yes" {{ @$artistData->mask_worn == 'yes' ? 'selected' : '' }}>
@@ -583,7 +583,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Wheel Chair Accessible</label><span class="text-danger">*</span>
+                                    <label>Wheel Chair Accessible</label>
                                     <select name="wheel_chair_accessible" class="form-control"
                                         value="{{ old('mask_worn') }}">
                                         <option selected disabled>select option</option>
@@ -626,7 +626,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Wifi Available</label><span class="text-danger">*</span>
+                                    <label>Wifi Available</label>
                                     <select name="wifi_available" class="form-control"
                                         value="{{ old('wifi_available') }}">
                                         <option selected disabled>select option</option>
@@ -668,7 +668,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Instagram Account</label><span class="text-danger">*</span>
+                                    <label>Instagram Account</label>
                                     <input type="url" class="form-control" id="insta_handle"
                                         placeholder="Instagram Account" name="insta_handle"
                                         value="{{ @$artistData->insta_handle }}">
@@ -682,7 +682,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Facebook Account</label><span class="text-danger">*</span>
+                                    <label>Facebook Account</label>
                                     <input type="url" class="form-control" id="facebook_handle"
                                         placeholder="facebook_handle" name="facebook_handle"
                                         value="{{ @$artistData->facebook_handle }}">
@@ -700,7 +700,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>YouTube Account</label><span class="text-danger">*</span>
+                                    <label>YouTube Account</label>
                                     <input type="url" class="form-control" id="youtube_handle"
                                         placeholder="YouTube Account" name="youtube_handle"
                                         value="{{ @$artistData->youtube_handle }}">
@@ -714,7 +714,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>X - Twitter</label><span class="text-danger">*</span>
+                                    <label>X - Twitter</label>
                                     <input type="url" class="form-control" id="twitter_handle"
                                         placeholder="X - Twitter" name="twitter_handle"
                                         value="{{ @$artistData->twitter_handle }}">
@@ -732,7 +732,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Google Map API</label><span class="text-danger">*</span>
+                                    <label>Google Map API</label>
                                     <input type="text" class="form-control" id="google_map_api"
                                         placeholder="Google Map API" name="google_map_api"
                                         value="{{ @$artistData->google_map_api }}">
@@ -746,7 +746,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Yelp API</label><span class="text-danger">*</span>
+                                    <label>Yelp API</label>
                                     <input type="text" class="form-control" id="yelp_api" placeholder="Yelp API"
                                         name="yelp_api" value="{{ @$artistData->yelp_api }}">
                                     @error('yelp_api')
@@ -1050,7 +1050,7 @@
                             </div>
 
                             <div class="col-md-1">
-                                <label>Thrusday Time</label>
+                                <label>Thursday Time</label>
                             </div>
 
                             <div class="col-md-2">
@@ -1096,7 +1096,7 @@
                             </div>
 
                             <div class="col-md-1">
-                                <label>Saterday Time</label>
+                                <label>Saturday Time</label>
                             </div>
 
                             <div class="col-md-2">

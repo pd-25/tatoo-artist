@@ -29,11 +29,11 @@
                 <div class="card-title pr">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h4>All Appointment</h4>
+                            <h4>All Appointments Archives</h4>
                         </div>
                         <div class="d-flex align-items-center">
-                            <a href="{{route('appoinment.getArchives')}}" class="btn btn-primary m-1">Archives</a>
-                            <button class="btn btn-primary m-1 d-none" id="moveToArchives">Move to Archives</button>
+                            <a href="{{route('admin.getAppointment')}}" class="btn btn-primary m-1">Back</a>
+                            
                         </div>
                     </div>
                     <div id="alert-container"></div>
@@ -54,7 +54,7 @@
                         <table class="table student-data-table m-t-20">
                             <thead style="text-align: center;">
                                 <tr>
-                                    <th><input type="checkbox" id="selectAll"></th>
+                                    {{-- <th><input type="checkbox" id="selectAll"></th> --}}
                                     <th>SN.</th>
                                     <th>User Name</th>
                                     <th>User Email</th>
@@ -84,7 +84,7 @@
                                 ?>    
 
                                         <tr>
-                                            <td><input type="checkbox" class="quoteCheckbox" value="{{ $appointment->id }}"></td>
+                                            {{-- <td><input type="checkbox" class="quoteCheckbox" value="{{ $appointment->id }}"></td> --}}
                                             <td><?=$index+1?></td>
                                             <td> {{ $appointment->user->name ?? 'No name available' }}</td>
 

@@ -88,7 +88,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminCheck'], function () {
 
 Route::post('/quotes', [DashboardController::class, 'storeQuote'])->name('admin.storeQuote');
 Route::get('/get-quote', [DashboardController::class, 'getQuote'])->name('admin.getQuote');
+Route::post('/appoinment-move-archive',[DashboardController::class,'appointmentArchiveMove'])->name('appoinment.moveToArchives');
+Route::get('/get-appointment/archives', [DashboardController::class, 'getAppointmentArchives'])->name('appoinment.getArchives');
 Route::get('/get-appointment', [DashboardController::class, 'getAppointment'])->name('admin.getAppointment');
+Route::post('/deposit-move-archive',[PaymentController::class,'depositArchiveMove'])->name('deposit.moveToArchives');
+Route::get('/get-deposit-slips/archives', [PaymentController::class, 'getDepositSlipsArchives'])->name('deposit.getArchives');
 Route::get('/get-deposit-slips', [PaymentController::class, 'getDepositSlips'])->name('admin.deposit-slips');
 Route::post('/get-filter-deposit', [PaymentController::class, 'getFilteredDeposits'])->name('admin.filterDeposite');
 Route::get('/print-deposit-pdf', [PaymentController::class, 'printDepositPDF'])->name('admin.printDepositPDF');
@@ -108,6 +112,8 @@ Route::get('/edit-payment/{id}', [PaymentController::class, 'editpaymentForm'])-
 Route::post('/edit-payment-post/{id}', [PaymentController::class, 'editpaymentPost'])->name('admin.editpaymentPost');
 Route::delete('/payment-delete/{id}', [PaymentController::class, 'deletepaymentForm'])->name('admin.deletepaymentForm');
 
+Route::post('/expanses-move-archive',[ExpensesController::class,'expansesArchiveMove'])->name('expenses.moveToArchives');
+Route::get('/get-expenses/archives', [ExpensesController::class, 'getExpensesArchive'])->name('expenses.getExpensesArchive');
 Route::get('/get-expenses', [ExpensesController::class, 'getExpenses'])->name('admin.getExpenses');
 Route::get('/add-expenses', [ExpensesController::class, 'AddexpensesForm'])->name('admin.AddexpensesForm');
 Route::post('/add-expenses-post', [ExpensesController::class, 'AddexpensesPost'])->name('admin.AddexpensesPost');
@@ -125,6 +131,9 @@ Route::delete('/delete-appointment/{id}', [DashboardController::class, 'deleteAp
 Route::get('/all-comment', [ArtworkController::class, 'allComment'])->name('admin.allComment');
 
 Route::get('/walk-in', [DashboardController::class, 'getWalkIn'])->name('artists.getWalkIn');
+Route::get('/walkin-archive', [DashboardController::class, 'getWalkinArchives'])->name('artists.getWalkInArchive');
+Route::post('/quote-arcihve-move',[DashboardController::class,'qouteArchiveMove'])->name('quote.moveToArchives');
+Route::get('/quote-archive', [DashboardController::class, 'getQuoteArchives'])->name('admin.quoteArchive');
 
 
 Route::post('userlogin', [AuthController::class, 'userlogin'])->name('userlogin');
