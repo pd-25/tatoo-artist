@@ -1,5 +1,11 @@
 @extends('admin.layout.main')
 @section('title', env('APP_NAME').' | Dashboard'  )
+<style>
+    .stat-widget-one .stat-digit {
+    font-size: 17px !important;
+    color: #373757;
+}
+</style>
 
 <link href="https://canvasjs.com/assets/css/jquery-ui.1.11.2.min.css" rel="stylesheet" />
 <script>
@@ -119,6 +125,110 @@ function toggleDataSeries(e) {
 
 }
 </script>
+// <script>  
+
+// window.onload = function () {
+//     var chart = new CanvasJS.Chart("chartContainer1", {
+//         animationEnabled: true,
+//         title: { text: "Activity" },
+//         axisY: {
+//             title: "Walk In",
+//             titleFontColor: "#4F81BC",
+//             lineColor: "#4F81BC",
+//             labelFontColor: "#4F81BC",
+//             tickColor: "#4F81BC"
+//         },
+//         axisY2: {
+//             title: "Quotes",
+//             titleFontColor: "#C0504E",
+//             lineColor: "#C0504E",
+//             labelFontColor: "#C0504E",
+//             tickColor: "#C0504E"
+//         },
+//         toolTip: { shared: true },
+//         legend: { cursor: "pointer", itemclick: toggleDataSeries },
+//         data: [
+//             {
+//                 type: "column",
+//                 name: "Walk In",
+//                 legendText: "Walk In",
+//                 showInLegend: true,
+//                 indexLabel: "{y}",
+//                 indexLabelFontSize: 12,
+//                 dataPointWidth: 30, // Adjust spacing
+//                 dataPoints: <?php echo json_encode($WALKInData); ?>
+//             },
+//             {
+//                 type: "line", // Change to line
+//                 name: "Quotes",
+//                 legendText: "Quotes",
+//                 axisYType: "secondary",
+//                 showInLegend: true,
+//                 lineThickness: 3, // Make the line thicker
+//                 markerType: "circle",
+//                 markerSize: 8,
+//                 dataPoints: <?php echo json_encode($QuotesData); ?>
+//             }
+//         ]
+//     });
+//     chart.render();
+
+//     var chart2 = new CanvasJS.Chart("chartContainer2", {
+//         animationEnabled: true,
+//         title: { text: "Sales VS Expenses" },
+//         axisY: {
+//             title: "Sales",
+//             titleFontColor: "#4F81BC",
+//             lineColor: "#4F81BC",
+//             labelFontColor: "#4F81BC",
+//             tickColor: "#4F81BC"
+//         },
+//         axisY2: {
+//             title: "Expenses",
+//             titleFontColor: "#C0504E",
+//             lineColor: "#C0504E",
+//             labelFontColor: "#C0504E",
+//             tickColor: "#C0504E"
+//         },
+//         toolTip: { shared: true },
+//         legend: { cursor: "pointer", itemclick: toggleDataSeries },
+//         data: [
+//             {
+//                 type: "column",
+//                 name: "Sales",
+//                 legendText: "Sales",
+//                 showInLegend: true,
+//                 indexLabel: "{y}",
+//                 indexLabelFontSize: 12,
+//                 dataPointWidth: 30, // Adjust spacing
+//                 dataPoints: <?php echo json_encode($totalSalesDepositAmount); ?>
+//             },
+//             {
+//                 type: "line", // Change to line
+//                 name: "Expenses",
+//                 legendText: "Expenses",
+//                 axisYType: "secondary",
+//                 showInLegend: true,
+//                 lineThickness: 3, // Thicker line
+//                 markerType: "square",
+//                 markerSize: 8,
+//                 dataPoints: <?php echo json_encode($totalExpensesAmountData); ?>
+//             }
+//         ]
+//     });
+//     chart2.render();
+
+//     function toggleDataSeries(e) {
+//         if (typeof e.dataSeries.visible === "undefined" || e.dataSeries.visible) {
+//             e.dataSeries.visible = false;
+//         } else {
+//             e.dataSeries.visible = true;
+//         }
+//         e.chart.render();
+//     }
+// };
+
+// </script>
 @section('content')
 <div class="container-fluid">
     <div class="row">
@@ -145,7 +255,7 @@ function toggleDataSeries(e) {
     <!-- /# row -->
     <section id="main-content">
         <div class="row">
-            @if (Auth::guard('admins')->check() || Auth::guard('sales')->check())
+            @if (Auth::guard('admins')->check())
                 <div class="col-lg-3">
                     <div class="card">
                         <div class="stat-widget-one">
@@ -170,60 +280,43 @@ function toggleDataSeries(e) {
                         </div>
                     </div>
                 </div>
-            @else
                 <div class="col-lg-3">
-                    <div class="card">
-                        <div class="stat-widget-one">
-                            <div class="stat-icon dib"><i class="ti-user color-primary border-primary"></i>
-                            </div>
-                            <div class="stat-content dib">
-                                <div class="stat-text">Total Appointments</div>
-                                <div class="stat-digit">{{$totalAppointments}}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="card">
-                        <div class="stat-widget-one">
-                            <div class="stat-icon dib"><i class="ti-user color-primary border-primary"></i>
-                            </div>
-                            <div class="stat-content dib">
-                                <div class="stat-text">Total Quotes</div>
-                                <div class="stat-digit">{{$totalQuotes}}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-            <div class="col-lg-3">
                 <div class="card">
                     <div class="stat-widget-one">
                         <div class="stat-icon dib"><i class="ti-user color-primary border-primary"></i>
                         </div>
                         <div class="stat-content dib">
-                            <div class="stat-text">Total Artworks</div>
-                            <div class="stat-digit">{{$totalArtworks}}</div>
+                            <div class="stat-text">Total Subscriber</div>
+                            <div class="stat-digit">{{$totalSubscriber}}</div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            @if (Auth::guard('admins')->check())
-            <div class="col-lg-4">
+                 </div>
+                 <div class="col-lg-3">
                 <div class="card">
                     <div class="stat-widget-one">
-                        <h3 class="text-center">Tire 1 Artists</h3><hr>
-                        <div style="display: flex; justify-content: space-around">
+                        <div class="stat-icon dib"><i class="ti-user color-primary border-primary"></i>
+                        </div>
+                        <div class="stat-content dib">
+                            <div class="stat-text">Total Sales Person</div>
+                            <div class="stat-digit">{{$totalSalesPerson}}</div>
+                        </div>
+                    </div>
+                </div>
+                 </div>
+                 <div class="col-lg-4">
+                <div class="card">
+                    <div class="stat-widget-one">
+                        <h5 class="text-center">Tire 1 Artists</h5><hr>
+                        <div style="display: flex; justify-content: space-between">
                             <div class="stat-digit">Artists</div>
                             <div class="stat-digit">{{ @$totalArtist1 }}</div>
                         </div>
-                        <div style="display: flex; justify-content: space-around">
+                        <div style="display: flex; justify-content: space-between">
                             <div class="stat-digit">Sales</div>
                             <div class="stat-digit">{{ @$totalsalesprice1 }}</div>
                         </div>
-                        <div style="display: flex; justify-content: space-around">
+                        <div style="display: flex; justify-content: space-between">
                             <div class="stat-digit">Quotes</div>
                             <div class="stat-digit">{{ @$totalQuotes1 }}</div>
                         </div>                        
@@ -233,16 +326,16 @@ function toggleDataSeries(e) {
             <div class="col-lg-4">
                 <div class="card">
                     <div class="stat-widget-one">
-                        <h3 class="text-center">Tire 2 Artists</h3><hr>
-                        <div style="display: flex; justify-content: space-around">
+                        <h5 class="text-center">Tire 2 Artists</h5><hr>
+                        <div style="display: flex; justify-content: space-between">
                             <div class="stat-digit">Artists</div>
                             <div class="stat-digit">{{ @$totalArtist2 }}</div>
                         </div>
-                        <div style="display: flex; justify-content: space-around">
+                        <div style="display: flex; justify-content: space-between">
                             <div class="stat-digit">Sales</div>
                             <div class="stat-digit">{{ @$totalsalesprice2 }}</div>
                         </div>
-                        <div style="display: flex; justify-content: space-around">
+                        <div style="display: flex; justify-content: space-between">
                             <div class="stat-digit">Quotes</div>
                             <div class="stat-digit">{{ @$totalQuotes2 }}</div>
                         </div>                        
@@ -252,27 +345,178 @@ function toggleDataSeries(e) {
             <div class="col-lg-4">
                 <div class="card">
                     <div class="stat-widget-one">
-                        <h3 class="text-center">Tire 3 Artists</h3><hr>
-                        <div style="display: flex; justify-content: space-around">
+                        <h5 class="text-center">Tire 3 Artists</h5><hr>
+                        <div style="display: flex; justify-content: space-between">
                             <div class="stat-digit">Artists</div>
                             <div class="stat-digit">{{ @$totalArtist3 }}</div>
                         </div>
-                        <div style="display: flex; justify-content: space-around">
+                        <div style="display: flex; justify-content: space-between">
                             <div class="stat-digit">Sales</div>
                             <div class="stat-digit">{{ @$totalsalesprice3 }}</div>
                         </div>
-                        <div style="display: flex; justify-content: space-around">
+                        <div style="display: flex; justify-content: space-between">
                             <div class="stat-digit">Quotes</div>
                             <div class="stat-digit">{{ @$totalQuotes3 }}</div>
                         </div>                        
                     </div>
                 </div>
             </div>
+                
+               
+            @endif
+            
+
+            @if (!Auth::guard('admins')->check() && !Auth::guard('artists')->check())
+            <div class="col-lg-4">
+                    <div class="card">
+                        <div class="stat-widget-one">
+                            <div class="stat-icon dib"><i class="ti-money color-success border-success"></i>
+                            </div>
+                            <div class="stat-content dib">
+                                <div class="stat-text">Total Artists</div>
+                                <div class="stat-digit">{{$totalArtists}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                <div class="card">
+                    <div class="stat-widget-one">
+                        <div class="stat-icon dib"><i class="ti-user color-primary border-primary"></i>
+                        </div>
+                        <div class="stat-content dib">
+                            <div class="stat-text">Total Appoinment</div>
+                            <div class="stat-digit">{{$totalAppointment}}</div>
+                        </div>
+                    </div>
+                </div>
+                 </div>
+                 <div class="col-lg-4">
+                <div class="card">
+                    <div class="stat-widget-one">
+                        <div class="stat-icon dib"><i class="ti-user color-primary border-primary"></i>
+                        </div>
+                        <div class="stat-content dib">
+                            <div class="stat-text">Total Subscriber</div>
+                            <div class="stat-digit">{{$totalSubscriber}}</div>
+                        </div>
+                    </div>
+                </div>
+                 </div>
+                 <div class="col-lg-4">
+                <div class="card">
+                    <div class="stat-widget-one">
+                        <h5 class="text-center">Tire 1 Artists</h5><hr>
+                        <div style="display: flex; justify-content: space-between">
+                            <div class="stat-digit">Artists</div>
+                            <div class="stat-digit">{{ @$totalArtist1 }}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between">
+                            <div class="stat-digit">Sales</div>
+                            <div class="stat-digit">{{ @$totalsalesprice1 }}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between">
+                            <div class="stat-digit">Quotes</div>
+                            <div class="stat-digit">{{ @$totalQuotes1 }}</div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="stat-widget-one">
+                        <h5 class="text-center">Tire 2 Artists</h5><hr>
+                        <div style="display: flex; justify-content: space-between">
+                            <div class="stat-digit">Artists</div>
+                            <div class="stat-digit">{{ @$totalArtist2 }}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between">
+                            <div class="stat-digit">Sales</div>
+                            <div class="stat-digit">{{ @$totalsalesprice2 }}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between">
+                            <div class="stat-digit">Quotes</div>
+                            <div class="stat-digit">{{ @$totalQuotes2 }}</div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="stat-widget-one">
+                        <h5 class="text-center">Tire 3 Artists</h5><hr>
+                        <div style="display: flex; justify-content: space-between">
+                            <div class="stat-digit">Artists</div>
+                            <div class="stat-digit">{{ @$totalArtist3 }}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between">
+                            <div class="stat-digit">Sales</div>
+                            <div class="stat-digit">{{ @$totalsalesprice3 }}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between">
+                            <div class="stat-digit">Quotes</div>
+                            <div class="stat-digit">{{ @$totalQuotes3 }}</div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+           
             @endif
 
 
-            @if (Auth::guard('sales')->check())
-            <div class="col-lg-11">
+            @if (Auth::guard('artists')->check())
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-4">
+                    <div class="card">
+                        <div class="stat-widget-one">
+                            <div class="stat-icon dib"><i class="ti-money color-success border-success"></i>
+                            </div>
+                            <div class="stat-content dib">
+                                <div class="stat-text">Subscription Plan</div>
+                                @if($havesubscription == 50)
+                                <div class="stat-digit">Starter Plan</div>
+                                @elseif($havesubscription == 100)
+                                <div class="stat-digit">Professional Plan</div>
+                                @elseif($havesubscription == 300)
+                                <div class="stat-digit">Elite Plan</div>
+                                @else
+                                <div class="stat-digit">No Plane</div>
+                                @endif
+                               
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="stat-widget-one">
+                            <div class="stat-icon dib"><i class="ti-layout-grid2 color-pink border-pink"></i>
+                            </div>
+                            <div class="stat-content dib">
+                                <div class="stat-text">Total Artworks</div>
+                                <div class="stat-digit">{{$totalArtwork}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                <div class="card">
+                    <div class="stat-widget-one">
+                        <div class="stat-icon dib"><i class="ti-user color-primary border-primary"></i>
+                        </div>
+                        <div class="stat-content dib">
+                            <div class="stat-text">Total Appoinment</div>
+                            <div class="stat-digit">{{$totalAppointment}}</div>
+                        </div>
+                    </div>
+                </div>
+                 </div>
+                 
+                 
+            </div>
                 <div class="card">
 
                     <div class="card-body">
