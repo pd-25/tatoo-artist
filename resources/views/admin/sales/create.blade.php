@@ -17,7 +17,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Artist Name</label><span class="text-danger">*</span>
+                                        <label>Sales Person's Name</label><span class="text-danger">*</span>
                                         <input type="text" class="form-control" placeholder="full name" name="name"
                                             value="{{ old('name') }}">
                                         @error('name')

@@ -110,7 +110,7 @@ class PaymentController extends Controller
                 $query->where('date', '<=', $endDate);
             endif;    
             
-            $payments = $query->get();
+            $payments = $query->paginate(10);
         }
         elseif (Auth::guard('admins')->check()){
             $query = PaymentModel::with('user');
@@ -123,7 +123,7 @@ class PaymentController extends Controller
                 $query->where('date', '<=', $endDate);
             endif;    
             
-            $payments = $query->get();
+            $payments = $query->paginate(10);
         }else{
             $salespersonId = Auth::guard('sales')->id(); 
             $artists = User::where('created_by', $salespersonId)->get();
@@ -138,7 +138,7 @@ class PaymentController extends Controller
                 $query->where('date', '<=', $endDate);
             endif;    
             
-            $payments = $query->whereIn('artist_id', $artists->pluck('id'))->get();
+            $payments = $query->whereIn('artist_id', $artists->pluck('id'))->paginate(10);
         }
         return view('admin.payment.deposit',compact('payments'));
     }

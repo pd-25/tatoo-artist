@@ -94,7 +94,7 @@ Route::get('/get-appointment', [DashboardController::class, 'getAppointment'])->
 Route::post('/deposit-move-archive',[PaymentController::class,'depositArchiveMove'])->name('deposit.moveToArchives');
 Route::get('/get-deposit-slips/archives', [PaymentController::class, 'getDepositSlipsArchives'])->name('deposit.getArchives');
 Route::get('/get-deposit-slips', [PaymentController::class, 'getDepositSlips'])->name('admin.deposit-slips');
-Route::post('/get-filter-deposit', [PaymentController::class, 'getFilteredDeposits'])->name('admin.filterDeposite');
+Route::get('/get-filter-deposit', [PaymentController::class, 'getFilteredDeposits'])->name('admin.filterDeposite');
 Route::get('/print-deposit-pdf', [PaymentController::class, 'printDepositPDF'])->name('admin.printDepositPDF');
 
 Route::post('/send-link', [DashboardController::class, 'SendLink'])->name('admin.SendLink');
