@@ -1,6 +1,9 @@
 @extends('admin.layout.main')
 @section('title', env('APP_NAME') . ' | Quote')
 @section('content')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
     <style>
         .myClass {
             width: 500px;
@@ -27,6 +30,51 @@
     </style>
 <div class="row justify-content-center">
     <div class="col-lg-11">
+        <div class="card">
+            <div class="card-title pr">
+                <h4>Search Data based on date</h4>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('artists.getWalkIn') }}" method="GET" enctype="multipart/form-data" name="paymentform">
+                    @csrf
+                    <div class="row d-flex justify-content-between">
+                        <div class="col-lg-5 col-md-5 col-sm-12">
+                            <label for="start_date"><b>Start Date:</b></label>
+                            <div class="input-group date datepicker">
+                                <input type="text" id="start_date" name="start_date" value="{{ old('start_date') }}" class="form-control" required>
+                                <div class="input-group-addon input-group-append">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>   
+                        </div>
+                
+                        <div class="col-lg-5 col-md-5 col-sm-12">
+                            <label for="end_date"><b>End Date:</b></label>
+                            <div class="input-group date datepicker">
+                                <input type="text" id="end_date" name="end_date" class="form-control" value="{{ old('end_date') }}" required>
+                                <div class="input-group-addon input-group-append">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>   
+                        </div>
+                  <!-- Filter and Print Buttons -->
+                  <div class="ccol-lg-2 col-md-2 col-sm-12 d-flex align-items-end  justify-content-center ">
+                    <button type="submit" class="btn btn-primary w-100 m-1 p-3 ">Search</button>
+                    
+                    
+                </div>
+                      
+                    </div> 
+                </form>
+                    
+            </div>    
+        </div>
+    </div>  
+    <div class="col-lg-11">
         <div class="card card-css">
             <div class="card-title pr">
                 <h4>Send walk-in</h4>
@@ -40,7 +88,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-11">
+                    <div class="col-md-10">
                         <input type="text" placeholder="abc@gmail.com" class="form-control" id="inputEmail">
                     </div>
                     @php
@@ -54,32 +102,14 @@
                         
                     @endphp
                     
-                    <div class="col-md-1">
-                        <button class="btn btn-md btn-success" type="button" onclick="Sendlink({{ $LoggedAuthId  }})">Send</button>
+                    <div class="col-md-2">
+                        <button class="btn btn-md btn-success" style="    width: 100%; padding: 10px;" type="button" onclick="Sendlink({{ $LoggedAuthId  }})">Send</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <div class="row justify-content-center">
     <div class="col-lg-11">
@@ -112,11 +142,13 @@
                     <table class="table student-data-table m-t-20">
                         <thead style="text-align: center;">
                             <tr>
-                                <th><input type="checkbox" id="selectAll"></th>
-                                <th>SN.</th>
-                                <th>User Email</th>
-                                <th>Artist Name</th>
-                                <th>Actions</th>
+                                <th class="text-center"><input type="checkbox" id="selectAll"></th>
+                                <th class="text-center">SN.</th>
+                                <th class="text-center">User Email</th>
+                                <th class="text-center">Artist Name</th>
+                                <th class="text-center">Date</th>
+                                <th class="">Actions</th>
+
                             </tr>
                         </thead>
                         <tbody style="text-align: center;">
@@ -128,6 +160,8 @@
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ @$quote->user->email }}</td>
                                             <td>{{ @$quote->artist->name }}</td>
+                                            <td>{{ date('m-d-Y',strtotime( $quote->created_at)) }}</td>
+                                            
                                             <td>
                                                 @if ($quote->link_send_status == 0)
                                                     <button class="btn btn-sm btn-primary"
@@ -170,7 +204,20 @@
         </div>
     </div>
 </div>
-
+    <style>
+       
+select.form-control:not([size]):not([multiple]) {
+  height: calc(2.25rem + 2px);
+}
+.form-control {
+  height: 42px !important;
+  border-radius: 0px;
+  box-shadow: none !important;
+  border-color: #e7e7e7;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+}
+          </style>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const selectAll = document.getElementById("selectAll");
@@ -244,7 +291,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
 @endsection
 
+
 @section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script>
+    $(function() {
+        $('.datepicker').datetimepicker({
+            "allowInputToggle": true,
+            "showClose": true,
+            "showClear": true,
+            "showTodayButton": true,
+            "format": "MM/DD/YYYY",
+        });
+    });
+</script>
 <script>
          function Sendlink(authUserId) {
             const inputEmail = document.getElementById("inputEmail").value;

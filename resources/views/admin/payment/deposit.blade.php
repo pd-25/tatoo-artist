@@ -10,7 +10,7 @@
                     <h4>Search Data based on date</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.filterDeposite') }}" method="POST" enctype="multipart/form-data" name="paymentform">
+                    <form action="{{ route('admin.filterDeposite') }}" method="GET" enctype="multipart/form-data" name="paymentform">
                         @csrf
                         <div class="row d-flex justify-content-between">
                             <div class="col-lg-5 col-md-5 col-sm-12">
