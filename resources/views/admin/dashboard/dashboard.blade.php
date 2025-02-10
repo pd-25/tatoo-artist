@@ -266,7 +266,7 @@ var chart1 = new CanvasJS.Chart("chartContainer1", {
         text: "Walk-ins vs Quotes"
     },
     axisY: {
-        title: "Amount (in units)",
+        title: "Number (in units)",
         titleFontColor: "#4F81BC",
         lineColor: "#4F81BC",
         labelFontColor: "#4F81BC",
