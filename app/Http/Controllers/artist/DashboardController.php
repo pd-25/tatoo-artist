@@ -143,7 +143,7 @@ public function index(Request $request) {
         // Sales Deposit
         $totalSalesDepositAmount[] = [
             'label' => date('F', strtotime($first_date_this_month)),
-            'y' => DB::table('payments')
+            'y' => (float) DB::table('payments')
                 ->where('artist_id', $artistId)
                 ->whereBetween('date', [$first_date_this_month, $last_date_this_month])
                 ->sum('deposit')

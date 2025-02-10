@@ -213,35 +213,30 @@ class DashboardController extends Controller
 
                 // WALK IN 
                 $WALKInDataCount = DB::table('quotes')
-                    ->select('quotes.*')
-                    ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
                     ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
                     ->where('quotes.quote_type', '0')
-                    ->where('quotes.created_at', '>=', $first_date_this_month)
-                    ->where('quotes.created_at', '<=', $last_date_this_month)
+                    ->whereBetween('quotes.created_at', [$first_date_this_month, $last_date_this_month])
+
                     ->count();
                 $WALKInData[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' => $WALKInDataCount);
-
+                
                 //Quotes
                 $QuotesDataCount = DB::table('quotes')
-                    ->select('quotes.*')
-                    ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
                     ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
                     ->where('quotes.quote_type', '1')
-                    ->where('quotes.created_at', '>=', $first_date_this_month)
-                    ->where('quotes.created_at', '<=', $last_date_this_month)
+                    ->whereBetween('quotes.created_at', [$first_date_this_month, $last_date_this_month])
+
                     ->count();
 
                 $QuotesData[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' => $QuotesDataCount);
 
                 // Sales Amount
                 $totalSalesDeposit = DB::table('payments')
-                    ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
                     ->where('payments.artist_id', Auth::guard('sales')->user()->id)
                     ->where('payments.date', '>=', $first_date_this_month)
                     ->where('payments.date', '<=', $last_date_this_month)
                     ->sum('payments.deposit');
-                $totalSalesDepositAmount[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' => $totalSalesDeposit);
+                $totalSalesDepositAmount[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' =>(float) $totalSalesDeposit);
 
                 // Expenses Amount
                 $totalExpensesAmount = DB::table('expense')
@@ -535,58 +530,61 @@ class DashboardController extends Controller
 
     public function getQuote(Request $request)
     {
-        if (Auth::guard('artists')->check()) {
-            $data['quotes'] = Quote::where('artist_id', auth()->guard('artists')->id())->with('user', 'artist')->where('isarchive', 0)
-                ->where('quote_type', 0)->paginate('10');
-        } elseif (Auth::guard('admins')->check()) {
-            $data['quotes'] = Quote::with('user', 'artist')->where('isarchive', 0)
-                ->where('quote_type', 0)->paginate('10');
-        } else {
-            $salespersonId = Auth::guard('sales')->id();
-            $artists = User::where('created_by', $salespersonId)->get();
-
-            $data['quotes'] = Quote::with('user', 'artist')->whereIn('artist_id', $artists->pluck('id'))->where('isarchive', 0)
-                ->where('quote_type', 0)->paginate('10');
-        }
-
-        //get customer id
-        if (Auth::guard('admins')->check()) {
-            // Admin can view all customers
-            $customerQuery = User::select('users.*', 'creator.name as creator_name')
-                ->leftJoin('users as creator', 'users.created_by', '=', 'creator.id')
-                ->where('users.type', 'Customer')
-                ->orderBy('users.id', 'DESC');
-
-            $data['customers'] = $customerQuery->get();
-        } elseif (Auth::guard('sales')->check()) {
-            $salesUserId = Auth::guard('sales')->id();
-
-            // Get customers created by this sales user
-            $customerQuery = User::select('users.*', 'creator.name as creator_name')
-                ->leftJoin('users as creator', 'users.created_by', '=', 'creator.id')
-                ->where('users.type', 'Customer')
-                ->where(function ($query) use ($salesUserId) {
-                    $query->where('users.created_by', $salesUserId)
-                        ->orWhereIn('users.created_by', function ($subQuery) use ($salesUserId) {
-                            $subQuery->select('id')
-                                ->from('users')
-                                ->where('created_by', $salesUserId);
-                        });
-                })
-                ->orderBy('users.id', 'DESC');
-
-            $data['customers'] = $customerQuery->get();
-        } else {
-            // For other users (like artists), just fetch their own created customers
-            $data['customers'] = User::where('type', 'Customer')
-                ->where('created_by', Auth::guard('artists')->id())
-                ->orderBy('id', 'DESC')
-                ->get();
-        }
-
-        // Get all artist for the select dropdown
-
-        $data['artists'] = $this->artistInterface->getAllArtistss();
+       
+       // Format the start and end dates from the request
+       $startDate = $request->has('start_date') ? Carbon::createFromFormat('m-d-Y', $request->start_date)->format('Y-m-d') : null;
+       $endDate = $request->has('end_date') ? Carbon::createFromFormat('m-d-Y', $request->end_date)->format('Y-m-d') : null;
+   
+       // Fetch quotes based on the authenticated user's role
+       $quotesQuery = Quote::with('user', 'artist')->where('isarchive', 0)->where('quote_type', 0);
+   
+       if (Auth::guard('artists')->check()) {
+           $quotesQuery->where('artist_id', auth()->guard('artists')->id());
+       } elseif (Auth::guard('sales')->check()) {
+           $salespersonId = Auth::guard('sales')->id();
+           $artistIds = User::where('created_by', $salespersonId)->pluck('id');
+           $quotesQuery->whereIn('artist_id', $artistIds);
+       }
+   
+       // Apply search filters
+      
+   
+       if ($startDate && $endDate) {
+           $quotesQuery->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
+       } elseif ($startDate) {
+           $quotesQuery->whereDate('created_at', '>=', $startDate);
+       } elseif ($endDate) {
+           $quotesQuery->whereDate('created_at', '<=', $endDate);
+       }
+   
+       $data['quotes'] = $quotesQuery->paginate(10);
+   
+       // Fetch customers based on role
+       $customerQuery = User::select('users.*', 'creator.name as creator_name')
+           ->leftJoin('users as creator', 'users.created_by', '=', 'creator.id')
+           ->where('users.type', 'Customer')
+           ->orderBy('users.id', 'DESC');
+   
+       if (Auth::guard('sales')->check()) {
+           $salesUserId = Auth::guard('sales')->id();
+           $customerQuery->where(function ($query) use ($salesUserId) {
+               $query->where('users.created_by', $salesUserId)
+                   ->orWhereIn('users.created_by', function ($subQuery) use ($salesUserId) {
+                       $subQuery->select('id')->from('users')->where('created_by', $salesUserId);
+                   });
+           });
+       } elseif (Auth::guard('artists')->check()) {
+           $customerQuery->where('users.created_by', Auth::guard('artists')->id());
+       }
+   
+       if ($request->filled('customer_name')) {
+           $customerQuery->where('users.name', 'LIKE', '%' . $request->customer_name . '%');
+       }
+   
+       $data['customers'] = $customerQuery->get();
+       
+       // Get all artists for the dropdown
+       $data['artists'] = $this->artistInterface->getAllArtistss($re = null);
         return view('admin.quote', $data);
     }
     public function getQuoteArchives()

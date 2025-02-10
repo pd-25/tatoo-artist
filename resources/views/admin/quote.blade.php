@@ -1,7 +1,10 @@
 @extends('admin.layout.main')
 @section('title', env('APP_NAME') . ' | Quote')
 @section('content')
+
     <style>
+
+
         .myClass {
             width: 500px;
             height: 500px;
@@ -23,7 +26,59 @@
             left: 50%;
         }
     </style>
+    <!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <div class="row justify-content-center">
+        <div class="col-lg-11">
+            <div class="card">
+                <div class="card-title pr">
+                    <h4>Search Data based on date</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.getQuote') }}" method="GET" enctype="multipart/form-data" name="paymentform">
+                        @csrf
+                        <div class="row d-flex justify-content-between">
+                            <!-- Start Date -->
+                            <div class="col-lg-5 col-md-5 col-sm-12">
+                                <label for="start_date"><b>Start Date:</b></label>
+                                <div class="input-group">
+                                    <input type="text" id="start_date" name="start_date" value="{{ old('start_date') }}" class="form-control flatpickr" required>
+                                    <div class="input-group-addon input-group-append">
+                                        <div class="input-group-text">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                    </div>
+                                </div>   
+                            </div>
+                    
+                            <!-- End Date -->
+                            <div class="col-lg-5 col-md-5 col-sm-12">
+                                <label for="end_date"><b>End Date:</b></label>
+                                <div class="input-group">
+                                    <input type="text" id="end_date" name="end_date" class="form-control flatpickr" value="{{ old('end_date') }}" required>
+                                    <div class="input-group-addon input-group-append">
+                                        <div class="input-group-text">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                    </div>
+                                </div>   
+                            </div>
+                    
+                            <!-- Filter and Print Buttons -->
+                            <div class="col-lg-2 col-md-2 col-sm-12 d-flex align-items-end justify-content-center">
+                                <button type="submit" class="btn btn-primary w-100 m-1">Search</button>
+                            </div>
+                        </div> 
+                    </form>
+
+                  
+                        
+                </div>    
+            </div>
+        </div>  
         <div class="col-lg-11">
             <div class="card">
                 
@@ -59,13 +114,14 @@
                         <table class="table student-data-table m-t-20">
                             <thead style="text-align: center;">
                                 <tr>
-                                <th><input type="checkbox" id="selectAll"></th>
-                                    <th>SN.</th>
-                                    <th>User Name</th>
-                                    <th>User Email</th>
-                                    <th>User Contact</th>
-                                    <th>Artist Name</th>
-                                    <th>Actions</th>
+                                <th class="text-center"><input type="checkbox" id="selectAll"></th>
+                                    <th class="text-center">SN.</th>
+                                    <th class="text-center">User Name</th>
+                                    <th class="text-center">User Email</th>
+                                    <th class="text-center">User Contact</th>
+                                    <th class="text-center">Artist Name</th>
+                                    <th class="text-center">Date</th>
+                                    <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody style="text-align: center;">
@@ -95,6 +151,7 @@
                                                 <td>{{ @$quote->user->email }}</td>
                                                 <td>{{ @$formattedPhoneNumber }}</td>
                                                 <td>{{ @$quote->artist->name }}</td>
+                                                <td>{{ date('m-d-Y',strtotime( $quote->created_at)) }}</td>
                                                 <td>
                                                     <button class="btn btn-sm btn-info toggle-actions mb-1">Show
                                                         Actions</button>
@@ -341,6 +398,15 @@ document.addEventListener("DOMContentLoaded", function() {
 @endsection
 
 @section('script')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        flatpickr(".flatpickr", {
+            dateFormat: "m-d-Y", // Customize the date format
+            allowInput: true, // Allow manual input
+            defaultDate: "today", // Set default date to today
+        });
+    });
+</script>
     <script>
         function Sendlink(userid, artistid, dbid) {
             $.ajax({
