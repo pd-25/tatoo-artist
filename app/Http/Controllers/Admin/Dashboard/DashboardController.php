@@ -92,32 +92,7 @@ class DashboardController extends Controller
             ->where('subscriptions.subscription_plan', '50')
             ->where('quotes.quote_type', '0')
             ->count();
-
-        // Total Artists2 count
-        // $totalArtist2 = Subscription::where('subscription_plan', '100')->count();
-
-        // $totalsalesprice2 = DB::table('payments')
-        //     ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-        //     ->where('subscriptions.subscription_plan', '100')->sum('payments.price');
-
-        // $totalQuotes2 = DB::table('quotes')
-        //     ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-        //     ->where('subscriptions.subscription_plan', '100')
-        //     ->where('quotes.quote_type', '0')
-        //     ->count();
-
-        // // Total Artists3 count
-        // $totalArtist3 = Subscription::where('subscription_plan', '300')->count();
-
-        // $totalsalesprice3 = DB::table('payments')
-        //     ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-        //     ->where('subscriptions.subscription_plan', '300')->sum('payments.price');
-
-        // $totalQuotes3 = DB::table('quotes')
-        //     ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-        //     ->where('subscriptions.subscription_plan', '300')
-        //     ->where('quotes.quote_type', '0')
-        //     ->count();
+            
         $totalArtist1 = $totalArtist2 = $totalArtist3 = 0;
         $totalsalesprice1 = $totalsalesprice2 = $totalsalesprice3 = 0;
         $totalQuotes1 = $totalQuotes2 = $totalQuotes3 = 0;
@@ -198,7 +173,7 @@ class DashboardController extends Controller
 
         $selectedyear =  date('Y');
         // FOR CHART LINK https://canvasjs.com/javascript-charts/multiple-axis-column-chart/
-        if (!empty(Auth::guard('sales')->user()->id)) {
+        if (!empty(Auth::guard('sales')->user()->id) || !empty(Auth::guard('artists')->user()->id)) {
             if ($request->selected_year == '') {
                 $selectedyear =  date('Y');
             } else {
@@ -419,10 +394,10 @@ class DashboardController extends Controller
         // Format the start and end dates from the request
         $startDate = $request->has('start_date') ? Carbon::createFromFormat('m/d/Y', $request->start_date)->format('Y-m-d') : null;
         $endDate = $request->has('end_date') ? Carbon::createFromFormat('m/d/Y', $request->end_date)->format('Y-m-d') : null;
-    
+
         // Fetch quotes based on the authenticated user's role
         $quotesQuery = Quote::with('user', 'artist')->where('isarchive', 0)->where('quote_type', 1);
-    
+
         if (Auth::guard('artists')->check()) {
             $quotesQuery->where('artist_id', auth()->guard('artists')->id());
         } elseif (Auth::guard('sales')->check()) {
@@ -430,10 +405,10 @@ class DashboardController extends Controller
             $artistIds = User::where('created_by', $salespersonId)->pluck('id');
             $quotesQuery->whereIn('artist_id', $artistIds);
         }
-    
+
         // Apply search filters
-       
-    
+
+
         if ($startDate && $endDate) {
             $quotesQuery->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
         } elseif ($startDate) {
@@ -441,15 +416,15 @@ class DashboardController extends Controller
         } elseif ($endDate) {
             $quotesQuery->whereDate('created_at', '<=', $endDate);
         }
-    
+
         $data['quotes'] = $quotesQuery->paginate(10);
-    
+
         // Fetch customers based on role
         $customerQuery = User::select('users.*', 'creator.name as creator_name')
             ->leftJoin('users as creator', 'users.created_by', '=', 'creator.id')
             ->where('users.type', 'Customer')
             ->orderBy('users.id', 'DESC');
-    
+
         if (Auth::guard('sales')->check()) {
             $salesUserId = Auth::guard('sales')->id();
             $customerQuery->where(function ($query) use ($salesUserId) {
@@ -461,19 +436,19 @@ class DashboardController extends Controller
         } elseif (Auth::guard('artists')->check()) {
             $customerQuery->where('users.created_by', Auth::guard('artists')->id());
         }
-    
+
         if ($request->filled('customer_name')) {
             $customerQuery->where('users.name', 'LIKE', '%' . $request->customer_name . '%');
         }
-    
+
         $data['customers'] = $customerQuery->get();
-        
+
         // Get all artists for the dropdown
         $data['artists'] = $this->artistInterface->getAllArtistss($re = null);
-    
+
         return view("admin.walkin", $data);
     }
-    
+
     public function getWalkinArchives()
     { {
 
