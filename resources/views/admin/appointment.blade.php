@@ -42,7 +42,7 @@
                                 <div class="col-lg-5 col-md-5 col-sm-12">
                                     <label for="start_date"><b>Start Date:</b></label>
                                     <div class="input-group">
-                                        <input type="text" id="start_date" name="start_date" value="{{ old('start_date') }}" class="form-control flatpickr" required>
+                                        <input type="text" id="start_date" name="start_date" value="{{ request()->input('start_date') ?? date('m-d-Y') }}" class="form-control flatpickr" required>
                                         <div class="input-group-addon input-group-append">
                                             <div class="input-group-text">
                                                 <i class="fa fa-calendar"></i>
@@ -55,7 +55,7 @@
                                 <div class="col-lg-5 col-md-5 col-sm-12">
                                     <label for="end_date"><b>End Date:</b></label>
                                     <div class="input-group">
-                                        <input type="text" id="end_date" name="end_date" class="form-control flatpickr" value="{{ old('end_date') }}" required>
+                                        <input type="text" id="end_date" name="end_date" class="form-control flatpickr" value="{{ request()->input('end_date') ?? date('m-d-Y') }}" required>
                                         <div class="input-group-addon input-group-append">
                                             <div class="input-group-text">
                                                 <i class="fa fa-calendar"></i>
@@ -256,7 +256,7 @@
         flatpickr(".flatpickr", {
             dateFormat: "m-d-Y", // Customize the date format
             allowInput: true, // Allow manual input
-            defaultDate: "today", // Set default date to today
+            // defaultDate: "today", // Set default date to today
         });
     });
 </script>
