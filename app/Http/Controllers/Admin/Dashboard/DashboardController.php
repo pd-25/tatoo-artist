@@ -55,6 +55,7 @@ class DashboardController extends Controller
         $totalAppointment = '';
         $havesubscription = '';
         $totalArtwork = '';
+        
 
         if (Auth::guard('artists')->check()) {
             $artistId = auth()->guard('artists')->id();
@@ -93,108 +94,388 @@ class DashboardController extends Controller
             ->where('quotes.quote_type', '0')
             ->count();
 
-        // Total Artists2 count
-        // $totalArtist2 = Subscription::where('subscription_plan', '100')->count();
+        //     $startDate = $request->has('start_date') ? Carbon::createFromFormat('m-d-Y', $request->start_date)->format('Y-m-d') : null;
+        //     $endDate = $request->has('end_date') ? Carbon::createFromFormat('m-d-Y', $request->end_date)->format('Y-m-d') : null;
+            
+        // $totalArtist1 = $totalArtist2 = $totalArtist3 = 0;
+        // $totalsalesprice1 = $totalsalesprice2 = $totalsalesprice3 = 0;
+        // $totalQuotes1 = $totalQuotes2 = $totalQuotes3 = 0;
+        // if (Auth::guard('artists')->check()) {
+        // } elseif (Auth::guard('admins')->check()) {
+        //     // Admin: Fetch all data
+        //     $totalArtist1 = Subscription::where('subscription_plan', '50')->whereBetween('created_at', [$startDate, $endDate])->count();
+        //     $totalsalesprice1 = DB::table('payments')
+        //         ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+        //         ->where('subscriptions.subscription_plan', '50')->whereBetween('created_at', [$startDate, $endDate])->sum('payments.price');
+        //     $totalQuotes1 = DB::table('quotes')
+        //         ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+        //         ->where('subscriptions.subscription_plan', '50')
+        //         ->where('quotes.quote_type', '0')
+        //         ->whereBetween('created_at', [$startDate, $endDate])
+        //         ->count();
 
-        // $totalsalesprice2 = DB::table('payments')
-        //     ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-        //     ->where('subscriptions.subscription_plan', '100')->sum('payments.price');
+        //     $totalArtist2 = Subscription::where('subscription_plan', '100')->count();
+        //     $totalsalesprice2 = DB::table('payments')
+        //         ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+        //         ->where('subscriptions.subscription_plan', '100')
+        //         ->whereBetween('created_at', [$startDate, $endDate])
+        //         ->sum('payments.price');
+        //     $totalQuotes2 = DB::table('quotes')
+        //         ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+        //         ->where('subscriptions.subscription_plan', '100')
+        //         ->where('quotes.quote_type', '0')
+        //         ->whereBetween('created_at', [$startDate, $endDate])
+        //         ->count();
 
-        // $totalQuotes2 = DB::table('quotes')
-        //     ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-        //     ->where('subscriptions.subscription_plan', '100')
-        //     ->where('quotes.quote_type', '0')
-        //     ->count();
+        //     $totalArtist3 = Subscription::where('subscription_plan', '300')->count();
+        //     $totalsalesprice3 = DB::table('payments')
+        //         ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+        //         ->where('subscriptions.subscription_plan', '300')
+        //         ->whereBetween('created_at', [$startDate, $endDate])
+        //         ->sum('payments.price');
+        //     $totalQuotes3 = DB::table('quotes')
+        //         ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+        //         ->where('subscriptions.subscription_plan', '300')
+        //         ->where('quotes.quote_type', '0')
+        //         ->whereBetween('created_at', [$startDate, $endDate])
+        //         ->count();
+        // } else {
+        //     // Salesperson: Fetch data for artists they created
+        //     $salespersonId = Auth::guard('sales')->id();
+        //     $artists = User::where('created_by', $salespersonId)->pluck('id');
 
-        // // Total Artists3 count
-        // $totalArtist3 = Subscription::where('subscription_plan', '300')->count();
+        //     $totalArtist1 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '50')->count();
+        //     $totalsalesprice1 = DB::table('payments')
+        //         ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+        //         ->whereIn('subscriptions.user_id', $artists)
+        //         ->where('subscriptions.subscription_plan', '50')
+        //         ->whereBetween('created_at', [$startDate, $endDate])
+        //         ->sum('payments.price');
+        //     $totalQuotes1 = DB::table('quotes')
+        //         ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+        //         ->whereIn('subscriptions.user_id', $artists)
+        //         ->where('subscriptions.subscription_plan', '50')
+        //         ->where('quotes.quote_type', '0')
+        //         ->whereBetween('created_at', [$startDate, $endDate])
+        //         ->count();
 
-        // $totalsalesprice3 = DB::table('payments')
-        //     ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-        //     ->where('subscriptions.subscription_plan', '300')->sum('payments.price');
+        //     $totalArtist2 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '100')->count();
+        //     $totalsalesprice2 = DB::table('payments')
+        //         ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+        //         ->whereIn('subscriptions.user_id', $artists)
+        //         ->where('subscriptions.subscription_plan', '100')
+        //         ->whereBetween('created_at', [$startDate, $endDate])
+        //         ->sum('payments.price');
+        //     $totalQuotes2 = DB::table('quotes')
+        //         ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+        //         ->whereIn('subscriptions.user_id', $artists)
+        //         ->where('subscriptions.subscription_plan', '100')
+        //         ->where('quotes.quote_type', '0')
+        //         ->whereBetween('created_at', [$startDate, $endDate])
+        //         ->count();
 
-        // $totalQuotes3 = DB::table('quotes')
-        //     ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-        //     ->where('subscriptions.subscription_plan', '300')
-        //     ->where('quotes.quote_type', '0')
-        //     ->count();
-        $totalArtist1 = $totalArtist2 = $totalArtist3 = 0;
-        $totalsalesprice1 = $totalsalesprice2 = $totalsalesprice3 = 0;
-        $totalQuotes1 = $totalQuotes2 = $totalQuotes3 = 0;
-        if (Auth::guard('artists')->check()) {
-        } elseif (Auth::guard('admins')->check()) {
-            // Admin: Fetch all data
-            $totalArtist1 = Subscription::where('subscription_plan', '50')->count();
-            $totalsalesprice1 = DB::table('payments')
-                ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-                ->where('subscriptions.subscription_plan', '50')->sum('payments.price');
-            $totalQuotes1 = DB::table('quotes')
-                ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-                ->where('subscriptions.subscription_plan', '50')
-                ->where('quotes.quote_type', '0')
-                ->count();
+        //     $totalArtist3 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '300')->count();
+        //     $totalsalesprice3 = DB::table('payments')
+        //         ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+        //         ->whereIn('subscriptions.user_id', $artists)
+        //         ->where('subscriptions.subscription_plan', '300')
+        //         ->whereBetween('created_at', [$startDate, $endDate])
+        //         ->sum('payments.price');
+        //     $totalQuotes3 = DB::table('quotes')
+        //         ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+        //         ->whereIn('subscriptions.user_id', $artists)
+        //         ->where('subscriptions.subscription_plan', '300')
+        //         ->where('quotes.quote_type', '0')
+        //         ->whereBetween('created_at', [$startDate, $endDate])
+        //         ->count();
+        // }
+    //     $startDate = $request->has('start_date') 
+    //     ? Carbon::createFromFormat('m-d-Y', $request->start_date)->format('Y-m-d') 
+    //     : null;
+    // $endDate = $request->has('end_date') 
+    //     ? Carbon::createFromFormat('m-d-Y', $request->end_date)->format('Y-m-d') 
+    //     : null;
+    
+    // $totalArtist1 = $totalArtist2 = $totalArtist3 = 0;
+    // $totalsalesprice1 = $totalsalesprice2 = $totalsalesprice3 = 0;
+    // $totalQuotes1 = $totalQuotes2 = $totalQuotes3 = 0;
+    
+    // if (Auth::guard('artists')->check()) {
+    //     // Artist-specific logic (if needed)
+    // } elseif (Auth::guard('admins')->check()) {
+    //     // Admin: Fetch all data
+    //     $totalArtist1 = Subscription::where('subscription_plan', '50')
+    //         ->whereBetween('subscriptions.created_at', [$startDate, $endDate])
+    //         ->count();
+    
+    //     $totalsalesprice1 = DB::table('payments')
+    //         ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+    //         ->where('subscriptions.subscription_plan', '50')
+    //         ->whereBetween('payments.date', [$startDate, $endDate])
+    //         ->sum('payments.price');
+    
+    //     $totalQuotes1 = DB::table('quotes')
+    //         ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+    //         ->where('subscriptions.subscription_plan', '50')
+    //         ->where('quotes.quote_type', '0')
+    //         ->whereBetween('quotes.created_at', [$startDate, $endDate])
+    //         ->count();
+    
+    //     $totalArtist2 = Subscription::where('subscription_plan', '100')
+    //         ->whereBetween('subscriptions.created_at', [$startDate, $endDate])
+    //         ->count();
+    
+    //     $totalsalesprice2 = DB::table('payments')
+    //         ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+    //         ->where('subscriptions.subscription_plan', '100')
+    //         ->whereBetween('payments.date', [$startDate, $endDate])
+    //         ->sum('payments.price');
+    
+    //     $totalQuotes2 = DB::table('quotes')
+    //         ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+    //         ->where('subscriptions.subscription_plan', '100')
+    //         ->where('quotes.quote_type', '0')
+    //         ->whereBetween('quotes.created_at', [$startDate, $endDate])
+    //         ->count();
+    
+    //     $totalArtist3 = Subscription::where('subscription_plan', '300')
+    //         ->whereBetween('subscriptions.created_at', [$startDate, $endDate])
+    //         ->count();
+    
+    //     $totalsalesprice3 = DB::table('payments')
+    //         ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+    //         ->where('subscriptions.subscription_plan', '300')
+    //         ->whereBetween('payments.date', [$startDate, $endDate])
+    //         ->sum('payments.price');
+    
+    //     $totalQuotes3 = DB::table('quotes')
+    //         ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+    //         ->where('subscriptions.subscription_plan', '300')
+    //         ->where('quotes.quote_type', '0')
+    //         ->whereBetween('quotes.created_at', [$startDate, $endDate])
+    //         ->count();
+    // } else {
+    //     // Salesperson: Fetch data for artists they created
+    //     $salespersonId = Auth::guard('sales')->id();
+    //     $artists = User::where('created_by', $salespersonId)->pluck('id');
+    
+    //     $totalArtist1 = Subscription::whereIn('user_id', $artists)
+    //         ->where('subscription_plan', '50')
+    //         ->whereBetween('subscriptions.created_at', [$startDate, $endDate])
+    //         ->count();
+    
+    //     $totalsalesprice1 = DB::table('payments')
+    //         ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+    //         ->whereIn('subscriptions.user_id', $artists)
+    //         ->where('subscriptions.subscription_plan', '50')
+    //         ->whereBetween('payments.date', [$startDate, $endDate])
+    //         ->sum('payments.price');
+    
+    //     $totalQuotes1 = DB::table('quotes')
+    //         ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+    //         ->whereIn('subscriptions.user_id', $artists)
+    //         ->where('subscriptions.subscription_plan', '50')
+    //         ->where('quotes.quote_type', '0')
+    //         ->whereBetween('quotes.created_at', [$startDate, $endDate])
+    //         ->count();
+    
+    //     $totalArtist2 = Subscription::whereIn('user_id', $artists)
+    //         ->where('subscription_plan', '100')
+    //         ->whereBetween('subscriptions.created_at', [$startDate, $endDate])
+    //         ->count();
+    
+    //     $totalsalesprice2 = DB::table('payments')
+    //         ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+    //         ->whereIn('subscriptions.user_id', $artists)
+    //         ->where('subscriptions.subscription_plan', '100')
+    //         ->whereBetween('payments.date', [$startDate, $endDate])
+    //         ->sum('payments.price');
+    
+    //     $totalQuotes2 = DB::table('quotes')
+    //         ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+    //         ->whereIn('subscriptions.user_id', $artists)
+    //         ->where('subscriptions.subscription_plan', '100')
+    //         ->where('quotes.quote_type', '0')
+    //         ->whereBetween('quotes.created_at', [$startDate, $endDate])
+    //         ->count();
+    
+    //     $totalArtist3 = Subscription::whereIn('user_id', $artists)
+    //         ->where('subscription_plan', '300')
+    //         ->whereBetween('subscriptions.created_at', [$startDate, $endDate])
+    //         ->count();
+    
+    //     $totalsalesprice3 = DB::table('payments')
+    //         ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+    //         ->whereIn('subscriptions.user_id', $artists)
+    //         ->where('subscriptions.subscription_plan', '300')
+    //         ->whereBetween('payments.date', [$startDate, $endDate])
+    //         ->sum('payments.price');
+    
+    //     $totalQuotes3 = DB::table('quotes')
+    //         ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+    //         ->whereIn('subscriptions.user_id', $artists)
+    //         ->where('subscriptions.subscription_plan', '300')
+    //         ->where('quotes.quote_type', '0')
+    //         ->whereBetween('quotes.created_at', [$startDate, $endDate])
+    //         ->count();
+    // }
 
-            $totalArtist2 = Subscription::where('subscription_plan', '100')->count();
-            $totalsalesprice2 = DB::table('payments')
-                ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-                ->where('subscriptions.subscription_plan', '100')->sum('payments.price');
-            $totalQuotes2 = DB::table('quotes')
-                ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-                ->where('subscriptions.subscription_plan', '100')
-                ->where('quotes.quote_type', '0')
-                ->count();
+    $startDate = $request->has('start_date') 
+    ? Carbon::createFromFormat('m-d-Y', $request->start_date)->startOfDay()->format('Y-m-d H:i:s') 
+    : null;
+$endDate = $request->has('end_date') 
+    ? Carbon::createFromFormat('m-d-Y', $request->end_date)->endOfDay()->format('Y-m-d H:i:s') 
+    : null;
 
-            $totalArtist3 = Subscription::where('subscription_plan', '300')->count();
-            $totalsalesprice3 = DB::table('payments')
-                ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-                ->where('subscriptions.subscription_plan', '300')->sum('payments.price');
-            $totalQuotes3 = DB::table('quotes')
-                ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-                ->where('subscriptions.subscription_plan', '300')
-                ->where('quotes.quote_type', '0')
-                ->count();
-        } else {
-            // Salesperson: Fetch data for artists they created
-            $salespersonId = Auth::guard('sales')->id();
-            $artists = User::where('created_by', $salespersonId)->pluck('id');
+$totalArtist1 = $totalArtist2 = $totalArtist3 = 0;
+$totalsalesprice1 = $totalsalesprice2 = $totalsalesprice3 = 0;
+$totalQuotes1 = $totalQuotes2 = $totalQuotes3 = 0;
 
-            $totalArtist1 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '50')->count();
-            $totalsalesprice1 = DB::table('payments')
-                ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-                ->whereIn('subscriptions.user_id', $artists)
-                ->where('subscriptions.subscription_plan', '50')->sum('payments.price');
-            $totalQuotes1 = DB::table('quotes')
-                ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-                ->whereIn('subscriptions.user_id', $artists)
-                ->where('subscriptions.subscription_plan', '50')
-                ->where('quotes.quote_type', '0')
-                ->count();
+if (Auth::guard('artists')->check()) {
+    // Artist-specific logic (if needed)
+} elseif (Auth::guard('admins')->check()) {
+    // Admin: Fetch all data
+    $query1 = Subscription::where('subscription_plan', '50');
+    $query2 = Subscription::where('subscription_plan', '100');
+    $query3 = Subscription::where('subscription_plan', '300');
 
-            $totalArtist2 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '100')->count();
-            $totalsalesprice2 = DB::table('payments')
-                ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-                ->whereIn('subscriptions.user_id', $artists)
-                ->where('subscriptions.subscription_plan', '100')->sum('payments.price');
-            $totalQuotes2 = DB::table('quotes')
-                ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-                ->whereIn('subscriptions.user_id', $artists)
-                ->where('subscriptions.subscription_plan', '100')
-                ->where('quotes.quote_type', '0')
-                ->count();
+    if ($startDate && $endDate) {
+        $query1->whereBetween('created_at', [$startDate, $endDate]);
+        $query2->whereBetween('created_at', [$startDate, $endDate]);
+        $query3->whereBetween('created_at', [$startDate, $endDate]);
+    }
 
-            $totalArtist3 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '300')->count();
-            $totalsalesprice3 = DB::table('payments')
-                ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
-                ->whereIn('subscriptions.user_id', $artists)
-                ->where('subscriptions.subscription_plan', '300')->sum('payments.price');
-            $totalQuotes3 = DB::table('quotes')
-                ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
-                ->whereIn('subscriptions.user_id', $artists)
-                ->where('subscriptions.subscription_plan', '300')
-                ->where('quotes.quote_type', '0')
-                ->count();
-        }
+    $totalArtist1 = $query1->count();
+    $totalArtist2 = $query2->count();
+    $totalArtist3 = $query3->count();
 
+    $totalsalesprice1 = DB::table('payments')
+        ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+        ->where('subscriptions.subscription_plan', '50')
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('payments.date', [$startDate, $endDate]);
+        })
+        ->sum('payments.price');
+
+    $totalsalesprice2 = DB::table('payments')
+        ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+        ->where('subscriptions.subscription_plan', '100')
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('payments.date', [$startDate, $endDate]);
+        })
+        ->sum('payments.price');
+
+    $totalsalesprice3 = DB::table('payments')
+        ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+        ->where('subscriptions.subscription_plan', '300')
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('payments.date', [$startDate, $endDate]);
+        })
+        ->sum('payments.price');
+
+    $totalQuotes1 = DB::table('quotes')
+        ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+        ->where('subscriptions.subscription_plan', '50')
+        ->where('quotes.quote_type', '0')
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('quotes.created_at', [$startDate, $endDate]);
+        })
+        ->count();
+
+    $totalQuotes2 = DB::table('quotes')
+        ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+        ->where('subscriptions.subscription_plan', '100')
+        ->where('quotes.quote_type', '0')
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('quotes.created_at', [$startDate, $endDate]);
+        })
+        ->count();
+
+    $totalQuotes3 = DB::table('quotes')
+        ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+        ->where('subscriptions.subscription_plan', '300')
+        ->where('quotes.quote_type', '0')
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('quotes.created_at', [$startDate, $endDate]);
+        })
+        ->count();
+} else {
+    // Salesperson: Fetch data for artists they created
+    $salespersonId = Auth::guard('sales')->id();
+    $artists = User::where('created_by', $salespersonId)->pluck('id');
+
+    $query1 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '50');
+    $query2 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '100');
+    $query3 = Subscription::whereIn('user_id', $artists)->where('subscription_plan', '300');
+
+    if ($startDate && $endDate) {
+        $query1->whereBetween('created_at', [$startDate, $endDate]);
+        $query2->whereBetween('created_at', [$startDate, $endDate]);
+        $query3->whereBetween('created_at', [$startDate, $endDate]);
+    }
+
+    $totalArtist1 = $query1->count();
+    $totalArtist2 = $query2->count();
+    $totalArtist3 = $query3->count();
+
+    $totalsalesprice1 = DB::table('payments')
+        ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+        ->whereIn('subscriptions.user_id', $artists)
+        ->where('subscriptions.subscription_plan', '50')
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('payments.date', [$startDate, $endDate]);
+        })
+        ->sum('payments.price');
+
+    $totalsalesprice2 = DB::table('payments')
+        ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+        ->whereIn('subscriptions.user_id', $artists)
+        ->where('subscriptions.subscription_plan', '100')
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('payments.date', [$startDate, $endDate]);
+        })
+        ->sum('payments.price');
+
+    $totalsalesprice3 = DB::table('payments')
+        ->join('subscriptions', 'payments.user_id', '=', 'subscriptions.user_id')
+        ->whereIn('subscriptions.user_id', $artists)
+        ->where('subscriptions.subscription_plan', '300')
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('payments.date', [$startDate, $endDate]);
+        })
+        ->sum('payments.price');
+
+    $totalQuotes1 = DB::table('quotes')
+        ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+        ->whereIn('subscriptions.user_id', $artists)
+        ->where('subscriptions.subscription_plan', '50')
+        ->where('quotes.quote_type', '0')
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('quotes.created_at', [$startDate, $endDate]);
+        })
+        ->count();
+
+    $totalQuotes2 = DB::table('quotes')
+        ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+        ->whereIn('subscriptions.user_id', $artists)
+        ->where('subscriptions.subscription_plan', '100')
+        ->where('quotes.quote_type', '0')
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('quotes.created_at', [$startDate, $endDate]);
+        })
+        ->count();
+
+    $totalQuotes3 = DB::table('quotes')
+        ->join('subscriptions', 'quotes.artist_id', '=', 'subscriptions.user_id')
+        ->whereIn('subscriptions.user_id', $artists)
+        ->where('subscriptions.subscription_plan', '300')
+        ->where('quotes.quote_type', '0')
+        ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('quotes.created_at', [$startDate, $endDate]);
+        })
+        ->count();
+}
+    
 
         $selectedyear =  date('Y');
         // FOR CHART LINK https://canvasjs.com/javascript-charts/multiple-axis-column-chart/
@@ -658,24 +939,34 @@ class DashboardController extends Controller
         ]);
         return back()->with('success', 'Quote created successfully.');
     }
-    public function getAppointment()
-    {
-        if (Auth::guard('artists')->check()) {
-            $data['appointments'] = Appointment::where('artist_id', auth()->guard('artists')->id())->with('user', 'artist')->where('isarchive', 0)->paginate('10');
-        } elseif (Auth::guard('admins')->check()) {
-            $data['appointments'] = Appointment::with('user', 'artist')->where('isarchive', 0)->paginate('10');
-        } else {
+public function getAppointment(Request $request)
+{
+    $startDate = $request->has('start_date') ? Carbon::createFromFormat('m-d-Y', $request->start_date)->startOfDay() : null;
+    $endDate = $request->has('end_date') ? Carbon::createFromFormat('m-d-Y', $request->end_date)->endOfDay() : null;
 
-            $salespersonId = Auth::guard('sales')->id();
-            $artists = User::where('created_by', $salespersonId)->get();
+    $query = Appointment::with('user', 'artist')->where('isarchive', 0);
 
-            $data['appointments'] = Appointment::with('user', 'artist')->whereIn('artist_id', $artists->pluck('id'))->where('isarchive', 0)->paginate('10');
-        }
-
-        //dd($data['quotes']);
-
-        return view('admin.appointment', $data);
+    if ($startDate && $endDate) {
+        $query->whereBetween('created_at', [$startDate, $endDate]);
+    } elseif ($startDate) {
+        $query->whereDate('created_at', '>=', $startDate);
+    } elseif ($endDate) {
+        $query->whereDate('created_at', '<=', $endDate);
     }
+
+    if (Auth::guard('artists')->check()) {
+        $query->where('artist_id', auth()->guard('artists')->id());
+    } elseif (Auth::guard('sales')->check()) {
+        $salespersonId = Auth::guard('sales')->id();
+        $artists = User::where('created_by', $salespersonId)->pluck('id');
+        $query->whereIn('artist_id', $artists);
+    }
+
+    $data['appointments'] = $query->paginate(10);
+
+    return view('admin.appointment', $data);
+}
+
     public function appointmentArchiveMove(Request $request)
     {
         $ids = $request->input('ids', []);

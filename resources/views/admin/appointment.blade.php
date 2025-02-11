@@ -22,9 +22,60 @@
         left:50%;
     }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <div class="row justify-content-center">
 
         <div class="col-lg-11">
+            
+                <div class="card">
+                    <div class="card-title pr">
+                        <h4>Search Data based on date</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('admin.getAppointment') }}" method="GET" enctype="multipart/form-data" name="paymentform">
+                            @csrf
+                            <div class="row d-flex justify-content-between">
+                                <!-- Start Date -->
+                                <div class="col-lg-5 col-md-5 col-sm-12">
+                                    <label for="start_date"><b>Start Date:</b></label>
+                                    <div class="input-group">
+                                        <input type="text" id="start_date" name="start_date" value="{{ old('start_date') }}" class="form-control flatpickr" required>
+                                        <div class="input-group-addon input-group-append">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                    </div>   
+                                </div>
+                        
+                                <!-- End Date -->
+                                <div class="col-lg-5 col-md-5 col-sm-12">
+                                    <label for="end_date"><b>End Date:</b></label>
+                                    <div class="input-group">
+                                        <input type="text" id="end_date" name="end_date" class="form-control flatpickr" value="{{ old('end_date') }}" required>
+                                        <div class="input-group-addon input-group-append">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                        </div>
+                                    </div>   
+                                </div>
+                        
+                                <!-- Filter and Print Buttons -->
+                                <div class="col-lg-2 col-md-2 col-sm-12 d-flex align-items-end justify-content-center">
+                                    <button type="submit" class="btn btn-primary w-100 m-1">Search</button>
+                                </div>
+                            </div> 
+                        </form>
+    
+                      
+                            
+                    </div>    
+                </div>
+             
             <div class="card">
                 <div class="card-title pr">
                     <div class="d-flex justify-content-between">
@@ -60,7 +111,9 @@
                                     <th>User Email</th>
                                     <th>User Contact</th>
                                     <th>Artist Name</th>
+                                    <th>Date</th>
                                     <th>Appointment Details</th>
+                                    
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -93,6 +146,7 @@
                                             <td>{{ $formattedPhoneNumber ?? 'No name available' }}</td>
 
                                             <td>{{ $appointment->artist->name ?? 'No name available' }} </td>
+                                            <td>{{ date('m-d-Y',strtotime( $appointment->created_at)) }}</td>
 
                                             <td> 
                                                 <button class="btn btn-sm btn-primary viewAppointmentDetails" data-availability="{{$availability}}" data-created ="{{$appo_created_at}}" data-msg="{{$escapedMessage}}" data-username="{{$appointment->user->name}}" data-email="{{$appointment->user->email}}" data-phone="{{$formattedPhoneNumber}}" data-artist="{{$appointment->artist->name}}" data-availability="{{$availability}}" data-created ="{{$appo_created_at}}" data-msg="{{$escapedMessage}}">View Quote Details</button>
@@ -197,6 +251,15 @@
 @endsection
 
 @section('script')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        flatpickr(".flatpickr", {
+            dateFormat: "m-d-Y", // Customize the date format
+            allowInput: true, // Allow manual input
+            defaultDate: "today", // Set default date to today
+        });
+    });
+</script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const selectAll = document.getElementById("selectAll");
