@@ -81,7 +81,7 @@
                                     {{-- <th><input type="checkbox" id="selectAll"></th> --}}
                                     <th>SL No</th>
                                     <th>Artist</th>
-                                    <th>Date</th>
+                                    {{-- <th>Date</th> --}}
                                     <th>Payment Method</th>
                                     <th>Amount</th>
                                     <th>Expenses</th>
@@ -98,9 +98,9 @@
                                             <td>
                                                 {{ $expenses->user->name ?? '' }}
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 {{ date('m-d-Y',strtotime($expenses->created_at))  }}
-                                            </td>
+                                            </td> --}}
                                             <td>
                                                 {{ ucfirst($expenses->payment_method) }}
                                             </td>

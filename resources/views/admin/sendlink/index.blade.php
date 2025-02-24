@@ -15,8 +15,12 @@
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <style>
-        .display-none {
+
+.display-none {
             display: none;
         }
 
@@ -491,14 +495,14 @@
                             <div class="col-md-6">
                                 <div class="input-group mb-3 datepicker">
                                     <span class="input-group-text" id="basic-addon3">Today's Date</span>
-                                    <input type="text" name="todaysdate" class="form-control uppercase" id="todaysdate"
+                                    <input type="text" name="todaysdate" class="form-control uppercase flatpickr" id="todaysdate"
                                         aria-describedby="basic-addon3" required />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group mb-3 datepicker">
                                     <span class="input-group-text" id="basic-addon3">Birth Date</span>
-                                    <input type="text" name="birthdate" class="form-control uppercase" id="birthdate"
+                                    <input type="text" name="birthdate" class="form-control uppercase flatpickr" id="birthdate"
                                         aria-describedby="basic-addon3" required />
                                 </div>
                             </div>
@@ -510,24 +514,13 @@
                             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
                             
                             <script>
-                                $(document).ready(function () {
-                                    // Initialize datetimepickers
-                                    $('#todaysdate').datetimepicker({
-                                        format: 'MM/DD/YYYY',
-                                        allowInputToggle: true,
-                                        showClose: true,
-                                        showClear: true,
-                                        showTodayButton: true,
-                                    });
-                            
-                                    $('#birthdate').datetimepicker({
-                                        format: 'MM/DD/YYYY',
-                                        allowInputToggle: true,
-                                        showClose: true,
-                                        showClear: true,
-                                        showTodayButton: true,
-                                    });
-                                });
+                               document.addEventListener("DOMContentLoaded", function() {
+        flatpickr(".flatpickr", {
+            dateFormat: "m-d-Y", // Customize the date format
+            allowInput: true, // Allow manual input
+            defaultDate: "today", // Set default date to today
+        });
+    });
                             </script>
                             
                         </div>
@@ -652,6 +645,7 @@
 </html>
 
 <script>
+
     function readURL(input, id) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();

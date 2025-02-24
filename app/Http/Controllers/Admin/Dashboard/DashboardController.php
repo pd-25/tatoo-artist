@@ -495,7 +495,7 @@ if (Auth::guard('artists')->check()) {
                 // WALK IN 
                 $WALKInDataCount = DB::table('quotes')
                     ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
-                    ->where('quotes.quote_type', '0')
+                    ->where('quotes.quote_type', '1')
                     ->whereBetween('quotes.created_at', [$first_date_this_month, $last_date_this_month])
 
                     ->count();
@@ -504,7 +504,7 @@ if (Auth::guard('artists')->check()) {
                 //Quotes
                 $QuotesDataCount = DB::table('quotes')
                     ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
-                    ->where('quotes.quote_type', '1')
+                    ->where('quotes.quote_type', '0')
                     ->whereBetween('quotes.created_at', [$first_date_this_month, $last_date_this_month])
 
                     ->count();
@@ -999,89 +999,65 @@ public function getAppointment(Request $request)
         return view('admin.appointmentArchive', $data);
     }
 
-    function SendLink(Request $request)
+    public function SendLink(Request $request)
     {
-        if ($request->has('type') && $request->input('type') === 'walkin') {
-            $findCustomer = User::where("email", $request->email)->first();
-            if ($findCustomer) {
-                $customeId = $findCustomer->id;
-            } else {
-                $data = [
-                    "password" => $request->email,
+        $artist = User::where('type', 'artist')->find($request->artistid);
+        if (!$artist) {
+            return response()->json(['error' => 'Artist not found'], 404);
+        }
+    
+        if ($request->input('type') === 'walkin') {
+            $customer = User::firstOrCreate(
+                ['email' => $request->email],
+                [
+                    "password" => bcrypt($request->email),
                     "type" => "Walk-In",
-                    "email" => $request->email,
                     "name" => $request->email,
                     "username" => $request->email,
-                ];
-                $this->artistController->createCus($data);
-                $getCustomerId = User::where("email", $request->email)->select("id")->first();
-                $customeId = $getCustomerId->id;
-            }
-            $newQuote = Quote::create([
-                'artist_id' => $request->artistid,
-                'user_id' => $customeId,
+                ]
+            );
+    
+            $quote = Quote::create([
+                'artist_id' => $artist->id,
+                'user_id' => $customer->id,
                 'quote_type' => 1
             ]);
-
-            try {
-                Mail::send('admin.email.sendlink', ["useremail" => $request->email, "user_id" => $customeId, "artist_id" => $request->artistid, "dbid" => $newQuote->id], function ($message) use ($request) {
-                    $message->to($request->email);
-                    $message->subject('TATTOO INFORMED CONSENT & MEDICAL HISTORY');
-                });
-                Quote::where('id', $newQuote->id)
-                    ->update([
-                        'link_send_status' => '1'
-                    ]);
-            } catch (\Throwable $th) {
-                Log::debug($th->getMessage());
-            }
-            echo "emailsend";
+    
+            $this->sendEmail($request->email, $artist, $customer->id, $artist->id, $quote->id);
+            $quote->update(['link_send_status' => 1]);
+    
         } else {
-            $user = User::where('id', $request->userid)->first();
-            $toemail = $user->email;
-            try {
-                Mail::send('admin.email.sendlink', ["useremail" => $user->email, "user_id" => $user->id, "artist_id" => $request->artistid, "dbid" => $request->dbid], function ($message) use ($toemail) {
-                    $message->to($toemail);
-                    $message->subject('TATTOO INFORMED CONSENT & MEDICAL HISTORY');
-                });
-            } catch (\Throwable $th) {
-                Log::debug($th->getMessage());
+            $user = User::find($request->userid);
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
             }
-
-            Quote::where('id', $request->dbid)
-                ->update([
-                    'link_send_status' => '1'
-                ]);
-
-            echo "emailsend";
+    
+            $this->sendEmail($user->email, $artist, $user->id, $artist->id, $request->dbid);
+            Quote::where('id', $request->dbid)->update(['link_send_status' => 1]);
+        }
+    
+        return response()->json(['message' => 'Email sent successfully']);
+    }
+    
+    private function sendEmail($toEmail, $artist, $userId, $artistId, $quoteId)
+    {
+        try {
+            Mail::send('admin.email.sendlink', [
+                "artistdata" => $artist,
+                "useremail" => $toEmail,
+                "user_id" => $userId,
+                "artist_id" => $artistId,
+                "dbid" => $quoteId
+            ], function ($message) use ($toEmail) {
+                $message->to($toEmail)
+                    ->subject('TATTOO INFORMED CONSENT & MEDICAL HISTORY');
+            });
+        } catch (\Throwable $th) {
+            Log::error("Email sending failed: " . $th->getMessage());
         }
     }
+    
 
-    // public function formlinkurl(Request $request){
-    //     $data['user_id'] = request()->segment(2);
-    //     $data['artist_id'] = request()->segment(3);
-    //     $data['dbid'] = request()->segment(4);
-
-    //     //check if this form is belongs to this user and the form is already submitted
-    //     $quote = Quote::where('user_id', request()->segment(2))
-    //           ->where('artist_id', request()->segment(3))
-    //           ->where('id', request()->segment(4))
-    //           ->first();
-
-    //     if($quote):
-    //        if(!is_null($quote->pdf_path)):
-    //            $error_msg1 = "We have already received your submitted data.";
-    //            $error_msg2 = "We'll be in touch shortly!";
-    //            return view('admin.sendlink.error',compact('error_msg1','error_msg2'));
-    //        else:
-    //            return view('admin.sendlink.index',$data);
-    //        endif;    
-    //     else:
-    //        $error_msg1 = "Something went wrong.";
-    //        $error_msg2 = "Please get in touch us.";
-    //        return view('admin.sendlink.error',compact('error_msg1','error_msg2'));
-    //     endif;         
-    // }
 
 
 
@@ -1130,8 +1106,9 @@ public function getAppointment(Request $request)
     }
     public function formatDate($requestDate)
     {
-        $date = explode('/', $requestDate);
+        $date = explode('-', $requestDate);
         $formattedDate = $date[2] . '-' . $date[0] . '-' . $date[1];
+        
         return $formattedDate;
     }
     public function userformsubmit(Request $request)

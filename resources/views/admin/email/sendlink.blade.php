@@ -63,8 +63,8 @@
                                 <tr>
                                     <td style="text-align: center;">
                                         <p>Copyright &copy; {{ date('Y') }} test. All Rights Reserved.</p>
-                                        <a href="#" style="font-size: 14px; margin-right: 5px; text-decoration: none; color: #ee5719;"><img src="{{ asset("frontend/img/emailtemplateimage/phone.svg") }}" alt=""> +91 XXXXXXXXXX </a>
-                                        <a href="#" style="font-size: 14px; margin-right: 5px; text-decoration: none; color: #ee5719;"><img src="{{ asset("frontend/img/emailtemplateimage/mail.svg") }}" alt=""> tatto@tatto.com </a>
+                                        <a href="#" style="font-size: 14px; margin-right: 5px; text-decoration: none; color: #ee5719;"><img src="{{ asset("frontend/img/emailtemplateimage/phone.svg") }}" alt=""> {{ $artistdata->phone ?? '' }} </a>
+                                        <a href="#" style="font-size: 14px; margin-right: 5px; text-decoration: none; color: #ee5719;"><img src="{{ asset("frontend/img/emailtemplateimage/mail.svg") }}" alt=""> {{$artistdata->email ?? ''}}</a>
                                     </td>
                                 </tr>
                              </tbody>

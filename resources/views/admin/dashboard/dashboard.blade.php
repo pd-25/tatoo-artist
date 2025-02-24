@@ -12,237 +12,7 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <link href="https://canvasjs.com/assets/css/jquery-ui.1.11.2.min.css" rel="stylesheet" />
-{{-- <script>
-window.onload = function () {
 
-var chart = new CanvasJS.Chart("chartContainer1", {
-	animationEnabled: true,
-	title:{
-		text: "Activity"
-	},	
-	axisY: {
-		title: "Walk In",
-		titleFontColor: "#4F81BC",
-		lineColor: "#4F81BC",
-		labelFontColor: "#4F81BC",
-		tickColor: "#4F81BC"
-	},
-	axisY2: {
-		title: "Quotes",
-		titleFontColor: "#C0504E",
-		lineColor: "#C0504E",
-		labelFontColor: "#C0504E",
-		tickColor: "#C0504E"
-	},	
-	toolTip: {
-		shared: true
-	},
-	legend: {
-		cursor:"pointer",
-		itemclick: toggleDataSeries
-	},
-	data: [{
-		type: "column",
-		name: "Walk In",
-		legendText: "Walk In",
-		showInLegend: true, 
-		// dataPoints:[
-		// 	{ label: "Jan", y: 266.21 },
-		// ]
-        dataPoints:<?php echo json_encode($WALKInData); ?>
-	},
-	{
-		type: "column",	
-		name: "Quotes",
-		legendText: "Quotes",
-		//axisYType: "secondary",
-		showInLegend: true,
-		// dataPoints:[
-		// 	{ label: "Jan", y: 10.46 },
-		// ]
-        dataPoints:<?php echo json_encode($QuotesData); ?>
-	}]
-});
-chart.render();
-
-
-
-var chart2 = new CanvasJS.Chart("chartContainer2", {
-	animationEnabled: true,
-	title:{
-		text: "Sales VS Expenses"
-	},	
-	axisY: {
-		title: "Sales",
-		titleFontColor: "#4F81BC",
-		lineColor: "#4F81BC",
-		labelFontColor: "#4F81BC",
-		tickColor: "#4F81BC"
-	},
-	axisY2: {
-		title: "Expenses",
-		titleFontColor: "#C0504E",
-		lineColor: "#C0504E",
-		labelFontColor: "#C0504E",
-		tickColor: "#C0504E"
-	},	
-	toolTip: {
-		shared: true
-	},
-	legend: {
-		cursor:"pointer",
-		itemclick: toggleDataSeries
-	},
-	data: [{
-		type: "column",
-		name: "Sales",
-		legendText: "Sales",
-		showInLegend: true, 
-		// dataPoints:[
-		// 	{ label: "Jan", y: 266.21 },
-		// ]
-        dataPoints:<?php echo json_encode($totalSalesDepositAmount); ?>
-	},
-	{
-		type: "column",	
-		name: "Expenses",
-		legendText: "Expenses",
-		//axisYType: "secondary",
-		showInLegend: true,
-		// dataPoints:[
-		// 	{ label: "Jan", y: 10.46 },
-		// ]
-        dataPoints:<?php echo json_encode($totalExpensesAmountData); ?>
-	}]
-});
-chart2.render();
-
-function toggleDataSeries(e) {
-	if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-		e.dataSeries.visible = false;
-	}
-	else {
-		e.dataSeries.visible = true;
-	}
-	chart.render();
-}
-
-}
-</script> --}}
-// <script>
-//     window.onload = function() {
-//         var chart = new CanvasJS.Chart("chartContainer1", {
-//             animationEnabled: true,
-//             title: {
-//                 text: "Activity"
-//             },
-//             axisY: {
-//                 title: "Walk In",
-//                 titleFontColor: "#4F81BC",
-//                 lineColor: "#4F81BC",
-//                 labelFontColor: "#4F81BC",
-//                 tickColor: "#4F81BC"
-//             },
-//             axisY2: {
-//                 title: "Quotes",
-//                 titleFontColor: "#C0504E",
-//                 lineColor: "#C0504E",
-//                 labelFontColor: "#C0504E",
-//                 tickColor: "#C0504E"
-//             },
-//             toolTip: {
-//                 shared: true
-//             },
-//             legend: {
-//                 cursor: "pointer",
-//                 itemclick: toggleDataSeries
-//             },
-//             data: [{
-//                     type: "column",
-//                     name: "Walk In",
-//                     legendText: "Walk In",
-//                     showInLegend: true,
-//                     indexLabel: "{y}",
-//                     indexLabelFontSize: 12,
-//                     dataPointWidth: 30, // Adjust spacing
-//                     dataPoints: <?php echo json_encode($WALKInData); ?>
-//                 },
-//                 {
-//                     type: "line", // Change to line
-//                     name: "Quotes",
-//                     legendText: "Quotes",
-//                     axisYType: "secondary",
-//                     showInLegend: true,
-//                     lineThickness: 3, // Make the line thicker
-//                     markerType: "circle",
-//                     markerSize: 8,
-//                     dataPoints: <?php echo json_encode($QuotesData); ?>
-//                 }
-//             ]
-//         });
-//         chart.render();
-
-//         var chart2 = new CanvasJS.Chart("chartContainer2", {
-//             animationEnabled: true,
-//             title: {
-//                 text: "Sales VS Expenses"
-//             },
-//             axisY: {
-//                 title: "Sales",
-//                 titleFontColor: "#4F81BC",
-//                 lineColor: "#4F81BC",
-//                 labelFontColor: "#4F81BC",
-//                 tickColor: "#4F81BC"
-//             },
-//             axisY2: {
-//                 title: "Expenses",
-//                 titleFontColor: "#C0504E",
-//                 lineColor: "#C0504E",
-//                 labelFontColor: "#C0504E",
-//                 tickColor: "#C0504E"
-//             },
-//             toolTip: {
-//                 shared: true
-//             },
-//             legend: {
-//                 cursor: "pointer",
-//                 itemclick: toggleDataSeries
-//             },
-//             data: [{
-//                     type: "column",
-//                     name: "Sales",
-//                     legendText: "Sales",
-//                     showInLegend: true,
-//                     indexLabel: "{y}",
-//                     indexLabelFontSize: 12,
-//                     dataPointWidth: 30, // Adjust spacing
-//                     dataPoints: <?php echo json_encode($totalSalesDepositAmount); ?>
-//                 },
-//                 {
-//                     type: "line", // Change to line
-//                     name: "Expenses",
-//                     legendText: "Expenses",
-//                     axisYType: "secondary",
-//                     showInLegend: true,
-//                     lineThickness: 3, // Thicker line
-//                     markerType: "square",
-//                     markerSize: 8,
-//                     dataPoints: <?php echo json_encode($totalExpensesAmountData); ?>
-//                 }
-//             ]
-//         });
-//         chart2.render();
-
-//         function toggleDataSeries(e) {
-//             if (typeof e.dataSeries.visible === "undefined" || e.dataSeries.visible) {
-//                 e.dataSeries.visible = false;
-//             } else {
-//                 e.dataSeries.visible = true;
-//             }
-//             e.chart.render();
-//         }
-//     };
-// </script>
 <?php
 
 // Encode data as JSON
@@ -483,7 +253,7 @@ function toggleDataSeries(e) {
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="stat-widget-one">
-                                <h5 class="text-center">Tire 1 Artists</h5>
+                                <h5 class="text-center">Tier 1 Artists</h5>
                                 <hr>
                                 <div style="display: flex; justify-content: space-between">
                                     <div class="stat-digit">Artists</div>
@@ -503,7 +273,7 @@ function toggleDataSeries(e) {
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="stat-widget-one">
-                                <h5 class="text-center">Tire 2 Artists</h5>
+                                <h5 class="text-center">Tier 2 Artists</h5>
                                 <hr>
                                 <div style="display: flex; justify-content: space-between">
                                     <div class="stat-digit">Artists</div>
@@ -523,7 +293,7 @@ function toggleDataSeries(e) {
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="stat-widget-one">
-                                <h5 class="text-center">Tire 3 Artists</h5>
+                                <h5 class="text-center">Tier 3 Artists</h5>
                                 <hr>
                                 <div style="display: flex; justify-content: space-between">
                                     <div class="stat-digit">Artists</div>
@@ -631,7 +401,7 @@ function toggleDataSeries(e) {
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="stat-widget-one">
-                                <h5 class="text-center">Tire 1 Artists</h5>
+                                <h5 class="text-center">Tier 1 Artists</h5>
                                 <hr>
                                 <div style="display: flex; justify-content: space-between">
                                     <div class="stat-digit">Artists</div>
@@ -651,7 +421,7 @@ function toggleDataSeries(e) {
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="stat-widget-one">
-                                <h5 class="text-center">Tire 2 Artists</h5>
+                                <h5 class="text-center">Tier 2 Artists</h5>
                                 <hr>
                                 <div style="display: flex; justify-content: space-between">
                                     <div class="stat-digit">Artists</div>
@@ -671,7 +441,7 @@ function toggleDataSeries(e) {
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="stat-widget-one">
-                                <h5 class="text-center">Tire 3 Artists</h5>
+                                <h5 class="text-center">Tier 3 Artists</h5>
                                 <hr>
                                 <div style="display: flex; justify-content: space-between">
                                     <div class="stat-digit">Artists</div>

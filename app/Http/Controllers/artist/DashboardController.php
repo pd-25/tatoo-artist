@@ -125,7 +125,7 @@ public function index(Request $request) {
             'label' => date('F', strtotime($first_date_this_month)),
             'y' => DB::table('quotes')
                 ->where('artist_id', $artistId)
-                ->where('quote_type', '0')
+                ->where('quote_type', '1')
                 ->whereBetween('created_at', [$first_date_this_month, $last_date_this_month])
                 ->count()
         ];
@@ -135,7 +135,7 @@ public function index(Request $request) {
             'label' => date('F', strtotime($first_date_this_month)),
             'y' => DB::table('quotes')
                 ->where('artist_id', $artistId)
-                ->where('quote_type', '1')
+                ->where('quote_type', '0')
                 ->whereBetween('created_at', [$first_date_this_month, $last_date_this_month])
                 ->count()
         ];

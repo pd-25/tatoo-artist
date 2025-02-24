@@ -174,7 +174,7 @@
                                                                 Link</button>
                                                         @elseif($quote->link_send_status == 1)
                                                             <button class="btn btn-sm btn-warning"
-                                                                onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Again
+                                                                onclick="AgainSendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Again
                                                                 Send Consent
                                                                 Link</button>
                                                         @else
@@ -408,35 +408,75 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 </script>
     <script>
-        function Sendlink(userid, artistid, dbid) {
-            $.ajax({
-                type: "POST",
-                url: "{{ route('admin.SendLink') }}",
-                data: {
-                    'userid': userid,
-                    'artistid': artistid,
-                    'dbid': dbid,
-                    '_token': '{{ csrf_token() }}'
-                },
-                beforeSend: function() {
-                    $('.ajax-loader').show();
-                },
-                complete: function() {
-                    $('.ajax-loader').hide();
-                },
-                success: function(result) {
-                    if (result == "emailsend") {
-                        swal({
-                            title: 'Email sent successfully.',
-                            target: ".myClass"
-                        });
-                        location.reload();
-                    } else {
-                        swal('Some Error occur, reload the page');
-                    }
-                }
-            });
+       function Sendlink(authUserId) {
+    const inputEmail = document.getElementById("inputEmail").value;
+    $.ajax({
+        type: "POST",
+        url: "{{ route('admin.SendLink') }}",
+        data: {
+            'type': 'walkin',
+            'email': inputEmail,
+            'artistid': authUserId,
+            '_token': '{{ csrf_token() }}'
+        },
+        beforeSend: function() {
+            $('.ajax-loader').show();
+        },
+        complete: function() {
+            $('.ajax-loader').hide();
+        },
+        success: function(result) {
+            if (result.message === "Email sent successfully") {
+                swal({
+                    title: 'Email sent successfully.',
+                    target: ".myClass"
+                }).then(() => {
+                    location.reload();
+                });
+            } else {
+                swal('Some error occurred, please reload the page');
+            }
+        },
+        error: function(xhr) {
+            swal('An error occurred: ' + xhr.responseJSON.error);
         }
+    });
+}
+
+function AgainSendlink(userid, artistid, dbid) {
+    $.ajax({
+        type: "POST",
+        url: "{{ route('admin.SendLink') }}",
+        data: {
+            'userid': userid,
+            'artistid': artistid,
+            'dbid': dbid,
+            '_token': '{{ csrf_token() }}'
+        },
+        beforeSend: function() {
+            $('.ajax-loader').show();
+        },
+        complete: function() {
+            $('.ajax-loader').hide();
+        },
+        success: function(result) {
+            if (result.message === "Email sent successfully") {
+                swal({
+                    title: 'Email sent successfully.',
+                    target: ".myClass"
+                }).then(() => {
+                    location.reload();
+                });
+            } else {
+                swal('Some error occurred, please reload the page');
+            }
+        },
+        error: function(xhr) {
+            swal('An error occurred: ' + xhr.responseJSON.error);
+        }
+    });
+}
+
 
         $(document).on("click", ".viewQuoteDetails", function() {
             let size = $(this).data('size');
