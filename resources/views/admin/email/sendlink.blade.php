@@ -51,7 +51,7 @@
                                       <!-- <h5 style='color: #6D717A;font-size: 20px;line-height: 23px;'>If you've lost your password or wish to reset it, use the link below to get started.</h5> -->
                                       <h4>
                                         <a href="{{ url('form-link-url/'.$user_id.'/'.$artist_id.'/'.$dbid) }}" style='color: #FFF;text-align: center;background: #EE5719;padding: 15px 50px;border-radius: 50px;margin: 10px auto;text-decoration: none;display: inline-block;'>
-                                            Submit Your Tattoo from
+                                            Submit Your Tattoo form
                                         </a>
                                       </h4>
                                       <!-- <p>If you did not request a password reset, you can safely ignore this email. Only a person with access to your email can reset your account password.</p> -->
@@ -62,7 +62,7 @@
                                 </tr>
                                 <tr>
                                     <td style="text-align: center;">
-                                        <p>Copyright &copy; {{ date('Y') }} test. All Rights Reserved.</p>
+                                        <p>Copyright &copy; {{ date('Y') }} Tattoome. All Rights Reserved.</p>
                                         <a href="#" style="font-size: 14px; margin-right: 5px; text-decoration: none; color: #ee5719;"><img src="{{ asset("frontend/img/emailtemplateimage/phone.svg") }}" alt=""> {{ $artistdata->phone ?? '' }} </a>
                                         <a href="#" style="font-size: 14px; margin-right: 5px; text-decoration: none; color: #ee5719;"><img src="{{ asset("frontend/img/emailtemplateimage/mail.svg") }}" alt=""> {{$artistdata->email ?? ''}}</a>
                                     </td>

@@ -157,7 +157,7 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="general_good_health" value="0" />
+                                    <input type="radio" name="general_good_health" value="0"  />
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -168,13 +168,13 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_under_any_medical_treatment" value="1" checked />
+                                    <input type="radio" name="you_under_any_medical_treatment" value="1"  />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_under_any_medical_treatment" value="0" />
+                                    <input type="radio" name="you_under_any_medical_treatment" value="0" checked />
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -185,13 +185,13 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_currently_taking_any_drugs" value="1" checked />
+                                    <input type="radio" name="you_currently_taking_any_drugs" value="1"  />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_currently_taking_any_drugs" value="0" />
+                                    <input type="radio" name="you_currently_taking_any_drugs" value="0" checked/>
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -202,13 +202,13 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_have_a_history_of_medication" value="1" checked />
+                                    <input type="radio" name="you_have_a_history_of_medication" value="1"  />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_have_a_history_of_medication" value="0" />
+                                    <input type="radio" name="you_have_a_history_of_medication" value="0" checked/>
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -219,13 +219,13 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_have_a_history_of_fainting" value="1" checked />
+                                    <input type="radio" name="you_have_a_history_of_fainting" value="1"  />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_have_a_history_of_fainting" value="0" />
+                                    <input type="radio" name="you_have_a_history_of_fainting" value="0" checked/>
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -236,13 +236,13 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="are_you_allergic_to_latex" value="1" checked />
+                                    <input type="radio" name="are_you_allergic_to_latex" value="1"  />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="are_you_allergic_to_latex" value="0" />
+                                    <input type="radio" name="are_you_allergic_to_latex" value="0" checked />
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -256,13 +256,13 @@
 
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="have_any_wounds_healed_slowly" value="1" checked />
+                                    <input type="radio" name="have_any_wounds_healed_slowly" value="1"  />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="have_any_wounds_healed_slowly" value="0" />
+                                    <input type="radio" name="have_any_wounds_healed_slowly" value="0" checked/>
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -275,13 +275,13 @@
                             <div class="col-md-1">
                                 <label class="radio-container">
                                     <input type="radio" name="are_you_allergic_to_any_know_materials" value="1"
-                                        checked />
+                                         />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="are_you_allergic_to_any_know_materials" value="0" />
+                                    <input type="radio" name="are_you_allergic_to_any_know_materials" value="0" checked/>
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -294,13 +294,13 @@
                             <div class="col-md-1">
                                 <label class="radio-container">
                                     <input type="radio" name="any_risk_factors_from_work_or_lifestyle" value="1"
-                                        checked />
+                                         />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="any_risk_factors_from_work_or_lifestyle" value="0" />
+                                    <input type="radio" name="any_risk_factors_from_work_or_lifestyle" value="0" checked/>
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -311,13 +311,13 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="are_you_pregnant_or_nursing" value="1" checked />
+                                    <input type="radio" name="are_you_pregnant_or_nursing" value="1"  />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="are_you_pregnant_or_nursing" value="0" />
+                                    <input type="radio" name="are_you_pregnant_or_nursing" value="0" checked/>
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
