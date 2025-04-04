@@ -78,8 +78,9 @@
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ \Carbon\Carbon::parse($log['date'])->format('d M Y, h:i A') }}</td>
-                                    <td>${{ $log['amount'] }}</td>
                                     <td>{{ ucwords($log['method']) }}</td>
+                                    <td>${{ $log['amount'] }}</td>
+
                                 </tr>
                             @endforeach
                         @else

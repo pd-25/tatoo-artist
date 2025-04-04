@@ -90,8 +90,7 @@
                                     <th>SL No</th>
                                     <th>Customer Name</th>
                                     <th>Price</th>
-                                    <th>Deposit</th>
-                                    <th>Total Due</th>
+                                    <th>Paid</th>
                                     <th>Date</th>
                                     <th>Payment Method</th>
                                     <th>View Deposit Image</th>
@@ -109,7 +108,6 @@
                                             <td>{{ $payment->customers_name }}</td>
                                             <td>{{ $payment->price }}</td>
                                             <td>{{ $payment->deposit_total }}</td>
-                                            <td>{{ $payment->total_due }}</td>
                                             <td>{{ date('m-d-Y',strtotime( $payment->date)) }}</td>
                                             <td>{{ $payment->payment_method }}</td>
                                             <td style="text-align: center;">
