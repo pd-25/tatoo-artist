@@ -67,8 +67,8 @@
                         <tr>
                             <th>#</th>
                             <th>Date</th>
-                            <th>Amount</th>
                             <th>Method</th>
+                            <th>Amount</th>
                         </tr>
                     </thead>
                     <tbody>
