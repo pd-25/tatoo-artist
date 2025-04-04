@@ -91,6 +91,9 @@ Route::get('/get-quote', [DashboardController::class, 'getQuote'])->name('admin.
 Route::post('/appoinment-move-archive',[DashboardController::class,'appointmentArchiveMove'])->name('appoinment.moveToArchives');
 Route::get('/get-appointment/archives', [DashboardController::class, 'getAppointmentArchives'])->name('appoinment.getArchives');
 Route::get('/get-appointment', [DashboardController::class, 'getAppointment'])->name('admin.getAppointment');
+
+
+
 Route::post('/deposit-move-archive',[PaymentController::class,'depositArchiveMove'])->name('deposit.moveToArchives');
 Route::get('/get-deposit-slips/archives', [PaymentController::class, 'getDepositSlipsArchives'])->name('deposit.getArchives');
 Route::get('/get-deposit-slips', [PaymentController::class, 'getDepositSlips'])->name('admin.deposit-slips');
@@ -103,10 +106,15 @@ Route::get('/success', [DashboardController::class, 'success'])->name('admin.suc
 Route::get('/error', [DashboardController::class, 'error'])->name('admin.error');
 Route::post('/userformsubmit', [DashboardController::class, 'userformsubmit'])->name('admin.userformsubmit');
 
+Route::get('/payment/{id}/installments', [PaymentController::class, 'showInstallments'])->name('admin.showInstallments');
+Route::post('/payment/installment/add', [PaymentController::class, 'addDepositInstallment'])->name('admin.addInstallment');
+
 Route::get('/get-accept-payment', [PaymentController::class, 'getAcceptPayment'])->name('admin.getAcceptPayment');
 Route::get('/add-payment', [PaymentController::class, 'AddpaymentForm'])->name('admin.AddpaymentForm');
 Route::post('/add-payment-post', [PaymentController::class, 'AddpaymentPost'])->name('admin.AddpaymentPost');
 Route::get('/print-payment-slip/{id}', [PaymentController::class, 'paymentview'])->name('admin.paymentview');
+
+
 
 Route::get('/edit-payment/{id}', [PaymentController::class, 'editpaymentForm'])->name('admin.editpaymentForm');
 Route::post('/edit-payment-post/{id}', [PaymentController::class, 'editpaymentPost'])->name('admin.editpaymentPost');

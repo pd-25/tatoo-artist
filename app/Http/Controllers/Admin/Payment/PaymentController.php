@@ -75,73 +75,153 @@ class PaymentController extends Controller
         return view('admin.payment.deposit',compact('payments'));
     }
 
-    public function getFilteredDeposits(Request $request){
+    // public function getFilteredDeposits(Request $request){
 
-        // Format the start and end dates from request
-        if ($request->has('start_date')) {
-            $requestStartDate = explode('/',$request->start_date);
-            $startDate = $requestStartDate[2].'-'.$requestStartDate[0].'-'.$requestStartDate[1];
-        }else{
-            $startDate = null;
+    //     if ($request->has('start_date')) {
+    //         $requestStartDate = explode('/',$request->start_date);
+    //         $startDate = $requestStartDate[2].'-'.$requestStartDate[0].'-'.$requestStartDate[1];
+    //     }else{
+    //         $startDate = null;
+    //     }
+
+    //     if ($request->has('end_date')) {
+    //         $requestEndDate = explode('/',$request->end_date);
+    //         $endDate = $requestEndDate[2].'-'.$requestEndDate[0].'-'.$requestEndDate[1];
+    //     }else{
+    //         $endDate = null;
+    //     }
+
+    //     $request->flash();
+
+    //     if (Auth::guard('artists')->check()){
+    //         $query = PaymentModel::where('artist_id',Auth::guard('artists')->user()->id);
+
+    //         if(!empty($startDate)):
+    //             $query->where('date', '>=', $startDate);
+    //         endif;    
+
+    //         if(!empty($endDate)):
+    //             $query->where('date', '<=', $endDate);
+    //         endif;    
+            
+    //         $payments = $query->paginate(10);
+    //     }
+    //     elseif (Auth::guard('admins')->check()){
+    //         $query = PaymentModel::with('user');
+
+    //         if(!empty($startDate)):
+    //             $query->where('date', '>=', $startDate);
+    //         endif;    
+
+    //         if(!empty($endDate)):
+    //             $query->where('date', '<=', $endDate);
+    //         endif;    
+            
+    //         $payments = $query->paginate(10);
+    //     }else{
+    //         $salespersonId = Auth::guard('sales')->id(); 
+    //         $artists = User::where('created_by', $salespersonId)->get();
+
+    //         $query = PaymentModel::with('user');
+
+    //         if(!empty($startDate)):
+    //             $query->where('date', '>=', $startDate);
+    //         endif;    
+
+    //         if(!empty($endDate)):
+    //             $query->where('date', '<=', $endDate);
+    //         endif;    
+            
+    //         $payments = $query->whereIn('artist_id', $artists->pluck('id'))->paginate(10);
+    //     }
+    //     return view('admin.payment.deposit',compact('payments'));
+    // }
+    public function getFilteredDeposits(Request $request)
+    {
+        // Format the start and end dates from request safely
+        $startDate = null;
+        $endDate = null;
+    
+        if ($request->filled('start_date') && substr_count($request->start_date, '/') === 2) {
+            $requestStartDate = explode('/', $request->start_date);
+            if (count($requestStartDate) === 3) {
+                $startDate = $requestStartDate[2] . '-' . $requestStartDate[0] . '-' . $requestStartDate[1];
+            }
         }
-
-        if ($request->has('end_date')) {
-            $requestEndDate = explode('/',$request->end_date);
-            $endDate = $requestEndDate[2].'-'.$requestEndDate[0].'-'.$requestEndDate[1];
-        }else{
-            $endDate = null;
+    
+        if ($request->filled('end_date') && substr_count($request->end_date, '/') === 2) {
+            $requestEndDate = explode('/', $request->end_date);
+            if (count($requestEndDate) === 3) {
+                $endDate = $requestEndDate[2] . '-' . $requestEndDate[0] . '-' . $requestEndDate[1];
+            }
         }
-
-        // var_dump($startDate);
-        // var_dump($endDate);
-        // exit;
-
-        // Flash the input data to the session
+    
+        // Flash old inputs
         $request->flash();
-
-        if (Auth::guard('artists')->check()){
-            $query = PaymentModel::where('artist_id',Auth::guard('artists')->user()->id);
-
-            if(!empty($startDate)):
+    
+        $customerName = $request->input('customers_name');
+    
+        if (Auth::guard('artists')->check()) {
+            $query = PaymentModel::where('artist_id', Auth::guard('artists')->user()->id);
+    
+            if (!empty($startDate)) {
                 $query->where('date', '>=', $startDate);
-            endif;    
-
-            if(!empty($endDate)):
+            }
+    
+            if (!empty($endDate)) {
                 $query->where('date', '<=', $endDate);
-            endif;    
-            
+            }
+    
+            if (!empty($customerName)) {
+                $query->where('customers_name', 'like', '%' . $customerName . '%');
+            }
+    
+            $payments = $query->with('user')->paginate(10);
+        }
+        elseif (Auth::guard('admins')->check()) {
+            $query = PaymentModel::with('user');
+    
+            if (!empty($startDate)) {
+                $query->where('date', '>=', $startDate);
+            }
+    
+            if (!empty($endDate)) {
+                $query->where('date', '<=', $endDate);
+            }
+    
+            if (!empty($customerName)) {
+                $query->where('customers_name', 'like', '%' . $customerName . '%');
+            }
+    
             $payments = $query->paginate(10);
         }
-        elseif (Auth::guard('admins')->check()){
-            $query = PaymentModel::with('user');
-
-            if(!empty($startDate)):
+        else {
+            $salespersonId = Auth::guard('sales')->id();
+            $artists = User::where('created_by', $salespersonId)->pluck('id');
+    
+            $query = PaymentModel::with('user')->whereIn('artist_id', $artists);
+    
+            if (!empty($startDate)) {
                 $query->where('date', '>=', $startDate);
-            endif;    
-
-            if(!empty($endDate)):
+            }
+    
+            if (!empty($endDate)) {
                 $query->where('date', '<=', $endDate);
-            endif;    
-            
+            }
+    
+            if (!empty($customerName)) {
+                $query->where('customers_name', 'like', '%' . $customerName . '%');
+            }
+    
             $payments = $query->paginate(10);
-        }else{
-            $salespersonId = Auth::guard('sales')->id(); 
-            $artists = User::where('created_by', $salespersonId)->get();
-
-            $query = PaymentModel::with('user');
-
-            if(!empty($startDate)):
-                $query->where('date', '>=', $startDate);
-            endif;    
-
-            if(!empty($endDate)):
-                $query->where('date', '<=', $endDate);
-            endif;    
-            
-            $payments = $query->whereIn('artist_id', $artists->pluck('id'))->paginate(10);
         }
-        return view('admin.payment.deposit',compact('payments'));
+    
+        return view('admin.payment.deposit', compact('payments'));
     }
+    
+
+
+
     public function printDepositPDF(Request $request)
     {
         // Format the start and end dates from request
@@ -272,67 +352,213 @@ class PaymentController extends Controller
     
     
 
+    // public function AddpaymentPost(Request $request)
+    // {
+    //     // Validate the request inputs
+    //     $this->validate($request, [
+    //         'artist_id'        => 'required',
+    //         'customers_name'   => 'required|string', // Ensuring it's a string
+    //         'design'           => 'required|string', // Ensuring it's a string
+    //         'price'            => 'required|numeric', // Ensure price is numeric
+    //         'deposit'          => 'nullable|numeric', // Ensure deposit is numeric
+    //         'tips'             => 'nullable|numeric', // Ensure tips is numeric
+    //         'fees'             => 'nullable|numeric', // Ensure fees is numeric
+    //         'total_due'       => 'nullable|numeric', // Ensure total_due is numeric
+    //         'bill_image'       => 'image|mimes:jpeg,png,jpg,gif'
+    //     ], [
+    //         'artist_id.required' => 'Please select an artist',
+    //         'customers_name.required' => 'Please enter customer name',
+    //         'design.required' => 'Please enter Design',
+    //         'price.required' => 'Please enter price',
+    //         'bill_image.required' => 'Please upload Bill Document',
+    //     ]);
+    
+    //     // Determine the user ID based on the authenticated guard
+    //     if (Auth::guard('artists')->check()) {
+    //         $userid = Auth::guard('artists')->user()->id;
+    //     } elseif (Auth::guard('admins')->check()) {
+    //         $userid = Auth::guard('admins')->user()->id;
+    //     } else {
+    //         $userid = Auth::guard('sales')->id();
+    //     }
+     
+    //     // Handle the bill image upload
+    //     $path = '';
+    //     if ($request->hasFile('bill_image')) {
+    //         $file = $request->file('bill_image');
+    //         $filename = $file->getClientOriginalName();
+    //         $file->storeAs('public/DepositSlip/', $filename);
+    //         $path = Storage::url('public/DepositSlip/' . $filename);
+    //     }
+    
+    //     // Create a new payment record
+    //     $pmodel = new PaymentModel();
+    //     $pmodel->user_id          = $userid;
+    //     $pmodel->date             = now()->format('Y-m-d'); // Automatically set today's date
+    //     $pmodel->artist_id        = $request->artist_id;
+    //     $pmodel->customers_name    = $request->customers_name;
+    //     $pmodel->design           = $request->design;
+    //     $pmodel->placement        = $request->placement;
+    //     $pmodel->price            = $request->price;
+    //     $pmodel->deposit          = $request->deposit ?? 0; // Default to 0 if null
+    //     $pmodel->tips             = $request->tips ?? 0; // Default to 0 if null
+    //     $pmodel->fees             = $request->fees ?? 0; // Default to 0 if null
+    //     $pmodel->total_due        = $request->total_due ?? 0; // Default to 0 if null
+    //     $pmodel->payment_method   = $request->payment_method;
+    //     $pmodel->bill_image       = $path;
+    
+    //     // Save the payment model
+    //     $pmodel->save();
+    
+    //     return redirect()->back()->with('message', 'Payment added successfully.');
+    // }
+    
+    
+
+
+
+
+
+
+
+
+
     public function AddpaymentPost(Request $request)
     {
-        // Validate the request inputs
-        $this->validate($request, [
-            'artist_id'        => 'required',
-            'customers_name'   => 'required|string', // Ensuring it's a string
-            'design'           => 'required|string', // Ensuring it's a string
-            'price'            => 'required|numeric', // Ensure price is numeric
-            'deposit'          => 'nullable|numeric', // Ensure deposit is numeric
-            'tips'             => 'nullable|numeric', // Ensure tips is numeric
-            'fees'             => 'nullable|numeric', // Ensure fees is numeric
-            'total_due'       => 'nullable|numeric', // Ensure total_due is numeric
-            'bill_image'       => 'image|mimes:jpeg,png,jpg,gif'
-        ], [
-            'artist_id.required' => 'Please select an artist',
-            'customers_name.required' => 'Please enter customer name',
-            'design.required' => 'Please enter Design',
-            'price.required' => 'Please enter price',
-            'bill_image.required' => 'Please upload Bill Document',
+        // Validate inputs
+        $request->validate([
+            'artist_id'        => 'required|integer',
+            'customers_name'   => 'required|string',
+            'design'           => 'required|string',
+            'placement'        => 'nullable|string',
+            'price'            => 'required|numeric',
+            'deposit'          => 'nullable|numeric',
+            'deposit_total'    => 'nullable|numeric',
+            'tips'             => 'nullable|numeric',
+            'fees'             => 'nullable|numeric',
+            'total_due'        => 'nullable|numeric',
+            'payment_method'   => 'required|string',
+            'bill_image'       => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]);
     
-        // Determine the user ID based on the authenticated guard
+        // Logged-in user check
         if (Auth::guard('artists')->check()) {
-            $userid = Auth::guard('artists')->user()->id;
+            $userId = Auth::guard('artists')->id();
         } elseif (Auth::guard('admins')->check()) {
-            $userid = Auth::guard('admins')->user()->id;
+            $userId = Auth::guard('admins')->id();
         } else {
-            $userid = Auth::guard('sales')->id();
+            $userId = Auth::guard('sales')->id();
         }
     
-        // Handle the bill image upload
-        $path = '';
+        // Handle bill image upload
+        $imagePath = '';
         if ($request->hasFile('bill_image')) {
             $file = $request->file('bill_image');
-            $filename = $file->getClientOriginalName();
+            $filename = time() . '_' . $file->getClientOriginalName();
             $file->storeAs('public/DepositSlip/', $filename);
-            $path = Storage::url('public/DepositSlip/' . $filename);
+            $imagePath = Storage::url('public/DepositSlip/' . $filename);
         }
     
-        // Create a new payment record
-        $pmodel = new PaymentModel();
-        $pmodel->user_id          = $userid;
-        $pmodel->date             = now()->format('Y-m-d'); // Automatically set today's date
-        $pmodel->artist_id        = $request->artist_id;
-        $pmodel->customers_name    = $request->customers_name;
-        $pmodel->design           = $request->design;
-        $pmodel->placement        = $request->placement;
-        $pmodel->price            = $request->price;
-        $pmodel->deposit          = $request->deposit ?? 0; // Default to 0 if null
-        $pmodel->tips             = $request->tips ?? 0; // Default to 0 if null
-        $pmodel->fees             = $request->fees ?? 0; // Default to 0 if null
-        $pmodel->total_due        = $request->total_due ?? 0; // Default to 0 if null
-        $pmodel->payment_method   = $request->payment_method;
-        $pmodel->bill_image       = $path;
+        // Prepare values
+        $price = $request->price;
+        $deposit = $request->deposit ?? 0;
+        $tips = $request->tips ?? 0;
+        $fees = $request->fees ?? 0;
     
-        // Save the payment model
-        $pmodel->save();
+        // Calculate percentages
+        $shopPercentage = round($deposit * 0.03, 2);
+        $artistPercentage = round($deposit * 0.02, 2);
     
-        return redirect()->back()->with('message', 'Payment added successfully.');
+        // Determine deposit_total
+        $depositTotal = $request->deposit_total ?? $deposit;
+    
+        // Determine total_due
+        $totalDue = $request->total_due ?? ($price - $depositTotal);
+    
+        // Init payment model
+        $payment = new PaymentModel();
+        $payment->user_id           = $userId;
+        $payment->artist_id         = $request->artist_id;
+        $payment->customers_name    = $request->customers_name;
+        $payment->design            = $request->design;
+        $payment->placement         = $request->placement;
+        $payment->price             = $price;
+        $payment->deposit_total     = $depositTotal;
+        $payment->tips              = $tips;
+        $payment->fees              = $fees;
+        $payment->total_due         = $totalDue;
+        $payment->shop_percentage   = $shopPercentage;
+        $payment->artist_percentage = $artistPercentage;
+        $payment->payment_method    = $request->payment_method;
+        $payment->bill_image        = $imagePath;
+        $payment->isarchive         = 0;
+        $payment->date              = now()->format('Y-m-d');
+    
+        // Add initial deposit log if deposit present
+        if ($deposit > 0) {
+            $payment->deposit_log = json_encode([[
+                'date'   => now()->toDateTimeString(),
+                'amount' => $deposit,
+                'method' => $request->payment_method,
+            ]]);
+        }
+    
+        $payment->save();
+    
+        return redirect()->route('admin.deposit-slips')->with('message', 'Payment added successfully.');
+
     }
     
+    public function showInstallments($id)
+{
+    $payment = PaymentModel::findOrFail($id);
+    $placement= Placement::find($payment->placement);
+    $installments = $payment->deposit_log ? json_decode($payment->deposit_log, true) : [];
+
+    return view('admin.payment.instalment', compact('payment', 'installments','placement'));
+}
+
+public function addDepositInstallment(Request $request)
+{
+    $request->validate([
+        'payment_id' => 'required|exists:payments,id',
+        'amount'     => 'required|numeric|min:0.01',
+        'method'     => 'required|string',
+    ]);
+
+    $payment = PaymentModel::findOrFail($request->payment_id);
+
+    // Get existing log or start new
+    $log = $payment->deposit_log ? json_decode($payment->deposit_log, true) : [];
+
+    // Add new installment entry
+    $log[] = [
+        'date'   => now()->toDateTimeString(),
+        'amount' => $request->amount,
+        'method' => $request->method,
+    ];
+
+    // Update deposit total
+    $payment->deposit_total += $request->amount;
+    $payment->deposit_log = json_encode($log);
+
+    // Recalculate totals
+    $price = $payment->price ?? 0;
+    $tips  = $payment->tips ?? 0;
+    $fees  = $payment->fees ?? 0;
+    $deposit_total = $payment->deposit_total;
+
+    $payment->total_due = $price  - $deposit_total;
+
+    // Update percentages
+    $payment->shop_percentage   = ($deposit_total * 3) / 100;
+    $payment->artist_percentage = ($deposit_total * 2) / 100;
+
+    $payment->save();
+
+    return redirect()->back()->with('message', 'Installment deposit added and totals updated successfully.');
+}
+
     
 
     public function editpaymentForm(Request $request,$id){
@@ -354,60 +580,80 @@ class PaymentController extends Controller
 
     public function editpaymentPost(Request $request, $id)
     {
-        // Validate the incoming request
-        $this->validate($request, [
-            'artist_id' => 'required',
-            'customers_name' => 'required',
-            'design' => 'required',
-            'price' => 'required'
-        ], [
-            'artist_id.required' => 'Please select an artist',
-            'customers_name.required' => 'Please enter customer name',
-            'design.required' => 'Please enter Design',
-            'price.required' => 'Please enter price',
-            'banner_url.required' => 'Please enter banner url'
+        $request->validate([
+            'artist_id'        => 'required|integer',
+            'customers_name'   => 'required|string',
+            'design'           => 'required|string',
+            'placement'        => 'nullable|string',
+            'price'            => 'required|numeric|min:0',
+            'deposit'          => 'nullable|numeric|min:0',
+            'deposit_total'    => 'nullable|numeric|min:0',
+            'tips'             => 'nullable|numeric|min:0',
+            'fees'             => 'nullable|numeric|min:0',
+            'total_due'        => 'nullable|numeric|min:0',
+            'payment_method'   => 'required|string',
+            'bill_image'       => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]);
     
-        // Retrieve the payment model using the decrypted ID
-        $pmodel = PaymentModel::find(decrypt($id));
+        $payment = PaymentModel::findOrFail($id);
     
-        // Check if the model was found
-        if (!$pmodel) {
-            return redirect()->back()->withErrors(['message' => 'Payment not found.']);
+        $price = $request->price;
+        $deposit = $request->deposit ?? 0;
+        $depositTotal = $request->deposit_total ?? $deposit;
+    
+        // Validation: Deposit & Total should not exceed Price
+        if ($deposit > $price) {
+            return back()->withInput()->withErrors(['deposit' => 'Initial deposit cannot be greater than price.']);
         }
     
-        // Get the user_id from the PaymentModel instance
-        $userid = $pmodel->user_id;
+        if ($depositTotal > $price) {
+            return back()->withInput()->withErrors(['deposit_total' => 'Total deposit cannot be greater than price.']);
+        }
     
-        // Handle file upload if a new image is provided
+        // Handle bill image (replace if uploaded)
+        $imagePath = $payment->bill_image;
         if ($request->hasFile('bill_image')) {
             $file = $request->file('bill_image');
-            $filename = $file->getClientOriginalName();
+            $filename = time() . '_' . $file->getClientOriginalName();
             $file->storeAs('public/DepositSlip/', $filename);
-            $path = Storage::url('public/DepositSlip/' . $filename);
-        } else {
-            // Use old image path if provided
-            $path = $request->old_image_path ?? ''; // Use null coalescing operator for cleaner code
+            $imagePath = Storage::url('public/DepositSlip/' . $filename);
         }
     
-        // Update model fields
-        $pmodel->date = date('Y-m-d');
-        $pmodel->artist_id = $request->input('artist_id');
-        $pmodel->customers_name = $request->input('customers_name');
-        $pmodel->design = $request->input('design');
-        $pmodel->placement = $request->input('placement');
-        $pmodel->price = $request->input('price');
-        $pmodel->deposit = $request->input('deposit');
-        $pmodel->tips = $request->input('tips');
-        $pmodel->fees = $request->input('fees');
-        $pmodel->total_due = $request->input('total_due');
-        $pmodel->payment_method = $request->input('payment_method');
-        $pmodel->bill_image = $path;
+        // Percentages
+        $shopPercentage = round($depositTotal * 0.03, 2);
+        $artistPercentage = round($depositTotal * 0.02, 2);
+        $totalDue = $request->total_due ?? ($price - $depositTotal);
     
-        // Save the updated model
-        $pmodel->save();
+        // Update values
+        $payment->artist_id         = $request->artist_id;
+        $payment->customers_name    = $request->customers_name;
+        $payment->design            = $request->design;
+        $payment->placement         = $request->placement;
+        $payment->price             = $price;
+        $payment->deposit_total     = $depositTotal;
+        $payment->tips              = $request->tips ?? 0;
+        $payment->fees              = $request->fees ?? 0;
+        $payment->total_due         = $totalDue;
+        $payment->shop_percentage   = $shopPercentage;
+        $payment->artist_percentage = $artistPercentage;
+        $payment->payment_method    = $request->payment_method;
+        $payment->bill_image        = $imagePath;
     
-        return redirect()->back()->with('message', 'Payment updated successfully.');
+        // Update deposit log if initial deposit added
+        if ($deposit > 0) {
+            $existingLog = json_decode($payment->deposit_log, true) ?? [];
+            $existingLog[] = [
+                'date'   => now()->toDateTimeString(),
+                'amount' => $deposit,
+                'method' => $request->payment_method,
+            ];
+            $payment->deposit_log = json_encode($existingLog);
+        }
+    
+        $payment->save();
+    
+        return redirect()->route('admin.deposit-slips')->with('message', 'Payment updated successfully.');
+    
     }
     
 

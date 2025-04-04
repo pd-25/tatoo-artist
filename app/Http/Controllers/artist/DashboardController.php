@@ -146,7 +146,7 @@ public function index(Request $request) {
             'y' => (float) DB::table('payments')
                 ->where('artist_id', $artistId)
                 ->whereBetween('date', [$first_date_this_month, $last_date_this_month])
-                ->sum('deposit')
+                ->sum('deposit_total')
         ];
 
         // Expenses Amount

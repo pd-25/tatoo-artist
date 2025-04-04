@@ -7,16 +7,19 @@
         <div class="col-lg-11">
             <div class="card">
                 <div class="card-title pr">
-                    <h4>Search Data based on date</h4>
+                    <h4>All Deposits of Payments</h4>
+                    @if (Session::has('message'))
+                    <p class="alert alert-info">{{ Session::get('message') }}</p>
+                @endif
                 </div>
                 <div class="card-body">
                     <form action="{{ route('admin.filterDeposite') }}" method="GET" enctype="multipart/form-data" name="paymentform">
                         @csrf
                         <div class="row d-flex justify-content-between">
-                            <div class="col-lg-5 col-md-5 col-sm-12">
+                            <div class="col-lg-3 col-md-3 col-sm-12">
                                 <label for="start_date"><b>Start Date:</b></label>
                                 <div class="input-group date datepicker">
-                                    <input type="text" id="start_date" name="start_date" value="{{ old('start_date') }}" class="form-control" required>
+                                    <input type="text" id="start_date" name="start_date" value="{{ old('start_date') }}" class="form-control" >
                                     <div class="input-group-addon input-group-append">
                                         <div class="input-group-text">
                                             <i class="fa fa-calendar"></i>
@@ -25,15 +28,21 @@
                                 </div>   
                             </div>
                     
-                            <div class="col-lg-5 col-md-5 col-sm-12">
+                            <div class="col-lg-3 col-md-3 col-sm-12">
                                 <label for="end_date"><b>End Date:</b></label>
                                 <div class="input-group date datepicker">
-                                    <input type="text" id="end_date" name="end_date" class="form-control" value="{{ old('end_date') }}" required>
+                                    <input type="text" id="end_date" name="end_date" class="form-control" value="{{ old('end_date') }}" >
                                     <div class="input-group-addon input-group-append">
                                         <div class="input-group-text">
                                             <i class="fa fa-calendar"></i>
                                         </div>
                                     </div>
+                                </div>   
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-12">
+                                <label for="name"><b>Name</b></label>
+                                <div class="input-group">
+                                    <input type="text" name="customers_name" class="form-control" placeholder="Search Customer Name" value="{{ old('customers_name') }}">
                                 </div>   
                             </div>
                       <!-- Filter and Print Buttons -->
@@ -99,7 +108,7 @@
                                             <td>{{ $index+1 }}</td>
                                             <td>{{ $payment->customers_name }}</td>
                                             <td>{{ $payment->price }}</td>
-                                            <td>{{ $payment->deposit }}</td>
+                                            <td>{{ $payment->deposit_total }}</td>
                                             <td>{{ $payment->total_due }}</td>
                                             <td>{{ date('m-d-Y',strtotime( $payment->date)) }}</td>
                                             <td>{{ $payment->payment_method }}</td>
@@ -111,6 +120,10 @@
                                                 @endif
                                             </td>
                                             <td style="text-align: center; display:flex; gap:3px;">
+                                                <a href="{{ route('admin.showInstallments', $payment->id) }}">
+                                                    <i class="ti-files btn btn-sm btn-primary"></i>
+                                                </a>
+                                                
                                                 <a href="{{ route('admin.editpaymentForm', encrypt($payment->id)) }}"><i class="ti-pencil btn btn-sm btn-primary"></i></a>
                                                 <form method="POST" action="{{ route('admin.deletepaymentForm', encrypt($payment->id)) }}" class="action-icon">
                                                     @csrf

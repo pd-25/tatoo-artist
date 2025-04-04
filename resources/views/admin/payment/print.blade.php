@@ -34,12 +34,15 @@
                     
                 </ul>
                 </div>
-                <hr>
-                <table class="table">
+             <table class="table">
                     
                     <tr>
                         <td><strong>Design:</strong></td>
                         <td>{{ $payments->design ?? 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Placement:</strong></td>
+                        <td>{{ $placements->firstWhere('id', $payments->placement)->title ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <td><strong>Price:</strong></td>
@@ -53,33 +56,48 @@
                         <td><strong>Total Due:</strong></td>
                         <td>{{ $payments->total_due ?? 'N/A' }}</td>
                     </tr>
-                    <tr>
-                        <td><strong>Placement:</strong></td>
-                        <td>{{ $placements->firstWhere('id', $payments->placement)->title ?? 'N/A' }}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Deposit:</strong></td>
-                        <td>{{ $payments->deposit ?? 'N/A' }}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Fees:</strong></td>
-                        <td>{{ $payments->fees ?? 'N/A' }}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Payment Method:</strong></td>
-                        <td>{{ ucfirst(str_replace('_', ' ', $payments->payment_method ?? 'N/A')) }}</td>
-                    </tr>
+                   
+                    
                     
                 </table>
                 <hr>
-                <div class="row d-flex justify-content-between">
+                <h5 class="text-left mt-4"><strong>Payment History</strong></h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $logs = json_decode($payments->deposit_log, true); @endphp
+                        @if ($logs && count($logs) > 0)
+                            @foreach ($logs as $index => $log)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($log['date'])->format('d M Y, h:i A') }}</td>
+                                    <td>${{ $log['amount'] }}</td>
+                                    <td>{{ ucwords($log['method']) }}</td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="4" class="text-center">No installments yet.</td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
+                <hr>
+                <div class="row d-flex justify-content-between px-2">
                     <div class="signature text-left">
                         <p><strong>Date:</strong> {{  date('m-d-Y',strtotime($payments->date))  }} 
-                        <br><strong>Signature:</strong>
+                        <br><strong>Signature:</strong> ____________________________________
                         </p>
                     </div>
                 <div class="total">
-                    <p><strong>Total:</strong> {{ $payments->total_due ?? 'N/A' }}</p>
+                    <p><strong>Total:</strong> {{ $payments->deposit_total ?? 'N/A' }}</p>
                 </div>
                 </div>
             </div>
@@ -169,6 +187,9 @@
     .text-center {
         text-align: center;
     }
+    .table td, .table th {
+    padding: 0.55rem !important;
+}
 
     @media print {
     button.print-button {
@@ -176,7 +197,7 @@
     }
     .print-container {
         box-shadow: none;
-        margin: 0 0 0 -100px;
+        margin: 0 0 0 -15%;
         width: 100%;
         max-width: none;
     }

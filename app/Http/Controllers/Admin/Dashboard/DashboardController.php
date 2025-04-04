@@ -516,7 +516,7 @@ if (Auth::guard('artists')->check()) {
                     ->where('payments.artist_id', Auth::guard('sales')->user()->id)
                     ->where('payments.date', '>=', $first_date_this_month)
                     ->where('payments.date', '<=', $last_date_this_month)
-                    ->sum('payments.deposit');
+                    ->sum('payments.deposit_total');
                 $totalSalesDepositAmount[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' =>(float) $totalSalesDeposit);
 
                 // Expenses Amount
