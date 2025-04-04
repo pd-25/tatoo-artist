@@ -98,7 +98,7 @@
                         </p>
                     </div>
                 <div class="total">
-                    <p><strong>Total:</strong> {{ $payments->deposit_total ?? 'N/A' }}</p>
+                    <p><strong>Total:</strong> ${{ $payments->deposit_total ?? 'N/A' }}</p>
                 </div>
                 </div>
             </div>
