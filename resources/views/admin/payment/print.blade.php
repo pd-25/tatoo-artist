@@ -46,15 +46,15 @@
                     </tr>
                     <tr>
                         <td><strong>Price:</strong></td>
-                        <td>{{ $payments->price ?? 'N/A' }}</td>
+                        <td>${{ $payments->price ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <td><strong>Tips:</strong></td>
-                        <td>{{ $payments->tips ?? 'N/A' }}</td>
+                        <td>${{ $payments->tips ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <td><strong>Total Due:</strong></td>
-                        <td>{{ $payments->total_due ?? 'N/A' }}</td>
+                        <td>${{ $payments->total_due ?? 'N/A' }}</td>
                     </tr>
                    
                     
