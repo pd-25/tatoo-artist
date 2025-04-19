@@ -29,16 +29,15 @@
                         <table class="table student-data-table m-t-20">
                             <thead>
                                 <tr>
-                                    <!-- <th><input type="checkbox" id="selectAll"></th> -->
+                                   
                                     <th>SL No</th>
                                     <th>Customer Name</th>
                                     <th>Price</th>
-                                    <th>Deposit</th>
-                                    <th>Total Due</th>
-                                    <th>Date</th>
-                                    <th>Payment Method</th>
-                                    <th>View Deposit Image</th>
-                                    <th>Action</th>
+                                    <th>Paid</th>
+                                    <th class="text-center">Date</th>
+                                    <th class="text-center" >Pay Type</th>
+                                    <th class="text-center">View Deposit Image</th>
+                                    <th class="text-center">Action</th>
                                     <th>View/Print</th>
                                 </tr>
                             </thead>
@@ -46,15 +45,17 @@
                                 @if(count($payments)>0)
                                     @foreach ($payments as $index=> $payment)
                                         <tr>
-                                            <!-- <td><input type="checkbox" class="quoteCheckbox" value="{{ $payment->id }}"></td> -->
+                                            
+                                            
 
                                             <td>{{ $index+1 }}</td>
-                                            <td>{{ $payment->customers_name }}</td>
+                                            <td>{{ $payment->customers_name }}<br>
+                                                
+                                            </td>
                                             <td>{{ $payment->price }}</td>
-                                            <td>{{ $payment->deposit }}</td>
-                                            <td>{{ $payment->total_due }}</td>
-                                            <td>{{ date('m-d-Y',strtotime( $payment->date)) }}</td>
-                                            <td>{{ $payment->payment_method }}</td>
+                                            <td>{{ $payment->deposit_total }}</td>
+                                            <td class="text-center">{{ date('m-d-Y',strtotime( $payment->date)) }}</td>
+                                            <td class="text-center">{{ $payment->payment_method }}</td>
                                             <td style="text-align: center;">
                                                 @if(!empty($payment->bill_image))
                                                     <a href="{{ asset($payment->bill_image) }}" class="btn btn-sm btn-success" target="_blank">View Link</a>
@@ -62,7 +63,9 @@
                                                     <button class="btn btn-sm btn-danger" readonly >No image!</button>     
                                                 @endif
                                             </td>
-                                            <td style="text-align: center; display:flex; gap:3px;">
+                                            <td style="text-align: center; display:flex; gap:3px; justify-content: center;">
+                                                
+                                                
                                                 <a href="{{ route('admin.editpaymentForm', encrypt($payment->id)) }}"><i class="ti-pencil btn btn-sm btn-primary"></i></a>
                                                 <form method="POST" action="{{ route('admin.deletepaymentForm', encrypt($payment->id)) }}" class="action-icon">
                                                     @csrf

@@ -99,7 +99,7 @@
                                     <th>Price</th>
                                     <th>Paid</th>
                                     <th class="text-center">Date</th>
-                                    <th class="text-center" >Payment Type</th>
+                                    <th class="text-center" >Pay Type</th>
                                     <th class="text-center">View Deposit Image</th>
                                     <th class="text-center">Action</th>
                                     <th>View/Print</th>
@@ -138,7 +138,7 @@
                                                     <button class="btn btn-sm btn-danger" readonly >No image!</button>     
                                                 @endif
                                             </td>
-                                            <td style="text-align: center; display:flex; gap:3px;">
+                                            <td style="text-align: center; display:flex; gap:3px; justify-content: center;">
                                                 <a href="{{ route('admin.showInstallments', $payment->id) }}">
                                                     <i class="ti-files btn btn-sm btn-primary"></i>
                                                 </a>
