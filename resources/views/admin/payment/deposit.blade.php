@@ -7,7 +7,7 @@
         <div class="col-lg-11">
             <div class="card">
                 <div class="card-title pr">
-                    <h4>All Deposits of Payments</h4>
+                    <h4>Search Data By Date Range OR Customer Name</h4>
                     @if (Session::has('message'))
                     <p class="alert alert-info">{{ Session::get('message') }}</p>
                 @endif
@@ -42,8 +42,15 @@
                             <div class="col-lg-4 col-md-4 col-sm-12">
                                 <label for="name"><b>Name</b></label>
                                 <div class="input-group">
-                                    <input type="text" name="customers_name" class="form-control" placeholder="Search Customer Name" value="{{ old('customers_name') }}">
-                                </div>   
+                                    <select name="customers_name" class="form-control" id="customers_name">
+                                        <option value="">Select Customer</option>
+                                        @foreach ($customers as $customer)
+                                            <option value="{{ $customer }}" {{ old('customers_name') == $customer ? 'selected' : '' }}>
+                                                {{ $customer }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                       <!-- Filter and Print Buttons -->
                       <div class="ccol-lg-2 col-md-2 col-sm-12 d-flex align-items-end mb-2 justify-content-center ">
@@ -102,10 +109,24 @@
                                 @if(count($payments)>0)
                                     @foreach ($payments as $index=> $payment)
                                         <tr>
-                                            <td><input type="checkbox" class="quoteCheckbox" value="{{ $payment->id }}"></td>
+                                            <td>
+                                                
+                                                <input 
+                                                    type="checkbox" 
+                                                    class="quoteCheckbox" 
+                                                    value="{{ $payment->id }}" 
+                                                    @disabled($payment->total_due > 0)
+                                                    title="{{ $payment->total_due > 0 ? 'Disabled due to deposit' : 'Select this payment' }}"
+                                                >
+                                            </td>
+                                            
 
                                             <td>{{ $index+1 }}</td>
-                                            <td>{{ $payment->customers_name }}</td>
+                                            <td>{{ $payment->customers_name }}<br>
+                                                @if($payment->isarchive == 1)
+                                                <p class="badge" style="background: red; color: #e7e7e7; font-size: 10px;">Archived</p>
+                                            @endif
+                                            </td>
                                             <td>{{ $payment->price }}</td>
                                             <td>{{ $payment->deposit_total }}</td>
                                             <td>{{ date('m-d-Y',strtotime( $payment->date)) }}</td>
@@ -193,40 +214,52 @@ select.form-control:not([size]):not([multiple]) {
             });
         });
     </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const selectAll = document.getElementById("selectAll");
-            const checkboxes = document.querySelectorAll(".quoteCheckbox");
-            const moveToArchives = document.getElementById("moveToArchives");
-        
-            function toggleMoveToArchives() {
-                const selectedIds = Array.from(checkboxes)
-                    .filter(checkbox => checkbox.checked)
-                    .map(checkbox => checkbox.value); 
-        
-                moveToArchives.classList.toggle("d-none", selectedIds.length === 0);
-        
-                // Store selected IDs in a data attribute
-                moveToArchives.setAttribute("data-selected", JSON.stringify(selectedIds));
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const selectAll = document.getElementById("selectAll");
+    const checkboxes = document.querySelectorAll(".quoteCheckbox");
+    const moveToArchives = document.getElementById("moveToArchives");
+
+    function toggleMoveToArchives() {
+        const selectedIds = Array.from(checkboxes)
+            .filter(checkbox => checkbox.checked && !checkbox.disabled)
+            .map(checkbox => checkbox.value);
+
+        moveToArchives.classList.toggle("d-none", selectedIds.length === 0);
+
+        moveToArchives.setAttribute("data-selected", JSON.stringify(selectedIds));
+    }
+
+    selectAll.addEventListener("change", function () {
+        checkboxes.forEach(checkbox => {
+            if (!checkbox.disabled) {
+                checkbox.checked = selectAll.checked;
             }
-        
-            selectAll.addEventListener("change", function() {
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = selectAll.checked;
-                });
-                toggleMoveToArchives();
-            });
-        
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener("change", toggleMoveToArchives);
-            });
-        
-            moveToArchives.addEventListener("click", function() {
-                const selectedIds = JSON.parse(moveToArchives.getAttribute("data-selected") || "[]");
-                
-                if (selectedIds.length > 0) {
-                    console.log("Selected IDs: ", selectedIds);
-                    // Send these IDs to the server via AJAX or form submission
+        });
+        toggleMoveToArchives();
+    });
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", toggleMoveToArchives);
+    });
+
+    moveToArchives.addEventListener("click", function () {
+        const selectedIds = JSON.parse(moveToArchives.getAttribute("data-selected") || "[]");
+
+        if (selectedIds.length > 0) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You are about to move selected items to archive.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, move it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
                     fetch("{{ route('deposit.moveToArchives') }}", {
                         method: "POST",
                         headers: {
@@ -235,27 +268,31 @@ select.form-control:not([size]):not([multiple]) {
                         },
                         body: JSON.stringify({ ids: selectedIds })
                     }).then(response => response.json())
-                    .then(data => {
-                    if (data.success) {
-                        // Show Bootstrap alert
-                        const alertDiv = document.createElement("div");
-                        alertDiv.className = "alert alert-info";
-                        alertDiv.innerHTML = data.success;
-                        document.getElementById("alert-container").appendChild(alertDiv);
-        
-                        // Remove alert after 3 seconds
-                        setTimeout(() => {
-                            alertDiv.remove();
-                            location.reload();
-                        }, 3000);
-                    } else {
-                        alert("Something went wrong!");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
+                        .then(data => {
+                            if (data.success) {
+                                const alertDiv = document.createElement("div");
+                                alertDiv.className = "alert alert-info";
+                                alertDiv.innerHTML = data.success;
+                                document.getElementById("alert-container").appendChild(alertDiv);
+
+                                setTimeout(() => {
+                                    alertDiv.remove();
+                                    location.reload();
+                                }, 3000);
+                            } else {
+                                Swal.fire('Error', 'Something went wrong!', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                            Swal.fire('Error', 'Failed to send request.', 'error');
+                        });
                 }
             });
-        });
-        </script>
+        }
+    });
+});
+</script>
+
 @endsection
 

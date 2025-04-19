@@ -360,24 +360,114 @@
                                     @enderror
                                 </div>
                             </div>
-
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Parking Available</label>
-                                    <select name="parking" class="form-control" value="{{ old('parking') }}">
-                                        <option selected disabled>select option</option>
-                                        <option value="yes" {{ @$artistData->parking == 'yes' ? 'selected' : '' }}>Yes
-                                        </option>
-                                        <option value="no" {{ @$artistData->parking == 'no' ? 'selected' : '' }}>No
-                                        </option>
-                                    </select>
-                                    @error('parking')
+                                    <label>Won't Do</label><span class="text-danger">*</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="wont_do[]" value="Offensive or Hate Symbols" id="OffensiveHateSymbols"
+                                            {{ in_array('Offensive or Hate Symbols', @$wontDo) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="OffensiveHateSymbols">
+                                            Offensive or Hate Symbols
+                                        </label>
+                                    </div>
+                            
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="wont_do[]" value="Copyrighted Material" id="CopyrightedMaterial"
+                                            {{ in_array('Copyrighted Material', @$wontDo) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="CopyrightedMaterial">
+                                            Copyrighted Material
+                                        </label>
+                                    </div>
+                            
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="wont_do[]" value="Inappropriate Imagery" id="InappropriateImagery"
+                                            {{ in_array('Inappropriate Imagery', @$wontDo) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="InappropriateImagery">
+                                            Inappropriate Imagery
+                                        </label>
+                                    </div>
+                            
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="wont_do[]" value="Eyes" id="Eyes"
+                                            {{ in_array('Eyes', @$wontDo) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="Eyes">
+                                            Eyes
+                                        </label>
+                                    </div>
+                            
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="wont_do[]" value="Genitals" id="Genitals"
+                                            {{ in_array('Genitals', @$wontDo) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="Genitals">
+                                            Genitals
+                                        </label>
+                                    </div>
+                            
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="wont_do[]" value="Inner Lips" id="InnerLips"
+                                            {{ in_array('Inner Lips', @$wontDo) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="InnerLips">
+                                            Inner Lips
+                                        </label>
+                                    </div>
+                            
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="wont_do[]" value="Armpits" id="Armpits"
+                                            {{ in_array('Armpits', @$wontDo) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="Armpits">
+                                            Armpits
+                                        </label>
+                                    </div>
+                            
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="wont_do[]" value="Bottom Of Foot" id="BottomOfFoot"
+                                            {{ in_array('Bottom Of Foot', @$wontDo) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="BottomOfFoot">
+                                            Bottom Of Foot
+                                        </label>
+                                    </div>
+                            
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="wont_do[]" value="Palms" id="Palms"
+                                            {{ in_array('Palms', @$wontDo) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="Palms">
+                                            Palms
+                                        </label>
+                                    </div>
+                            
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="wont_do[]" value="Toes" id="Toes"
+                                            {{ in_array('Toes', @$wontDo) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="Toes">
+                                            Toes
+                                        </label>
+                                    </div>
+                            
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="wont_do[]" value="Breasts" id="Breasts"
+                                            {{ in_array('Breasts', @$wontDo) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="Breasts">
+                                            Breasts
+                                        </label>
+                                    </div>
+                            
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="wont_do[]" value="Gang Symbols" id="GangSymbols"
+                                            {{ in_array('Gang Symbols', @$wontDo) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="GangSymbols">
+                                            Gang Symbols
+                                        </label>
+                                    </div>
+                            
+                                    @error('wont_do')
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
                                 </div>
                             </div>
+
+                           
 
                         </div>
 
@@ -474,7 +564,51 @@
                                     @enderror
                                 </div>
                             </div>
-
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Unique Offerings</label><span class="text-danger">*</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="unique_offerings[]" value="Vegan Ink" id="Vegan Ink"
+                                        {{ in_array('Vegan Ink', @$uniqueOfferings) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="Vegan Ink">
+                                            Vegan Ink
+                                        </label>
+                                    </div>
+                            
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="unique_offerings[]" value="Cover Ups" id="Cover Ups"
+                                        {{ in_array('Cover Ups', @$uniqueOfferings) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="Cover Ups">
+                                            Cover Ups
+                                        </label>
+                                    </div>
+                            
+                                  
+                            
+                                    @error('unique_offerings')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Parking Available</label>
+                                    <select name="parking" class="form-control" value="{{ old('parking') }}">
+                                        <option selected disabled>select option</option>
+                                        <option value="yes" {{ @$artistData->parking == 'yes' ? 'selected' : '' }}>Yes
+                                        </option>
+                                        <option value="no" {{ @$artistData->parking == 'no' ? 'selected' : '' }}>No
+                                        </option>
+                                    </select>
+                                    @error('parking')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Air Conditioned</label>

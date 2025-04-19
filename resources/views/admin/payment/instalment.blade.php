@@ -33,11 +33,11 @@
                     </div>
                     
                     <div class="col-md-6 mt-2">
-                        <label>Shop Percentage (3%)</label>
+                        <label>Shop Percentage </label>
                         <input type="number" class="form-control" value="{{ $payment->shop_percentage }}" readonly>
                     </div>
                     <div class="col-md-6 mt-2">
-                        <label>Artist Percentage (2%)</label>
+                        <label>Artist Percentage </label>
                         <input type="number" class="form-control" value="{{ $payment->artist_percentage }}" readonly>
                     </div>
                     <div class="col-md-6 mt-2">
@@ -168,11 +168,19 @@
                 data: { artist_id: artistId },
                 success: function(data) {
                     let options = '<option value="">Select Payment Method</option>';
-                    data.forEach(function(method) {
-                        let value = method.toLowerCase().replace(/ /g, '_');
-                        options += `<option value="${value}">${method}</option>`;
-                    });
+                    
+                    if (data.paymentMethods && Array.isArray(data.paymentMethods)) {
+                        data.paymentMethods.forEach(function(method) {
+                            let value = method.toLowerCase().replace(/ /g, '_');
+                            options += `<option value="${value}">${method}</option>`;
+                        });
+                    }
+
                     $('#payment-method').html(options);
+
+                    // Store shop percentage from API
+                    shopPercentage = parseFloat(data.shop_percentage) || 0;
+                    updatePercentages(parseFloat($('#deposit_total').val()) || parseFloat($('#deposit').val()) || 0);
                 },
                 error: function(xhr) {
                     console.error(xhr);

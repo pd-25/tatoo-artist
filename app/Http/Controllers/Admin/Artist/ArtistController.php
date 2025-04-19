@@ -239,7 +239,10 @@ public function index(Request $re)
             "shop_percentage",
             "shop_email",
             "shop_name",
-            "shop_address"
+            "shop_address",
+            "wont_do",
+            "unique_offerings"
+
         );
 
         $store = $this->artistInterface->storeArtistData($data, $timeData, $artistData);
@@ -259,6 +262,8 @@ public function index(Request $re)
         $data['artistData'] = @$data['artist']->artistData;
         $data['languageSpoken'] = explode(',', @$data['artistData']->language_spoken);
         $data['PaymentMethod'] = explode(',', @$data['artistData']->payment_method);
+        $data['wontDo'] = explode(',', @$data['artistData']->wont_do);
+        $data['uniqueOfferings'] = explode(',', @$data['artistData']->unique_offerings);
         $data['styles'] = Style::orderBy('id', 'asc')->get();
         if ($data['artist'] == 'Not Found') {
             return back()->with('msg', 'No artist found!');
@@ -276,6 +281,8 @@ public function index(Request $re)
         $data['languageSpoken'] = explode(',', @$data['artistData']->language_spoken);
         $data['PaymentMethod'] = explode(',', @$data['artistData']->payment_method);
         $data['styles'] = Style::orderBy('id', 'asc')->get();
+        $data['wontDo'] = explode(',', @$data['artistData']->wont_do);
+        $data['uniqueOfferings'] = explode(',', @$data['artistData']->unique_offerings);
         // dd($data);
         if ($data['artist'] == 'Not Found') {
             return back()->with('msg', 'No artist found!');
@@ -301,7 +308,7 @@ public function index(Request $re)
     // Data to be updated
     $data = $request->only('name', 'username', 'email', 'phone', 'address', 'address2', 'country', 'state', 'city', 'password', 'zipcode', 'latitude', 'longitude', 'profile_image', 'banner_image');
     $timeData = $request->only('sunday_from', 'sunday_to', 'monday_from', 'monday_to', 'tuesday_from', 'tuesday_to', 'wednesday_from', 'wednesday_to', 'thrusday_from', 'thrusday_to', 'friday_from', 'friday_to', 'saterday_from', 'saterday_to');
-    $artistData = $request->only('hourly_rate', 'specialty', 'years_in_trade', 'walk_in_welcome', 'certified_professionals', 'consultation_available', 'language_spoken', 'parking', 'payment_method', 'air_conditioned', 'water_available', 'coffee_available', 'mask_worn', 'vaccinated_staff', 'wheel_chair_accessible', 'bike_parking', 'wifi_available', 'artist_of_the_year', 'insta_handle', 'facebook_handle', 'youtube_handle', 'twitter_handle', 'google_map_api', 'yelp_api', 'shop_logo', 'shop_percentage', 'shop_email', 'shop_name', 'shop_address');
+    $artistData = $request->only('hourly_rate', 'specialty', 'years_in_trade', 'walk_in_welcome', 'certified_professionals', 'consultation_available', 'language_spoken', 'parking', 'payment_method', 'air_conditioned', 'water_available', 'coffee_available', 'mask_worn', 'vaccinated_staff', 'wheel_chair_accessible', 'bike_parking', 'wifi_available', 'artist_of_the_year', 'insta_handle', 'facebook_handle', 'youtube_handle', 'twitter_handle', 'google_map_api', 'yelp_api', 'shop_logo', 'shop_percentage', 'shop_email', 'shop_name', 'shop_address','wont_do','unique_offerings');
     $close = $request->only('sunday_close', 'monday_close', 'tuesday_close', 'wednesday_close', 'thrusday_close', 'friday_close', 'saterday_close');
 
     try {

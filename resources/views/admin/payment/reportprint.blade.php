@@ -16,9 +16,10 @@
 <body>
     <div class="container-fluid">
         <h2>Deposit Report</h2>
+        @if(!empty($startDate) && !empty($endDate))
         <p><strong>Start Date:</strong> {{ date('m-d-Y', strtotime($startDate)) }}</p>
         <p><strong>End Date:</strong> {{ date('m-d-Y', strtotime($endDate)) }}</p>
-
+        @endif
         <table>
             <thead>
                 <tr>
@@ -28,11 +29,11 @@
                     <th>Price</th>
                     <th>Paid</th>
                     <th>Total Due</th>
-                    <th>Tipes</th>
+                    <th>Tips</th>
                     <th>Fees</th>
                     <th>Payment Method</th>
-                    <th>Shop (3%)</th>
-                    <th>Artist (2%)</th>
+                    <th>Shop Percentage</th>
+                    <th>Artist Percentage</th>
                     <th>Date</th>
                 </tr>
             </thead>

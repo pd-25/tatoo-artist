@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Payment;
 
 use App\Http\Controllers\Controller;
+use App\Models\ArtistData;
 use Illuminate\Http\Request;
 use App\Models\Placement;
 use App\Models\PaymentModel;
@@ -58,22 +59,57 @@ class PaymentController extends Controller
         //dd($payments);
         return view('admin.payment.depositArchives',compact('payments'));
     }
-    public function getDepositSlips(Request $request){
-        if (Auth::guard('artists')->check()){
-            $payments = PaymentModel::with('user','artist')->where('artist_id',Auth::guard('artists')->user()->id)->where('isarchive',0)->orderBy('id','desc')->paginate('10');
-        }
-        elseif (Auth::guard('admins')->check()){
-            $payments = PaymentModel::with('user','artist')->where('isarchive',0)->orderBy('id','desc')->paginate('10');
-        }else{
-            $salespersonId = Auth::guard('sales')->id(); 
-            $artists = User::where('created_by', $salespersonId)->get();
-            
-            $payments = PaymentModel::with('user','artist')->whereIn('artist_id', $artists->pluck('id'))->where('isarchive',0)->orderBy('id','desc')->paginate('10');
-        }
+    public function getDepositSlips(Request $request)
+{
+    $payments = null;
+    $customers = [];
 
-        //dd($payments);
-        return view('admin.payment.deposit',compact('payments'));
+    if (Auth::guard('artists')->check()) {
+        $payments = PaymentModel::with('user', 'artist')
+            ->where('artist_id', Auth::guard('artists')->user()->id)
+            ->where('isarchive', 0)
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+    } elseif (Auth::guard('admins')->check()) {
+        $payments = PaymentModel::with('user', 'artist')
+            ->where('isarchive', 0)
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+    } else {
+        $salespersonId = Auth::guard('sales')->id();
+        $artists = User::where('created_by', $salespersonId)->get();
+        $payments = PaymentModel::with('user', 'artist')
+            ->whereIn('artist_id', $artists->pluck('id'))
+            ->where('isarchive', 0)
+            ->orderBy('id', 'desc')
+            ->paginate(10);
     }
+
+    // Extract unique customer names from the payments collection
+    $customers = $payments->pluck('customers_name')->unique()->values()->toArray();
+
+    // Remove dd($payments) to allow the view to render
+    return view('admin.payment.deposit', compact('payments', 'customers'));
+}
+    // public function getDepositSlips(Request $request){
+    //     if (Auth::guard('artists')->check()){
+    //         $payments = PaymentModel::with('user','artist')->where('artist_id',Auth::guard('artists')->user()->id)->where('isarchive',0)->orderBy('id','desc')->paginate('10');
+    //         dd($payments);
+    //     }
+    //     elseif (Auth::guard('admins')->check()){
+    //         $payments = PaymentModel::with('user','artist')->where('isarchive',0)->orderBy('id','desc')->paginate('10');
+    //         dd($payments);
+    //     }else{
+    //         $salespersonId = Auth::guard('sales')->id(); 
+    //         $artists = User::where('created_by', $salespersonId)->get();
+            
+    //         $payments = PaymentModel::with('user','artist')->whereIn('artist_id', $artists->pluck('id'))->where('isarchive',0)->orderBy('id','desc')->paginate('10');
+    //         dd($payments);
+    //     }
+
+    //     //dd($payments);
+    //     return view('admin.payment.deposit',compact('payments'));
+    // }
 
     // public function getFilteredDeposits(Request $request){
 
@@ -137,87 +173,111 @@ class PaymentController extends Controller
     //     return view('admin.payment.deposit',compact('payments'));
     // }
     public function getFilteredDeposits(Request $request)
-    {
-        // Format the start and end dates from request safely
-        $startDate = null;
-        $endDate = null;
-    
-        if ($request->filled('start_date') && substr_count($request->start_date, '/') === 2) {
-            $requestStartDate = explode('/', $request->start_date);
-            if (count($requestStartDate) === 3) {
-                $startDate = $requestStartDate[2] . '-' . $requestStartDate[0] . '-' . $requestStartDate[1];
-            }
+{
+    // Format the start and end dates from request safely
+    $startDate = null;
+    $endDate = null;
+
+    if ($request->filled('start_date') && substr_count($request->start_date, '/') === 2) {
+        $requestStartDate = explode('/', $request->start_date);
+        if (count($requestStartDate) === 3) {
+            $startDate = $requestStartDate[2] . '-' . $requestStartDate[0] . '-' . $requestStartDate[1];
         }
-    
-        if ($request->filled('end_date') && substr_count($request->end_date, '/') === 2) {
-            $requestEndDate = explode('/', $request->end_date);
-            if (count($requestEndDate) === 3) {
-                $endDate = $requestEndDate[2] . '-' . $requestEndDate[0] . '-' . $requestEndDate[1];
-            }
-        }
-    
-        // Flash old inputs
-        $request->flash();
-    
-        $customerName = $request->input('customers_name');
-    
-        if (Auth::guard('artists')->check()) {
-            $query = PaymentModel::where('artist_id', Auth::guard('artists')->user()->id);
-    
-            if (!empty($startDate)) {
-                $query->where('date', '>=', $startDate);
-            }
-    
-            if (!empty($endDate)) {
-                $query->where('date', '<=', $endDate);
-            }
-    
-            if (!empty($customerName)) {
-                $query->where('customers_name', 'like', '%' . $customerName . '%');
-            }
-    
-            $payments = $query->with('user')->paginate(10);
-        }
-        elseif (Auth::guard('admins')->check()) {
-            $query = PaymentModel::with('user');
-    
-            if (!empty($startDate)) {
-                $query->where('date', '>=', $startDate);
-            }
-    
-            if (!empty($endDate)) {
-                $query->where('date', '<=', $endDate);
-            }
-    
-            if (!empty($customerName)) {
-                $query->where('customers_name', 'like', '%' . $customerName . '%');
-            }
-    
-            $payments = $query->paginate(10);
-        }
-        else {
-            $salespersonId = Auth::guard('sales')->id();
-            $artists = User::where('created_by', $salespersonId)->pluck('id');
-    
-            $query = PaymentModel::with('user')->whereIn('artist_id', $artists);
-    
-            if (!empty($startDate)) {
-                $query->where('date', '>=', $startDate);
-            }
-    
-            if (!empty($endDate)) {
-                $query->where('date', '<=', $endDate);
-            }
-    
-            if (!empty($customerName)) {
-                $query->where('customers_name', 'like', '%' . $customerName . '%');
-            }
-    
-            $payments = $query->paginate(10);
-        }
-    
-        return view('admin.payment.deposit', compact('payments'));
     }
+
+    if ($request->filled('end_date') && substr_count($request->end_date, '/') === 2) {
+        $requestEndDate = explode('/', $request->end_date);
+        if (count($requestEndDate) === 3) {
+            $endDate = $requestEndDate[2] . '-' . $requestEndDate[0] . '-' . $requestEndDate[1];
+        }
+    }
+
+    // Flash old inputs
+    $request->flash();
+
+    $customerName = $request->input('customers_name');
+
+    if (Auth::guard('artists')->check()) {
+        // Payments query for artists
+        $query = PaymentModel::where('artist_id', Auth::guard('artists')->user()->id);
+
+        if (!empty($startDate)) {
+            $query->where('date', '>=', $startDate);
+        }
+
+        if (!empty($endDate)) {
+            $query->where('date', '<=', $endDate);
+        }
+
+        if (!empty($customerName)) {
+            $query->where('customers_name', 'like', '%' . $customerName . '%');
+        }
+
+        $payments = $query->with('user')->paginate(10);
+
+        // Get all customer names for this artist
+        $customers = PaymentModel::where('artist_id', Auth::guard('artists')->user()->id)
+            ->pluck('customers_name')
+            ->unique()
+            ->values()
+            ->toArray();
+    }
+    elseif (Auth::guard('admins')->check()) {
+        // Payments query for admins
+        $query = PaymentModel::with('user');
+
+        if (!empty($startDate)) {
+            $query->where('date', '>=', $startDate);
+        }
+
+        if (!empty($endDate)) {
+            $query->where('date', '<=', $endDate);
+        }
+
+        if (!empty($customerName)) {
+            $query->where('customers_name', 'like', '%' . $customerName . '%');
+        }
+
+        $payments = $query->paginate(10);
+
+        // Get all customer names for admins
+        $customers = PaymentModel::pluck('customers_name')
+            ->unique()
+            ->values()
+            ->toArray();
+    }
+    else {
+        $salespersonId = Auth::guard('sales')->id();
+        $artists = User::where('created_by', $salespersonId)->pluck('id');
+
+        // Payments query for sales
+        $query = PaymentModel::with('user')->whereIn('artist_id', $artists);
+
+        if (!empty($startDate)) {
+            $query->where('date', '>=', $startDate);
+        }
+
+        if (!empty($endDate)) {
+            $query->where('date', '<=', $endDate);
+        }
+
+        if (!empty($customerName)) {
+            $query->where('customers_name', 'like', '%' . $customerName . '%');
+        }
+
+        $payments = $query->paginate(10);
+
+        // Get all customer names for this salesperson's artists
+        $customers = PaymentModel::whereIn('artist_id', $artists)
+            ->pluck('customers_name')
+            ->unique()
+            ->values()
+            ->toArray();
+    }
+
+    // Pass both payments and customers to the view
+    return view('admin.payment.deposit', compact('payments', 'customers'));
+}
     
 
 
@@ -288,21 +348,27 @@ class PaymentController extends Controller
     }
     
 
-    public function getPaymentMethods(Request $request)
-    {
-        $paymentMethods = [];
-        $artistId = $request->artist_id;
-    
-        if ($artistId) {
-            $artist = User::where('id', $artistId)->where('type', 'artist')->first();
-            if ($artist && $artist->artistData) {
-                $artistData = $artist->artistData;
-                $paymentMethods = explode(',', $artistData->payment_method);  // Split by comma into an array
-            }
+public function getPaymentMethods(Request $request)
+{
+    $paymentMethods = [];
+    $shop_percentage = null;
+    $artistId = $request->artist_id;
+
+    if ($artistId) {
+        $artist = User::where('id', $artistId)->where('type', 'artist')->first();
+        if ($artist && $artist->artistData) {
+            $artistData = $artist->artistData;
+            $paymentMethods = explode(',', $artistData->payment_method);
+            $shop_percentage = $artistData->shop_percentage;
         }
-    
-        return response()->json($paymentMethods);
     }
+
+    return response()->json([
+        'paymentMethods' => $paymentMethods,
+        'shop_percentage' => $shop_percentage
+    ]);
+}
+
     public function AddpaymentForm(Request $request)
 {
     $artistId = null;
@@ -466,8 +532,12 @@ class PaymentController extends Controller
         $fees = $request->fees ?? 0;
     
         // Calculate percentages
-        $shopPercentage = round($deposit * 0.03, 2);
-        $artistPercentage = round($deposit * 0.02, 2);
+        $artistData = ArtistData::where('artist_id', $request->artist_id)->first();
+       $shopPercentageValue = $artistData ? (float)$artistData->shop_percentage : 0; // Assuming shop_percentage is a column in ArtistData
+        $artistPercentageValue = 100 - $shopPercentageValue;
+        
+        $shopPercentage = round($deposit * $shopPercentageValue / 100, 2);
+        $artistPercentage = round($deposit * $artistPercentageValue / 100, 2);
     
         // Determine deposit_total
         $depositTotal = $request->deposit_total ?? $deposit;
@@ -525,6 +595,7 @@ public function addDepositInstallment(Request $request)
         'amount'     => 'required|numeric|min:0.01',
         'method'     => 'required|string',
     ]);
+    
 
     $payment = PaymentModel::findOrFail($request->payment_id);
 
@@ -551,8 +622,16 @@ public function addDepositInstallment(Request $request)
     $payment->total_due = $price  - $deposit_total;
 
     // Update percentages
-    $payment->shop_percentage   = ($deposit_total * 3) / 100;
-    $payment->artist_percentage = ($deposit_total * 2) / 100;
+    $artistData = ArtistData::where('artist_id', $payment->artist_id)->first();
+   $shopPercentageValue = $artistData ? (float)$artistData->shop_percentage : 0; // Assuming shop_percentage is a column in ArtistData
+    $artistPercentageValue = 100 - $shopPercentageValue;
+
+    $payment->shop_percentage = round($deposit_total * $shopPercentageValue / 100, 2);
+    $payment->artist_percentage = round($deposit_total * $artistPercentageValue / 100, 2);
+
+
+
+   
 
     $payment->save();
 
@@ -620,8 +699,14 @@ public function addDepositInstallment(Request $request)
         }
     
         // Percentages
-        $shopPercentage = round($depositTotal * 0.03, 2);
-        $artistPercentage = round($depositTotal * 0.02, 2);
+        $artistData = ArtistData::where('artist_id', $request->artist_id)->first();
+       $shopPercentageValue = $artistData ? (float)$artistData->shop_percentage : 0; // Assuming shop_percentage is a column in ArtistData
+        $artistPercentageValue = 100 - $shopPercentageValue;
+
+        $shopPercentage = round($depositTotal * $shopPercentageValue / 100, 2);
+        $artistPercentage = round($depositTotal * $artistPercentageValue / 100, 2);
+
+
         $totalDue = $request->total_due ?? ($price - $depositTotal);
     
         // Update values

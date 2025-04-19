@@ -142,6 +142,9 @@ class ArtistRepository implements ArtistInterface
             "shop_logo" => $content_logo,
             "shop_name" => $artistData["shop_name"],
             "shop_address" => $artistData["shop_address"],
+            "wont_do" => implode(',', $artistData["wont_do"]),
+            "unique_offerings" => implode(',', $artistData["unique_offerings"]),
+           
         ];
 
         ArtistData::create($artistData);
@@ -161,7 +164,7 @@ class ArtistRepository implements ArtistInterface
 
     public function updateArtist($data, $id, $timeData, $artistData, $close)
     {
-        //dd($data);
+        // dd($data,$artistData);
         $find =  User::where('id', $id)->first();
         if ($find) {
           
@@ -227,39 +230,13 @@ class ArtistRepository implements ArtistInterface
                      if(isset($artistData["payment_method"])){
                         $artistData["payment_method"] = implode(',', $artistData["payment_method"]);
                      }
-                    // $artistData = [
-                    //     "hourly_rate" => $artistData["hourly_rate"],
-                    //     "specialty" => $artistData["specialty"],
-                    //     "years_in_trade" => $artistData["years_in_trade"],
-                    //     "walk_in_welcome" => $artistData["walk_in_welcome"],
-                    //     "certified_professionals" => $artistData["certified_professionals"],
-                    //     "consultation_available" => $artistData["consultation_available"],
-                    //     "language_spoken" => implode(',', $artistData["language_spoken"]),
-                    //     "parking" => $artistData["parking"],
-                    //     "payment_method" => implode(',', $artistData["payment_method"]),
-                    //     "air_conditioned" => $artistData["air_conditioned"],
-                    //     "water_available" => $artistData["water_available"],
-                    //     "coffee_available" => $artistData["coffee_available"],
-                    //     "mask_worn" => $artistData["mask_worn"],
-                    //     "vaccinated_staff" => $artistData["vaccinated_staff"],
-                    //     "wheel_chair_accessible" => $artistData["wheel_chair_accessible"],
-                    //     "bike_parking" => $artistData["bike_parking"],
-                    //     "wifi_available" => $artistData["wifi_available"],
-                    //     "artist_of_the_year" => $artistData["artist_of_the_year"],
-                    //     "insta_handle" => $artistData["insta_handle"],
-                    //     "facebook_handle" => $artistData["facebook_handle"],
-                    //     "youtube_handle" => $artistData["youtube_handle"],
-                    //     "twitter_handle" => $artistData["twitter_handle"],
-                    //     "google_map_api" => $artistData["google_map_api"],
-                    //     "yelp_api" => $artistData["yelp_api"],
-                    //     "shop_percentage" => $artistData["shop_percentage"],
-                    //     "shop_email" => $artistData["shop_email"],
-                    //     "shop_logo" => $content_logo,
-                    //     "shop_name" => $artistData["shop_name"],
-                    //     "shop_address" => $artistData["shop_address"],
-                    // ];
-
-                    // dd( $artistData);
+                     if(isset($artistData["wont_do"])){
+                        $artistData["wont_do"] = implode(',', $artistData["wont_do"]);
+                     }
+                     if(isset($artistData["unique_offerings"])){
+                        $artistData["unique_offerings"] = implode(',', $artistData["unique_offerings"]);
+                     }
+                    
                     
                     $check_if_artist_data->update($artistData);
                 }

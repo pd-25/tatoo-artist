@@ -47,16 +47,14 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Shop Percentage (3%)</label>
+                                    <label>Shop Percentage</label>
                                     <input type="text" class="form-control" id="shop_percentage" readonly>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Artist Percentage (2%)</label>
+                                    <label>Artist Percentage</label>
                                     <input type="text" class="form-control" id="artist_percentage" readonly>
                                 </div>
-
-                                
 
                                 <div class="form-group">
                                     <label>Deposit Slip</label>
@@ -90,13 +88,6 @@
                                     @error('placement') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
-                                {{-- <div class="form-group">
-                                    <label>Initial Deposit</label>
-                                    <input type="number" class="form-control" name="deposit" id="deposit" placeholder="Initial Deposit" value="{{ old('deposit', $payments->deposit) }}">
-                                    <small id="deposit-error" class="text-danger d-none">Initial deposit cannot exceed price.</small>
-                                    @error('deposit') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div> --}}
-
                                 <div class="form-group">
                                     <label>Fees</label>
                                     <input type="number" class="form-control" name="fees" placeholder="Fees" value="{{ old('fees', $payments->fees) }}">
@@ -107,9 +98,6 @@
                                     <label>Payment Method <span class="text-danger">*</span></label>
                                     <select name="payment_method" id="payment-method" class="form-control" required>
                                         <option value="">Select Payment Method</option>
-                                        @if($payments->payment_method)
-                                            <option value="{{ $payments->payment_method }}" selected>{{ ucwords(str_replace('_', ' ', $payments->payment_method)) }}</option>
-                                        @endif
                                     </select>
                                     @error('payment_method') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -120,6 +108,7 @@
                                     <small id="total-error" class="text-danger d-none">Total deposit cannot exceed price.</small>
                                     @error('deposit_total') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
+
                                 <div class="form-group">
                                     <label>Tips</label>
                                     <input type="number" class="form-control" name="tips" placeholder="Tips" value="{{ old('tips', $payments->tips) }}">
@@ -141,6 +130,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     let depositEdited = false;
+    let shopPercentage = 0;
 
     $(document).ready(function() {
         const artistId = $('#artist-id').val() || $('#artist-select').val();
@@ -148,8 +138,11 @@
 
         $('#artist-select').change(function() {
             const selectedArtistId = $(this).val();
-            if (selectedArtistId) fetchPaymentMethods(selectedArtistId);
-            else $('#payment-method').html('<option value="">Select Payment Method</option>');
+            if (selectedArtistId) {
+                fetchPaymentMethods(selectedArtistId);
+            } else {
+                $('#payment-method').html('<option value="">Select Payment Method</option>');
+            }
         });
 
         function fetchPaymentMethods(artistId) {
@@ -159,43 +152,44 @@
                 data: { artist_id: artistId },
                 success: function(data) {
                     let options = '<option value="">Select Payment Method</option>';
-                    data.forEach(method => {
-                        let value = method.toLowerCase().replace(/ /g, '_');
-                        options += `<option value="${value}">${method}</option>`;
-                    });
-                    $('#payment-method').append(options);
+                    
+                    if (data.paymentMethods && Array.isArray(data.paymentMethods)) {
+                        data.paymentMethods.forEach(function(method) {
+                            let value = method.toLowerCase().replace(/ /g, '_');
+                            let selected = '{{ $payments->payment_method }}' === value ? 'selected' : '';
+                            options += `<option value="${value}" ${selected}>${method}</option>`;
+                        });
+                    }
+
+                    $('#payment-method').html(options);
+
+                    // Store shop percentage from API
+                    shopPercentage = parseFloat(data.shop_percentage) || 0;
+                    updatePercentages(parseFloat($('#deposit_total').val()) || 0);
+                },
+                error: function(xhr) {
+                    console.error(xhr);
                 }
             });
         }
 
         function updatePercentages(val) {
-            $('#shop_percentage').val((val * 0.03).toFixed(2));
-            $('#artist_percentage').val((val * 0.02).toFixed(2));
+            const artistPercentage = 100 - shopPercentage;
+            const shopAmount = (val * shopPercentage / 100).toFixed(2);
+            const artistAmount = (val * artistPercentage / 100).toFixed(2);
+            
+            $('#shop_percentage').val(shopAmount);
+            $('#artist_percentage').val(artistAmount);
         }
 
         function validateAmounts() {
             const price = parseFloat($('#price').val()) || 0;
-            const deposit = parseFloat($('#deposit').val()) || 0;
             const total = parseFloat($('#deposit_total').val()) || 0;
 
-            $('#deposit-error').toggleClass('d-none', deposit <= price);
             $('#total-error').toggleClass('d-none', total <= price);
 
-            if (deposit > price) $('#deposit').val(price);
             if (total > price) $('#deposit_total').val(price);
         }
-
-        $('#deposit').on('input', function () {
-            const deposit = parseFloat($(this).val()) || 0;
-            const price = parseFloat($('#price').val()) || 0;
-
-            if (!depositEdited && deposit <= price) {
-                $('#deposit_total').val(deposit);
-                updatePercentages(deposit);
-            }
-
-            validateAmounts();
-        });
 
         $('#deposit_total').on('input', function () {
             depositEdited = true;
@@ -204,11 +198,13 @@
             validateAmounts();
         });
 
-        $('#price').on('input', validateAmounts);
+        $('#price').on('input', function () {
+            validateAmounts();
+        });
 
-        // Initialize percentages if existing value
-        const initial = parseFloat($('#deposit_total').val()) || 0;
-        updatePercentages(initial);
+        // Initialize percentages
+        const initialTotal = parseFloat($('#deposit_total').val()) || 0;
+        updatePercentages(initialTsotal);
     });
 </script>
 @endsection

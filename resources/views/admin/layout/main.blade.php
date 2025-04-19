@@ -89,7 +89,7 @@
                     @endif
 
                     @if (Auth::guard('artists')->check())
-                        <li><a href="{{ route('artists.getForm') }}"><i class="ti-upload"></i> Artwork</a></li>
+                        {{-- <li><a href="{{ route('artists.getForm') }}"><i class="ti-upload"></i> Artwork</a></li> --}}
                         <li><a href="{{ route('artists.getArtistWiseArtwork') }}"><i class="ti-image"></i> Modify Art</a>
                     @else
                         <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Artwork Management <span

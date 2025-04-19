@@ -168,6 +168,8 @@ public function index(Request $request) {
     $data['artistData'] = @$data['artist']->artistData;
     $data['languageSpoken'] = explode(',', @$data['artistData']->language_spoken);
     $data['PaymentMethod'] = explode(',', @$data['artistData']->payment_method);
+    $data['wontDo'] = explode(',', @$data['artistData']->wont_do);
+    $data['uniqueOfferings'] = explode(',', @$data['artistData']->unique_offerings);
     $data['styles'] = Style::orderBy('id', 'asc')->get();
     // dd($data);
     if ($data['artist'] == 'Not Found') {

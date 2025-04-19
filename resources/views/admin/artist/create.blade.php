@@ -302,23 +302,103 @@
                                             </span>
                                         @enderror
                                     </div>
-                                </div>    
-    
+                                </div>  
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Parking Available</label>
-                                        <select name="parking" class="form-control" value="{{ old('parking') }}">
-                                            <!--<option selected disabled>select option</option>-->
-                                            <option value="yes">Yes</option>
-                                            <option value="no">No</option>
-                                        </select>
-                                        @error('parking')
+                                        <label>Won't Do</label><span class="text-danger">*</span>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="wont_do[]" value="Offensive or Hate Symbols" id="OffensiveHateSymbols">
+                                            <label class="form-check-label" for="OffensiveHateSymbols">
+                                                Offensive or Hate Symbols
+                                            </label>
+                                        </div>
+                                
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="wont_do[]" value="Copyrighted Material" id="CopyrightedMaterial">
+                                            <label class="form-check-label" for="CopyrightedMaterial">
+                                                Copyrighted Material
+                                            </label>
+                                        </div>
+                                
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="wont_do[]" value="Inappropriate Imagery" id="InappropriateImagery">
+                                            <label class="form-check-label" for="InappropriateImagery">
+                                                Inappropriate Imagery
+                                            </label>
+                                        </div>
+                                
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="wont_do[]" value="Eyes" id="Eyes">
+                                            <label class="form-check-label" for="Eyes">
+                                                Eyes
+                                            </label>
+                                        </div>
+                                
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="wont_do[]" value="Genitals" id="Genitals">
+                                            <label class="form-check-label" for="Genitals">
+                                                Genitals
+                                            </label>
+                                        </div>
+                                
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="wont_do[]" value="Inner Lips" id="InnerLips">
+                                            <label class="form-check-label" for="InnerLips">
+                                                Inner Lips
+                                            </label>
+                                        </div>
+                                
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="wont_do[]" value="Armpits" id="Armpits">
+                                            <label class="form-check-label" for="Armpits">
+                                                Armpits
+                                            </label>
+                                        </div>
+                                
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="wont_do[]" value="Bottom Of Foot" id="BottomOfFoot">
+                                            <label class="form-check-label" for="BottomOfFoot">
+                                                Bottom Of Foot
+                                            </label>
+                                        </div>
+                                
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="wont_do[]" value="Palms" id="Palms">
+                                            <label class="form-check-label" for="Palms">
+                                                Palms
+                                            </label>
+                                        </div>
+                                
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="wont_do[]" value="Toes" id="Toes">
+                                            <label class="form-check-label" for="Toes">
+                                                Toes
+                                            </label>
+                                        </div>
+                                
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="wont_do[]" value="Breasts" id="Breasts">
+                                            <label class="form-check-label" for="Breasts">
+                                                Breasts
+                                            </label>
+                                        </div>
+                                
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="wont_do[]" value="Gang Symbols" id="GangSymbols">
+                                            <label class="form-check-label" for="GangSymbols">
+                                                Gang Symbols
+                                            </label>
+                                        </div>
+                                
+                                        @error('wont_do')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                         @enderror
                                     </div>
-                                </div>
+                                </div>  
+    
+                              
     
                             </div>
 
@@ -397,7 +477,47 @@
                                         @enderror
                                     </div>
                                 </div>    
-    
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Unique Offerings</label><span class="text-danger">*</span>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="unique_offerings[]" value="Vegan Ink" id="Vegan Ink">
+                                            <label class="form-check-label" for="Vegan Ink">
+                                                Vegan Ink
+                                            </label>
+                                        </div>
+                                
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="unique_offerings[]" value="Cover Ups" id="Cover Ups">
+                                            <label class="form-check-label" for="Cover Ups">
+                                                Cover Ups
+                                            </label>
+                                        </div>
+                                
+                                      
+                                
+                                        @error('unique_offerings')
+                                            <span class="text-danger" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Parking Available</label>
+                                        <select name="parking" class="form-control" value="{{ old('parking') }}">
+                                            <!--<option selected disabled>select option</option>-->
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                        @error('parking')
+                                            <span class="text-danger" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Air Conditioned</label>

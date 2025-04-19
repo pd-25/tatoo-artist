@@ -47,12 +47,12 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Shop Percentage (3%)</label>
+                                    <label>Shop Percentage</label>
                                     <input type="text" class="form-control" id="shop_percentage" readonly>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Artist Percentage (2%)</label>
+                                    <label>Artist Percentage</label>
                                     <input type="text" class="form-control" id="artist_percentage" readonly>
                                 </div>
 
@@ -130,6 +130,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     let depositEdited = false;
+    let shopPercentage = 0;
 
     $(document).ready(function() {
         const artistId = $('#artist-id').val();
@@ -151,11 +152,19 @@
                 data: { artist_id: artistId },
                 success: function(data) {
                     let options = '<option value="">Select Payment Method</option>';
-                    data.forEach(function(method) {
-                        let value = method.toLowerCase().replace(/ /g, '_');
-                        options += `<option value="${value}">${method}</option>`;
-                    });
+                    
+                    if (data.paymentMethods && Array.isArray(data.paymentMethods)) {
+                        data.paymentMethods.forEach(function(method) {
+                            let value = method.toLowerCase().replace(/ /g, '_');
+                            options += `<option value="${value}">${method}</option>`;
+                        });
+                    }
+
                     $('#payment-method').html(options);
+
+                    // Store shop percentage from API
+                    shopPercentage = parseFloat(data.shop_percentage) || 0;
+                    updatePercentages(parseFloat($('#deposit_total').val()) || parseFloat($('#deposit').val()) || 0);
                 },
                 error: function(xhr) {
                     console.error(xhr);
@@ -164,8 +173,12 @@
         }
 
         function updatePercentages(val) {
-            $('#shop_percentage').val((val * 0.03).toFixed(2));
-            $('#artist_percentage').val((val * 0.02).toFixed(2));
+            const artistPercentage = 100 - shopPercentage;
+            const shopAmount = (val * shopPercentage / 100).toFixed(2);
+            const artistAmount = (val * artistPercentage / 100).toFixed(2);
+            
+            $('#shop_percentage').val(shopAmount);
+            $('#artist_percentage').val(artistAmount);
         }
 
         function validateAmounts() {
