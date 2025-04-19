@@ -98,10 +98,10 @@
                                     <th>Customer Name</th>
                                     <th>Price</th>
                                     <th>Paid</th>
-                                    <th>Date</th>
-                                    <th>Payment Method</th>
-                                    <th>View Deposit Image</th>
-                                    <th>Action</th>
+                                    <th class="text-center">Date</th>
+                                    <th class="text-center" >Payment Type</th>
+                                    <th class="text-center">View Deposit Image</th>
+                                    <th class="text-center">Action</th>
                                     <th>View/Print</th>
                                 </tr>
                             </thead>
@@ -129,8 +129,8 @@
                                             </td>
                                             <td>{{ $payment->price }}</td>
                                             <td>{{ $payment->deposit_total }}</td>
-                                            <td>{{ date('m-d-Y',strtotime( $payment->date)) }}</td>
-                                            <td>{{ $payment->payment_method }}</td>
+                                            <td class="text-center">{{ date('m-d-Y',strtotime( $payment->date)) }}</td>
+                                            <td class="text-center">{{ $payment->payment_method }}</td>
                                             <td style="text-align: center;">
                                                 @if(!empty($payment->bill_image))
                                                     <a href="{{ asset($payment->bill_image) }}" class="btn btn-sm btn-success" target="_blank">View Link</a>

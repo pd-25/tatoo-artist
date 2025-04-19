@@ -95,9 +95,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Payment Method <span class="text-danger">*</span></label>
+                                    <label>Payment Type <span class="text-danger">*</span></label>
                                     <select name="payment_method" id="payment-method" class="form-control" required>
-                                        <option value="">Select Payment Method</option>
+                                        <option value="">Select Payment Type</option>
                                     </select>
                                     @error('payment_method') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -141,7 +141,7 @@
             if (selectedArtistId) {
                 fetchPaymentMethods(selectedArtistId);
             } else {
-                $('#payment-method').html('<option value="">Select Payment Method</option>');
+                $('#payment-method').html('<option value="">Select Payment Type</option>');
             }
         });
 
@@ -151,7 +151,7 @@
                 type: 'GET',
                 data: { artist_id: artistId },
                 success: function(data) {
-                    let options = '<option value="">Select Payment Method</option>';
+                    let options = '<option value="">Select Payment Type</option>';
                     
                     if (data.paymentMethods && Array.isArray(data.paymentMethods)) {
                         data.paymentMethods.forEach(function(method) {
