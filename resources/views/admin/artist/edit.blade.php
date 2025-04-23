@@ -613,7 +613,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Current CC Fees Percent Charged(%) <span class="text-danger">*</span></label>
+                                    <label>Current CC Fees Percent Charged(%)</label>
                                     <div class="form-group">
                                         <input type="number" step="0.01" class="form-control" id="cc_fees_percentage" placeholder="Current CC Fees Percent Charged" name="cc_fees_percentage" value="{{ @$artistData->cc_fees_percentage }}">
                                         @error('cc_fees_percentage')

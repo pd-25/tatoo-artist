@@ -504,7 +504,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label>CC Fees <span class="text-danger">*</span></label>
+                                    <label>CC Fees </label>
                                     <div class="form-group">
                                         
                                         <input type="radio" name="cc_fees" value="Credit Card Fees Paid By Shop" id="cc_fees">
@@ -527,7 +527,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label>Current CC Fees Percent Charged(%) <span class="text-danger">*</span></label>
+                                    <label>Current CC Fees Percent Charged(%) </label>
                                     <div class="form-group">
                                         <input type="number" step="0.01" name="cc_fees_percentage" required class="form-control" placeholder="Current CC Fees Percent Charged">
                                         @error('cc_fees_percentage')
