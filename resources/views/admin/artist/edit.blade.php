@@ -593,6 +593,38 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
+                                <label>CC Fees <span class="text-danger">*</span></label>
+                                <div class="form-group">
+                                    <input type="radio" name="cc_fees" value="Credit Card Fees Paid By Shop"
+                                        {{ @$artistData->cc_fees == 'Credit Card Fees Paid By Shop' ? 'checked' : '' }}> 
+                                        <label> 1) Credit Card Fees Paid By Shop</label><br>
+                                    <input type="radio" name="cc_fees" value="Credit Card Fees Shared Using Current Shop Percentage"
+                                        {{ @$artistData->cc_fees == 'Credit Card Fees Shared Using Current Shop Percentage' ? 'checked' : '' }}>
+                                        <label> 2) Credit Card Fees Shared Using Current Shop Percentage</label><br>
+                                    <input type="radio" name="cc_fees" value="Credit Card Fess Charged to Artist"
+                                        {{ @$artistData->cc_fees == 'Credit Card Fess Charged to Artist' ? 'checked' : '' }}>
+                                        <label> 3) Credit Card Fess Charged to Artist</label>
+                                    @error('cc_fees')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Current CC Fees Percent Charged(%) <span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <input type="number" class="form-control" id="cc_fees_percentage" placeholder="Current CC Fees Percent Charged" name="cc_fees_percentage" value="{{ @$artistData->cc_fees_percentage }}">
+                                        @error('cc_fees_percentage')
+                                            <span class="text-danger" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Parking Available</label>
                                     <select name="parking" class="form-control" value="{{ old('parking') }}">
@@ -627,6 +659,7 @@
                                     @enderror
                                 </div>
                             </div>
+                           
 
                         </div>
 

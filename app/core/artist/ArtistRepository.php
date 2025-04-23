@@ -144,6 +144,8 @@ class ArtistRepository implements ArtistInterface
             "shop_address" => $artistData["shop_address"],
             "wont_do" => implode(',', $artistData["wont_do"]),
             "unique_offerings" => implode(',', $artistData["unique_offerings"]),
+            "cc_fees" => $artistData["cc_fees"],
+            "cc_fees_percentage" => $artistData["cc_fees_percentage"],
            
         ];
 
