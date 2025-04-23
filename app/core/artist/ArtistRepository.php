@@ -143,7 +143,9 @@ class ArtistRepository implements ArtistInterface
             "shop_name" => $artistData["shop_name"],
             "shop_address" => $artistData["shop_address"],
             "wont_do" => implode(',', $artistData["wont_do"]),
-            "unique_offerings" => implode(',', $artistData["unique_offerings"]),
+            "unique_offerings" => isset($artistData["unique_offerings"]) && is_array($artistData["unique_offerings"])
+            ? implode(',', $artistData["unique_offerings"])
+            : null,
             "cc_fees" => $artistData["cc_fees"],
             "cc_fees_percentage" => $artistData["cc_fees_percentage"],
            

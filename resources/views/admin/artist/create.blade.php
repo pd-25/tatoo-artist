@@ -481,7 +481,7 @@
                                     <div class="form-group">
                                         <label>Unique Offerings</label><span class="text-danger">*</span>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="unique_offerings[]" value="Vegan Ink" id="Vegan Ink">
+                                            <input class="form-check-input" type="checkbox" name="unique_offerings[]" value="Vegan Ink" id="Vegan Ink" checked >
                                             <label class="form-check-label" for="Vegan Ink">
                                                 Vegan Ink
                                             </label>
@@ -529,7 +529,7 @@
                                 <div class="col-md-6">
                                     <label>Current CC Fees Percent Charged(%) <span class="text-danger">*</span></label>
                                     <div class="form-group">
-                                        <input type="number" class="form-control" id="cc_fees_percentage" placeholder="Current CC Fees Percent Charged" name="cc_fees_percentage">
+                                        <input type="number" class="form-control" id="cc_fees_percentage" placeholder="Current CC Fees Percent Charged" name="cc_fees_percentage" required>
                                         @error('cc_fees_percentage')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
