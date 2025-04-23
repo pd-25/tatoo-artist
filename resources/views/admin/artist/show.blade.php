@@ -475,7 +475,7 @@
                         <div class="row">
 
                             <div class="col-md-6">
-                                <label>CC Fees <span class="text-danger">*</span></label>
+                                <label>CC Fees </label>
                                 <div class="form-group">
                                     <input disabled type="radio" name="cc_fees" value="Credit Card Fees Paid By Shop"
                                         {{ @$artistData->cc_fees == 'Credit Card Fees Paid By Shop' ? 'checked' : '' }}> 
@@ -495,7 +495,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Current CC Fees Percent Charged(%) <span class="text-danger">*</span></label>
+                                    <label>Current CC Fees Percent Charged(%) </label>
                                     <div class="form-group">
                                         <input disabled type="number" class="form-control" id="cc_fees_percentage" placeholder="Current CC Fees Percent Charged" name="cc_fees_percentage" value="{{ @$artistData->cc_fees_percentage }}">
                                         @error('cc_fees_percentage')
