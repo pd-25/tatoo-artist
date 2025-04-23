@@ -593,7 +593,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label>CC Fees <span class="text-danger">*</span></label>
+                                <label>CC Fees </label>
                                 <div class="form-group">
                                     <input type="radio" name="cc_fees" value="Credit Card Fees Paid By Shop"
                                         {{ @$artistData->cc_fees == 'Credit Card Fees Paid By Shop' ? 'checked' : '' }}> 
