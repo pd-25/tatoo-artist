@@ -615,7 +615,7 @@
                                 <div class="form-group">
                                     <label>Current CC Fees Percent Charged(%) <span class="text-danger">*</span></label>
                                     <div class="form-group">
-                                        <input type="number" class="form-control" id="cc_fees_percentage" placeholder="Current CC Fees Percent Charged" name="cc_fees_percentage" value="{{ @$artistData->cc_fees_percentage }}">
+                                        <input type="number" step="0.01" class="form-control" id="cc_fees_percentage" placeholder="Current CC Fees Percent Charged" name="cc_fees_percentage" value="{{ @$artistData->cc_fees_percentage }}">
                                         @error('cc_fees_percentage')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>

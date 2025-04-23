@@ -529,7 +529,7 @@
                                 <div class="col-md-6">
                                     <label>Current CC Fees Percent Charged(%) <span class="text-danger">*</span></label>
                                     <div class="form-group">
-                                        <input type="number" class="form-control" id="cc_fees_percentage" placeholder="Current CC Fees Percent Charged" name="cc_fees_percentage" required>
+                                        <input type="number" step="0.01" name="cc_fees_percentage" required class="form-control" placeholder="Current CC Fees Percent Charged">
                                         @error('cc_fees_percentage')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
