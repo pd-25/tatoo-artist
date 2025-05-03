@@ -63,6 +63,7 @@ class PaymentController extends Controller
     {
         $payments = null;
         $customers = [];
+        $ccfees=0;
 
         if (Auth::guard('artists')->check()) {
             $payments = PaymentModel::with('user', 'artist')
@@ -70,6 +71,7 @@ class PaymentController extends Controller
                 ->where('isarchive', 0)
                 ->orderBy('id', 'desc')
                 ->paginate(10);
+
         } elseif (Auth::guard('admins')->check()) {
             $payments = PaymentModel::with('user', 'artist')
                 ->where('isarchive', 0)
@@ -84,12 +86,14 @@ class PaymentController extends Controller
                 ->orderBy('id', 'desc')
                 ->paginate(10);
         }
-
+        $ccfees = $payments->sum('fees');
         // Extract unique customer names from the payments collection
         $customers = $payments->pluck('customers_name')->unique()->values()->toArray();
 
+       
+
         // Remove dd($payments) to allow the view to render
-        return view('admin.payment.deposit', compact('payments', 'customers'));
+        return view('admin.payment.deposit', compact('payments', 'customers','ccfees'));
     }
     // public function getDepositSlips(Request $request){
     //     if (Auth::guard('artists')->check()){

@@ -75,6 +75,7 @@
                             <h4>All Deposits of Payments</h4>
                         </div>
                         <div class="d-flex align-items-center">
+                            <button class="btn m-1 {{$ccfees == 0 ? 'btn-success': 'btn-warning' }}">{{$ccfees == 0 ? 'No Due CC Fees':'CC Due - '.$ccfees . ' $'}}</button>
                              <a href="{{ route('admin.AddpaymentForm') }}" target="_blank" class="btn  btn-success">Add Payment</a>
                             <a href="{{route('deposit.getArchives')}}" class="btn btn-primary m-1">Archives</a>
                             <button class="btn btn-primary m-1 d-none" id="moveToArchives">Move to Archives</button>
