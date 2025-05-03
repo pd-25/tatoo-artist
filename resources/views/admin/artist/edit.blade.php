@@ -595,14 +595,14 @@
                             <div class="col-md-6">
                                 <label>CC Fees </label>
                                 <div class="form-group">
-                                    <input type="radio" name="cc_fees" value="Credit Card Fees Paid By Shop"
-                                        {{ @$artistData->cc_fees == 'Credit Card Fees Paid By Shop' ? 'checked' : '' }}> 
+                                    <input type="radio" name="cc_fees" value="1"
+                                        {{ @$artistData->cc_fees == '1' ? 'checked' : '' }}> 
                                         <label> 1) Credit Card Fees Paid By Shop</label><br>
-                                    <input type="radio" name="cc_fees" value="Credit Card Fees Shared Using Current Shop Percentage"
-                                        {{ @$artistData->cc_fees == 'Credit Card Fees Shared Using Current Shop Percentage' ? 'checked' : '' }}>
+                                    <input type="radio" name="cc_fees" value="2"
+                                        {{ @$artistData->cc_fees == '2' ? 'checked' : '' }}>
                                         <label> 2) Credit Card Fees Shared Using Current Shop Percentage</label><br>
-                                    <input type="radio" name="cc_fees" value="Credit Card Fess Charged to Artist"
-                                        {{ @$artistData->cc_fees == 'Credit Card Fess Charged to Artist' ? 'checked' : '' }}>
+                                    <input type="radio" name="cc_fees" value="3"
+                                        {{ @$artistData->cc_fees == '3' ? 'checked' : '' }}>
                                         <label> 3) Credit Card Fess Charged to Artist</label>
                                     @error('cc_fees')
                                         <span class="text-danger" role="alert">
@@ -944,7 +944,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Shop Percentage</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="shop_percentage"
+                                    <input type="number" class="form-control" id="shop_percentage"
                                         placeholder="Shop Percentage" name="shop_percentage"
                                         value="{{ @$artistData->shop_percentage }}">
                                     @error('shop_percentage')

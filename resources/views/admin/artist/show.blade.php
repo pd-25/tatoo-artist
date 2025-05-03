@@ -477,14 +477,14 @@
                             <div class="col-md-6">
                                 <label>CC Fees </label>
                                 <div class="form-group">
-                                    <input disabled type="radio" name="cc_fees" value="Credit Card Fees Paid By Shop"
-                                        {{ @$artistData->cc_fees == 'Credit Card Fees Paid By Shop' ? 'checked' : '' }}> 
+                                    <input disabled type="radio" name="cc_fees" value="1"
+                                        {{ @$artistData->cc_fees == '1' ? 'checked' : '' }}> 
                                         <label> 1) Credit Card Fees Paid By Shop</label><br>
-                                    <input disabled type="radio" name="cc_fees" value="Credit Card Fees Shared Using Current Shop Percentage"
-                                        {{ @$artistData->cc_fees == 'Credit Card Fees Shared Using Current Shop Percentage' ? 'checked' : '' }}>
+                                    <input disabled type="radio" name="cc_fees" value="2"
+                                        {{ @$artistData->cc_fees == '2' ? 'checked' : '' }}>
                                         <label> 2) Credit Card Fees Shared Using Current Shop Percentage</label><br>
-                                    <input disabled type="radio" name="cc_fees" value="Credit Card Fess Charged to Artist"
-                                        {{ @$artistData->cc_fees == 'Credit Card Fess Charged to Artist' ? 'checked' : '' }}>
+                                    <input disabled type="radio" name="cc_fees" value="3"
+                                        {{ @$artistData->cc_fees == '3' ? 'checked' : '' }}>
                                         <label> 3) Credit Card Fess Charged to Artist</label>
                                     @error('cc_fees')
                                         <span class="text-danger" role="alert">

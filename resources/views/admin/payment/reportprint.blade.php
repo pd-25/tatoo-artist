@@ -30,7 +30,7 @@
                     <th>Paid</th>
                     <th>Total Due</th>
                     <th>Tips</th>
-                    <th>Fees</th>
+                    <th>CC Fees</th>
                     <th>Payment Method</th>
                     <th>Shop Percentage</th>
                     <th>Artist Percentage</th>

@@ -28,7 +28,7 @@
                     </div>
                    
                     <div class="col-md-6 mt-2">
-                        <label>Fees</label>
+                        <label>CC Fees</label>
                         <input type="number" class="form-control" value="{{ $payment->fees }}" readonly>
                     </div>
                     
@@ -65,12 +65,18 @@
                         <input type="hidden" id="current-deposit" value="{{ $payment->deposit_total }}">
                         <input type="hidden" id="total-price" value="{{ $payment->price }}">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-2">
+                                <label>Reimbursed</label><br>
+                                <input type="radio" name="reimbursed" value="0" {{ old('reimbursed') == 0 ? 'checked' : '' }}> No<br>
+                                <input type="radio" name="reimbursed" value="1" {{ old('reimbursed') == 1 ? 'checked' : '' }}> Yes
+                            </div>
+                            <div class="col-md-3">
                                 <label>Amount</label>
                                 <input type="number" name="amount" id="installment-amount" step="0.01" class="form-control" required>
                                 <small id="amount-error" class="text-danger d-none">Amount exceeds total price.</small>
                             </div>
-                            <div class="col-md-4">
+                            
+                            <div class="col-md-3">
                                 <label>Method</label>
                                 <select  name="method" id="payment-method" class="form-control" required>
                                     <option value="">Select Payment Method</option>
@@ -97,7 +103,9 @@
                             <th>#</th>
                             <th>Date</th>
                             <th>Amount</th>
+                            <th>Reimbursed</th>
                             <th>Method</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -108,16 +116,34 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ \Carbon\Carbon::parse($log['date'])->format('d M Y, h:i A') }}</td>
                                     <td>{{ $log['amount'] }}</td>
+                                    <td>{{ $log['reimbursed'] == 1 ? 'Yes' : 'No' }}</td>
                                     <td>{{ $log['method'] }}</td>
+                                    <td class="d-flex align-items-cente justify-content-end" style="gap: 5px">
+                                        <form action="{{ route('admin.payment.deleteReimbursed', $payment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this installment?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="index" value="{{ $index }}">
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                        <form action="{{ route('payments.updateReimbursed', $payment->id) }}" method="POST" onsubmit="return {{ $log['reimbursed'] == 1 ? 'false' : 'true' }};">
+                                            @csrf
+                                            <input type="hidden" name="index" value="{{ $index }}">
+                                            <button type="submit" class="btn btn-sm {{ $log['reimbursed'] == 1 ? 'btn-success' : 'btn-warning' }}">
+                                                {{ $log['reimbursed'] == 1 ? 'Already Reimbursed' : 'Clear Reimburse' }}
+                                            </button>
+                                        </form>
+                                        
+                                    </td>
                                 </tr>
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="4" class="text-center">No installments yet.</td>
+                                <td colspan="6" class="text-center">No installments yet.</td>
                             </tr>
                         @endif
                     </tbody>
                 </table>
+                
 
                 <a href="{{ route('admin.deposit-slips') }}" class="btn btn-secondary mt-3">Back to Dashboard</a>
             </div>

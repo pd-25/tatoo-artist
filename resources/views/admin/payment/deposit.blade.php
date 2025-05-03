@@ -100,6 +100,7 @@
                                     <th>Paid</th>
                                     <th class="text-center">Date</th>
                                     <th class="text-center" >Pay Type</th>
+                                    <th class="text-center">CC Amount</th>
                                     <th class="text-center">View Deposit Image</th>
                                     <th class="text-center">Action</th>
                                     <th>View/Print</th>
@@ -130,7 +131,13 @@
                                             <td>{{ $payment->price }}</td>
                                             <td>{{ $payment->deposit_total }}</td>
                                             <td class="text-center">{{ date('m-d-Y',strtotime( $payment->date)) }}</td>
-                                            <td class="text-center">{{ $payment->payment_method }}</td>
+                                            <td class="text-center">
+                                                {{ $payment->deposit_log ? json_decode($payment->deposit_log, true)[count(json_decode($payment->deposit_log, true)) - 1]['method'] : '' }}
+                                            </td>
+                                            <td class="text-center">
+                                                <button class="btn btn-sm {{$payment->fees == 0 ? 'btn-success':'btn-warning' }}" readonly >{{$payment->fees == 0 ? 'N/A' : $payment->fees}}</button>
+                                            </td>
+                                            
                                             <td style="text-align: center;">
                                                 @if(!empty($payment->bill_image))
                                                     <a href="{{ asset($payment->bill_image) }}" class="btn btn-sm btn-success" target="_blank">View Link</a>

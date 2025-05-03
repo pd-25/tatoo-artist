@@ -507,15 +507,15 @@
                                     <label>CC Fees </label>
                                     <div class="form-group">
                                         
-                                        <input type="radio" name="cc_fees" value="Credit Card Fees Paid By Shop" id="cc_fees">
+                                        <input type="radio" name="cc_fees" value="1" id="cc_fees" checked>
                                         <label class="form-check-label" for="cc_fees">
                                             1) Credit Card Fees Paid By Shop
                                         </label><br>
-                                        <input type="radio" name="cc_fees" value="Credit Card Fees Shared Using Current Shop Percentage" id="cc_fees">
+                                        <input type="radio" name="cc_fees" value="2" id="cc_fees">
                                         <label class="form-check-label" for="cc_fees">
                                            2) Credit Card Fees Shared Using Current Shop Percentage
                                         </label><br>
-                                        <input type="radio" name="cc_fees" value="Credit Card Fess Charged to Artist" id="cc_fees">
+                                        <input type="radio" name="cc_fees" value="3" id="cc_fees">
                                         <label class="form-check-label" for="cc_fees">
                                             3) Credit Card Fess Charged to Artist
                                         </label>

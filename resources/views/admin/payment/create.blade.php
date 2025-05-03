@@ -55,17 +55,16 @@
                                     <label>Artist Percentage</label>
                                     <input type="text" class="form-control" id="artist_percentage" readonly>
                                 </div>
-
                                 <div class="form-group">
-                                    <label>Tips</label>
-                                    <input type="number" class="form-control" name="tips" placeholder="Tips" value="{{ old('tips') }}">
-                                    @error('tips') <span class="text-danger">{{ $message }}</span> @enderror
+                                    <label>CC Fees</label>
+                                    <input type="number" class="form-control" name="fees" placeholder="Fees" value="0" readonly>
+                                    @error('fees') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Deposit Slip</label>
-                                    <input type="file" class="form-control" name="bill_image">
-                                    @error('bill_image') <span class="text-danger">{{ $message }}</span> @enderror
+                                    <label>Reimbursed</label><br>
+                                    <input type="radio" name="reimbursed" value="1" {{ old('reimbursed') == 1 ? 'checked' : '' }}> Yes<br>
+                                    <input type="radio" name="reimbursed" value="0" {{ old('reimbursed') == 0 ? 'checked' : '' }}> No
                                 </div>
                             </div>
 
@@ -95,11 +94,7 @@
                                     @error('deposit') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
-                                <div class="form-group">
-                                    <label>Fees</label>
-                                    <input type="number" class="form-control" name="fees" placeholder="Fees" value="{{ old('fees') }}">
-                                    @error('fees') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
+                                
 
                                 <div class="form-group">
                                     <label>Pay Type <span class="text-danger">*</span></label>
@@ -115,6 +110,24 @@
                                     <small id="total-error" class="text-danger d-none">Total deposit cannot exceed price.</small>
                                     @error('deposit_total') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
+                                <div class="form-group">
+                                    <label>Tips</label>
+                                    <input type="number" class="form-control" name="tips" placeholder="Tips" value="{{ old('tips') }}">
+                                    @error('tips') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Deposit Slip</label>
+                                    <input type="file" class="form-control" name="bill_image">
+                                    @error('bill_image') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                                
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Notes(optional)</label>
+                                <input type="text" class="form-control" name="notes">
+                                @error('notes') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
 
@@ -131,6 +144,8 @@
 <script>
     let depositEdited = false;
     let shopPercentage = 0;
+    let ccFees = 0;
+    let ccFeesPercentage = 0;
 
     $(document).ready(function() {
         const artistId = $('#artist-id').val();
@@ -162,8 +177,10 @@
 
                     $('#payment-method').html(options);
 
-                    // Store shop percentage from API
+                    // Store shop percentage and cc fees
                     shopPercentage = parseFloat(data.shop_percentage) || 0;
+                    ccFees = data.cc_fees;
+                    ccFeesPercentage = parseFloat(data.cc_fees_percentage) || 0;
                     updatePercentages(parseFloat($('#deposit_total').val()) || parseFloat($('#deposit').val()) || 0);
                 },
                 error: function(xhr) {
@@ -202,6 +219,7 @@
                 updatePercentages(deposit);
             }
 
+            updateFeesIfNeeded(); // NEW
             validateAmounts();
         });
 
@@ -209,12 +227,41 @@
             depositEdited = true;
             const total = parseFloat($(this).val()) || 0;
             updatePercentages(total);
+            updateFeesIfNeeded(); // NEW
             validateAmounts();
         });
 
         $('#price').on('input', function () {
             validateAmounts();
         });
+
+        // ✅ NEW: Update fees only if reimbursed == 0
+        $('input[name="reimbursed"]').on('change', function () {
+            updateFeesIfNeeded();
+        });
+
+        function updateFeesIfNeeded() {
+    const reimbursed = $('input[name="reimbursed"]:checked').val();
+    const deposit = parseFloat($('#deposit_total').val()) || parseFloat($('#deposit').val()) || 0;
+
+    if (reimbursed == 0) {
+        let calculatedFees = 0;
+
+        if (ccFees == 1) {
+            calculatedFees = 0;
+        } else if (ccFees == 2) {
+            calculatedFees = deposit * (ccFeesPercentage / 100) * (shopPercentage / 100);
+        } else if (ccFees == 3) {
+            calculatedFees = deposit * (ccFeesPercentage / 100);
+        }
+
+        $('input[name="fees"]').val(calculatedFees.toFixed(2));
+    } else {
+        $('input[name="fees"]').val(0);
+    }
+}
+
     });
 </script>
+
 @endsection

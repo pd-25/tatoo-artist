@@ -55,18 +55,12 @@
                                     <label>Artist Percentage</label>
                                     <input type="text" class="form-control" id="artist_percentage" readonly>
                                 </div>
-
                                 <div class="form-group">
-                                    <label>Deposit Slip</label>
-                                    <input type="file" class="form-control" name="bill_image">
-                                    <small>Leave blank to keep existing image.</small><br>
-                                    @if (!empty($payments->bill_image))
-                                        <img style="height: 82px; width: 82px;" src="{{ asset($payments->bill_image) }}" alt="">
-                                    @else
-                                        <img style="height: 82px; width: 82px;" src="{{ asset('noimg.png') }}" alt="">
-                                    @endif
-                                    @error('bill_image') <span class="text-danger">{{ $message }}</span> @enderror
+                                    <label>Fees</label>
+                                    <input type="text" class="form-control" name="fees" placeholder="Fees" value="{{ old('fees', $payments->fees) }} " readonly>
+                                    @error('fees') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
+                              
                             </div>
 
                             {{-- Right Column --}}
@@ -88,19 +82,15 @@
                                     @error('placement') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
-                                <div class="form-group">
-                                    <label>Fees</label>
-                                    <input type="number" class="form-control" name="fees" placeholder="Fees" value="{{ old('fees', $payments->fees) }}">
-                                    @error('fees') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
+                                
 
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label>Pay Type <span class="text-danger">*</span></label>
                                     <select name="payment_method" id="payment-method" class="form-control" required>
                                         <option value="">Select Pay Type</option>
                                     </select>
                                     @error('payment_method') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
+                                </div> --}}
 
                                 <div class="form-group">
                                     <label>Deposit Total</label>
@@ -113,6 +103,24 @@
                                     <label>Tips</label>
                                     <input type="number" class="form-control" name="tips" placeholder="Tips" value="{{ old('tips', $payments->tips) }}">
                                     @error('tips') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label>Deposit Slip</label>
+                                    <input type="file" class="form-control" name="bill_image">
+                                    <small>Leave blank to keep existing image.</small><br>
+                                    @if (!empty($payments->bill_image))
+                                        <img style="height: 82px; width: 82px;" src="{{ asset($payments->bill_image) }}" alt="">
+                                    @else
+                                        <img style="height: 82px; width: 82px;" src="{{ asset('noimg.png') }}" alt="">
+                                    @endif
+                                    @error('bill_image') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Notes(optional)</label>
+                                    <input type="text" class="form-control" name="notes" value="{{ old('notes', $payments->notes) }}">
+                                    @error('notes') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
                         </div>

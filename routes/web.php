@@ -108,6 +108,10 @@ Route::post('/userformsubmit', [DashboardController::class, 'userformsubmit'])->
 
 Route::get('/payment/{id}/installments', [PaymentController::class, 'showInstallments'])->name('admin.showInstallments');
 Route::post('/payment/installment/add', [PaymentController::class, 'addDepositInstallment'])->name('admin.addInstallment');
+Route::post('/admin/payments/update-reimbursed/{payment}', [PaymentController::class, 'updateReimbursed'])->name('payments.updateReimbursed');
+Route::delete('/admin/payment/delete-reimbursed/{payment}', [PaymentController::class, 'deleteReimbursed'])->name('admin.payment.deleteReimbursed');
+
+
 
 Route::get('/get-accept-payment', [PaymentController::class, 'getAcceptPayment'])->name('admin.getAcceptPayment');
 Route::get('/add-payment', [PaymentController::class, 'AddpaymentForm'])->name('admin.AddpaymentForm');
