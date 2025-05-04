@@ -181,6 +181,7 @@ class PaymentController extends Controller
         // Format the start and end dates from request safely
         $startDate = null;
         $endDate = null;
+        $ccfees=0;
 
         if ($request->filled('start_date') && substr_count($request->start_date, '/') === 2) {
             $requestStartDate = explode('/', $request->start_date);
@@ -276,9 +277,9 @@ class PaymentController extends Controller
                 ->values()
                 ->toArray();
         }
-
+        $ccfees = $payments->sum('fees');
         // Pass both payments and customers to the view
-        return view('admin.payment.deposit', compact('payments', 'customers'));
+        return view('admin.payment.deposit', compact('payments', 'customers','ccfees'));
     }
 
 
