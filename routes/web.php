@@ -99,6 +99,8 @@ Route::get('/get-deposit-slips/archives', [PaymentController::class, 'getDeposit
 Route::get('/get-deposit-slips', [PaymentController::class, 'getDepositSlips'])->name('admin.deposit-slips');
 Route::get('/get-filter-deposit', [PaymentController::class, 'getFilteredDeposits'])->name('admin.filterDeposite');
 Route::get('/print-deposit-pdf', [PaymentController::class, 'printDepositPDF'])->name('admin.printDepositPDF');
+Route::get('/print-cc-pdf', [PaymentController::class, 'printDepositPDF'])->name('admin.printCCPDF');
+
 
 Route::post('/send-link', [DashboardController::class, 'SendLink'])->name('admin.SendLink');
 Route::get('/form-link-url/{user_id}/{artist_id}/{dbid}', [DashboardController::class, 'formlinkurl'])->name('admin.formlinkurl');

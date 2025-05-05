@@ -55,7 +55,7 @@
                       <!-- Filter and Print Buttons -->
                       <div class="ccol-lg-2 col-md-2 col-sm-12 d-flex align-items-end mb-2 justify-content-center ">
                         <button type="submit" class="btn btn-primary w-100 m-1 ">Search</button>
-                        <a href="{{ route('admin.printDepositPDF', ['start_date' => old('start_date'), 'end_date' => old('end_date')]) }}" target="_blank" class="m-1 btn btn-secondary no-print w-100" style="color:white">Print PDF</a>
+                        <a href="{{ route('admin.printDepositPDF', ['start_date' => old('start_date'), 'end_date' => old('end_date'),'customer_name' => old('customers_name')]) }}" target="_blank" class="m-1 btn btn-secondary no-print w-100" style="color:white">Print PDF</a>
                         
                         
                     </div>
@@ -75,7 +75,7 @@
                             <h4>All Deposits of Payments</h4>
                         </div>
                         <div class="d-flex align-items-center">
-                            <button class="btn m-1 {{$ccfees == 0 ? 'btn-success': 'btn-warning' }}">{{$ccfees == 0 ? 'No Due CC Fees':'CC Due - '.$ccfees . ' $'}}</button>
+                            <a class="btn m-1 {{$ccfees == 0 ? 'btn-success': 'btn-warning' }}" href="{{route('admin.printCCPDF',['start_date' => old('start_date'), 'end_date' => old('end_date'),'customer_name' => old('customers_name')])}}">{{$ccfees == 0 ? 'No Due CC Fees':'CC Due - '.$ccfees . ' $'}}</a>
                              <a href="{{ route('admin.AddpaymentForm') }}" target="_blank" class="btn  btn-success">Add Payment</a>
                             <a href="{{route('deposit.getArchives')}}" class="btn btn-primary m-1">Archives</a>
                             <button class="btn btn-primary m-1 d-none" id="moveToArchives">Move to Archives</button>
@@ -148,7 +148,8 @@
                                             </td>
                                             <td style="text-align: center; display:flex; gap:3px; justify-content: center;">
                                                 <a href="{{ route('admin.showInstallments', $payment->id) }}">
-                                                    <i class="ti-files btn btn-sm btn-primary"></i>
+                                                    <i class="ti-wallet btn btn-sm btn-primary"></i>
+
                                                 </a>
                                                 
                                                 <a href="{{ route('admin.editpaymentForm', encrypt($payment->id)) }}"><i class="ti-pencil btn btn-sm btn-primary"></i></a>

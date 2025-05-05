@@ -59,16 +59,16 @@
                 {{-- Add New Installment --}}
                 @if($payment->deposit_total < $payment->price)
                     <h5>Add New Installment</h5>
-                    <form action="{{ route('admin.addInstallment') }}" method="POST" id="installment-form">
+                    <form action="{{ route('admin.ccprint') }}" method="POST" id="installment-form">
                         @csrf
                         <input type="hidden" name="payment_id" value="{{ $payment->id }}">
                         <input type="hidden" id="current-deposit" value="{{ $payment->deposit_total }}">
                         <input type="hidden" id="total-price" value="{{ $payment->price }}">
                         <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <label>Reimbursed</label><br>
-                                <input type="radio" name="reimbursed" value="0" {{ old('reimbursed') == 0 ? 'checked' : '' }}> No<br>
-                                <input type="radio" name="reimbursed" value="1" {{ old('reimbursed') == 1 ? 'checked' : '' }}> Yes
+                                <input type="radio" name="reimbursed" value="0" {{ old('reimbursed') == 0 ? 'checked' : '' }}> {{' '}}CC Reimbursed No<br>
+                                <input type="radio" name="reimbursed" value="1" {{ old('reimbursed') == 1 ? 'checked' : '' }}> {{' '}}CC Reimbursed Yes
                             </div>
                             <div class="col-md-3">
                                 <label>Amount</label>
@@ -83,7 +83,7 @@
                                 </select>
                                 @error('payment_method') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
-                            <div class="col-md-4" style="margin-top: 29px;">
+                            <div class="col-md-3" style="margin-top: 29px;">
                                 <button type="submit" class="btn btn-primary w-100" id="submit-installment">Add Installment</button>
                             </div>
                         </div>
@@ -119,18 +119,23 @@
                                     <td>{{ $log['reimbursed'] == 1 ? 'Yes' : 'No' }}</td>
                                     <td>{{ $log['method'] }}</td>
                                     <td class="d-flex align-items-cente justify-content-end" style="gap: 5px">
-                                        <form action="{{ route('admin.payment.deleteReimbursed', $payment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this installment?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="hidden" name="index" value="{{ $index }}">
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                        </form>
+                                        
+                                        @if ($log['method'] == 'cc')
+                                        
+                                      
                                         <form action="{{ route('payments.updateReimbursed', $payment->id) }}" method="POST" onsubmit="return {{ $log['reimbursed'] == 1 ? 'false' : 'true' }};">
                                             @csrf
                                             <input type="hidden" name="index" value="{{ $index }}">
                                             <button type="submit" class="btn btn-sm {{ $log['reimbursed'] == 1 ? 'btn-success' : 'btn-warning' }}">
                                                 {{ $log['reimbursed'] == 1 ? 'Already Reimbursed' : 'Clear Reimburse' }}
                                             </button>
+                                        </form>
+                                        @endif
+                                        <form action="{{ route('admin.payment.deleteReimbursed', $payment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this installment?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="index" value="{{ $index }}">
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                         </form>
                                         
                                     </td>
@@ -213,6 +218,19 @@
                 }
             });
         }
+
+    $('#payment-method').on('change', function () {
+        const selectedMethod = $(this).val();
+        if (selectedMethod === 'cc') {
+            $('input[name="reimbursed"][value="0"]').prop('checked', true);
+        } else {
+            $('input[name="reimbursed"][value="1"]').prop('checked', true);
+        }
     });
+
+
+    });
+
+    
 </script>
 @endsection

@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
 class PaymentController extends Controller
@@ -285,69 +286,199 @@ class PaymentController extends Controller
 
 
 
+    // public function printDepositPDF(Request $request)
+    // {
+    //     // Format the start and end dates from request
+    //     if ($request->has('start_date')) {
+    //         $requestStartDate = explode('/', $request->start_date);
+    //         $startDate = $requestStartDate[2] . '-' . $requestStartDate[0] . '-' . $requestStartDate[1];
+    //     } else {
+    //         $startDate = null;
+    //     }
+
+    //     if ($request->has('end_date')) {
+    //         $requestEndDate = explode('/', $request->end_date);
+    //         $endDate = $requestEndDate[2] . '-' . $requestEndDate[0] . '-' . $requestEndDate[1];
+    //     } else {
+    //         $endDate = null;
+    //     }
+
+    //     // Query logic for different user guards
+    //     if (Auth::guard('artists')->check()) {
+    //         $query = PaymentModel::where('artist_id', Auth::guard('artists')->user()->id);
+
+    //         if (!empty($startDate)) {
+    //             $query->where('date', '>=', $startDate);
+    //         }
+
+    //         if (!empty($endDate)) {
+    //             $query->where('date', '<=', $endDate);
+    //         }
+
+    //         $payments = $query->get();
+    //     } elseif (Auth::guard('admins')->check()) {
+    //         $query = PaymentModel::with('user');
+
+    //         if (!empty($startDate)) {
+    //             $query->where('date', '>=', $startDate);
+    //         }
+
+    //         if (!empty($endDate)) {
+    //             $query->where('date', '<=', $endDate);
+    //         }
+
+    //         $payments = $query->get();
+    //     } else {
+    //         $salespersonId = Auth::guard('sales')->id();
+    //         $artists = User::where('created_by', $salespersonId)->get();
+
+    //         $query = PaymentModel::with('user');
+
+    //         if (!empty($startDate)) {
+    //             $query->where('date', '>=', $startDate);
+    //         }
+
+    //         if (!empty($endDate)) {
+    //             $query->where('date', '<=', $endDate);
+    //         }
+
+    //         $payments = $query->whereIn('artist_id', $artists->pluck('id'))->get();
+    //     }
+       
+    //     if (Route::currentRouteName() === 'admin.printCCPDF') {
+    //         // Filter payments where deposit_log has method = 'cc'
+    //         $ccPayments = $payments->filter(function ($payment) {
+    //             $logs = json_decode($payment->deposit_log, true);
+    //             if (!is_array($logs)) return false;
+        
+    //             foreach ($logs as $log) {
+    //                 if (isset($log['method']) && strtolower($log['method']) === 'cc') {
+    //                     return true;
+    //                 }
+    //             }
+    //             return false;
+    //         });
+        
+    //         return view('admin.payment.ccprint', [
+    //             'payments' => $ccPayments,
+    //             'startDate' => $startDate,
+    //             'endDate' => $endDate
+    //         ]);
+    //     }
+        
+    //     // Pass the payments data to a PDF view
+    //     return view('admin.payment.reportprint', compact('payments', 'startDate', 'endDate'));
+    // }
+
+
     public function printDepositPDF(Request $request)
-    {
-        // Format the start and end dates from request
-        if ($request->has('start_date')) {
-            $requestStartDate = explode('/', $request->start_date);
-            $startDate = $requestStartDate[2] . '-' . $requestStartDate[0] . '-' . $requestStartDate[1];
-        } else {
-            $startDate = null;
-        }
-
-        if ($request->has('end_date')) {
-            $requestEndDate = explode('/', $request->end_date);
-            $endDate = $requestEndDate[2] . '-' . $requestEndDate[0] . '-' . $requestEndDate[1];
-        } else {
-            $endDate = null;
-        }
-
-        // Query logic for different user guards
-        if (Auth::guard('artists')->check()) {
-            $query = PaymentModel::where('artist_id', Auth::guard('artists')->user()->id);
-
-            if (!empty($startDate)) {
-                $query->where('date', '>=', $startDate);
-            }
-
-            if (!empty($endDate)) {
-                $query->where('date', '<=', $endDate);
-            }
-
-            $payments = $query->get();
-        } elseif (Auth::guard('admins')->check()) {
-            $query = PaymentModel::with('user');
-
-            if (!empty($startDate)) {
-                $query->where('date', '>=', $startDate);
-            }
-
-            if (!empty($endDate)) {
-                $query->where('date', '<=', $endDate);
-            }
-
-            $payments = $query->get();
-        } else {
-            $salespersonId = Auth::guard('sales')->id();
-            $artists = User::where('created_by', $salespersonId)->get();
-
-            $query = PaymentModel::with('user');
-
-            if (!empty($startDate)) {
-                $query->where('date', '>=', $startDate);
-            }
-
-            if (!empty($endDate)) {
-                $query->where('date', '<=', $endDate);
-            }
-
-            $payments = $query->whereIn('artist_id', $artists->pluck('id'))->get();
-        }
-
-        // Pass the payments data to a PDF view
-        return view('admin.payment.reportprint', compact('payments', 'startDate', 'endDate'));
+{
+    // Format the start and end dates
+    if ($request->has('start_date')) {
+        $requestStartDate = explode('/', $request->start_date);
+        $startDate = $requestStartDate[2] . '-' . $requestStartDate[0] . '-' . $requestStartDate[1];
+    } else {
+        $startDate = null;
     }
 
+    if ($request->has('end_date')) {
+        $requestEndDate = explode('/', $request->end_date);
+        $endDate = $requestEndDate[2] . '-' . $requestEndDate[0] . '-' . $requestEndDate[1];
+    } else {
+        $endDate = null;
+    }
+
+    $customerName = $request->input('customer_name'); // New input
+
+    // Artist guard
+    if (Auth::guard('artists')->check()) {
+        $query = PaymentModel::where('artist_id', Auth::guard('artists')->user()->id);
+
+        if (!empty($startDate)) {
+            $query->where('date', '>=', $startDate);
+        }
+
+        if (!empty($endDate)) {
+            $query->where('date', '<=', $endDate);
+        }
+
+        if (!empty($customerName)) {
+            $query->whereHas('user', function ($q) use ($customerName) {
+                $q->where('customers_name', 'like', '%' . $customerName . '%');
+            });
+        }
+
+        $payments = $query->get();
+    }
+    // Admin guard
+    elseif (Auth::guard('admins')->check()) {
+        $query = PaymentModel::with('user');
+
+        if (!empty($startDate)) {
+            $query->where('date', '>=', $startDate);
+        }
+
+        if (!empty($endDate)) {
+            $query->where('date', '<=', $endDate);
+        }
+
+        if (!empty($customerName)) {
+            $query->whereHas('user', function ($q) use ($customerName) {
+                $q->where('customers_name', 'like', '%' . $customerName . '%');
+            });
+        }
+
+        $payments = $query->get();
+    }
+    // Sales guard
+    else {
+        $salespersonId = Auth::guard('sales')->id();
+        $artists = User::where('created_by', $salespersonId)->get();
+
+        $query = PaymentModel::with('user')
+            ->whereIn('artist_id', $artists->pluck('id'));
+
+        if (!empty($startDate)) {
+            $query->where('date', '>=', $startDate);
+        }
+
+        if (!empty($endDate)) {
+            $query->where('date', '<=', $endDate);
+        }
+
+        if (!empty($customerName)) {
+            $query->whereHas('user', function ($q) use ($customerName) {
+                $q->where('customers_name', 'like', '%' . $customerName . '%');
+            });
+        }
+
+        $payments = $query->get();
+    }
+
+    // Credit card filter
+    if (Route::currentRouteName() === 'admin.printCCPDF') {
+        $ccPayments = $payments->filter(function ($payment) {
+            $logs = json_decode($payment->deposit_log, true);
+            if (!is_array($logs)) return false;
+
+            foreach ($logs as $log) {
+                if (isset($log['method']) && strtolower($log['method']) === 'cc') {
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        return view('admin.payment.ccprint', [
+            'payments' => $ccPayments,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'customerName' => $customerName,
+        ]);
+    }
+
+    return view('admin.payment.reportprint', compact('payments', 'startDate', 'endDate', 'customerName'));
+}
 
     public function getPaymentMethods(Request $request)
     {
