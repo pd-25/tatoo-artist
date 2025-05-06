@@ -59,7 +59,7 @@
                 {{-- Add New Installment --}}
                 @if($payment->deposit_total < $payment->price)
                     <h5>Add New Installment</h5>
-                    <form action="{{ route('admin.ccprint') }}" method="POST" id="installment-form">
+                    <form action="{{ route('admin.addInstallment') }}" method="POST" id="installment-form">
                         @csrf
                         <input type="hidden" name="payment_id" value="{{ $payment->id }}">
                         <input type="hidden" id="current-deposit" value="{{ $payment->deposit_total }}">
