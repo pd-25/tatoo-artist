@@ -462,7 +462,7 @@ class PaymentController extends Controller
             if (!is_array($logs)) return false;
 
             foreach ($logs as $log) {
-                if (isset($log['method']) && strtolower($log['method']) === 'cc') {
+                if (isset($log['method']) && strtolower($log['method']) === 'cc' && strtolower($log['reimbursed']) === '0') {
                     return true;
                 }
             }

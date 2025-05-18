@@ -75,7 +75,8 @@
                             <h4>All Deposits of Payments</h4>
                         </div>
                         <div class="d-flex align-items-center">
-                            <a class="btn m-1 {{$ccfees == 0 ? 'btn-success': 'btn-warning' }}" href="{{route('admin.printCCPDF',['start_date' => old('start_date'), 'end_date' => old('end_date'),'customer_name' => old('customers_name')])}}">{{$ccfees == 0 ? 'No Due CC Fees':'CC Due - '.$ccfees . ' $'}}</a>
+                            {{-- <a class="btn m-1 {{$ccfees == 0 ? 'btn-success': 'btn-warning' }}" href="{{route('admin.printCCPDF',['start_date' => old('start_date'), 'end_date' => old('end_date'),'customer_name' => old('customers_name')])}}">{{$ccfees == 0 ? 'No Due CC Fees':'CC Due - '.$ccfees . ' $'}}</a> --}}
+                            <a class="btn m-1 {{$ccfees == 0 ? 'btn-success': 'btn-warning' }}" href="{{route('admin.printCCPDF',['start_date' => old('start_date'), 'end_date' => old('end_date'),'customer_name' => old('customers_name')])}}"><i class="ti-printer"></i> CC Due</a>
                              <a href="{{ route('admin.AddpaymentForm') }}" target="_blank" class="btn  btn-success">Add Payment</a>
                             <a href="{{route('deposit.getArchives')}}" class="btn btn-primary m-1">Archives</a>
                             <button class="btn btn-primary m-1 d-none" id="moveToArchives">Move to Archives</button>

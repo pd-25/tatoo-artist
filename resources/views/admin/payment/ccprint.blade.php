@@ -82,7 +82,7 @@
             @foreach ($payments as $payment)
                 @php
                     $logs = collect(json_decode($payment->deposit_log, true))
-                                ->filter(fn($log) => isset($log['method']) && strtolower($log['method']) === 'cc')
+                                ->filter(fn($log) => isset($log['method']) && strtolower($log['method']) === 'cc' && strtolower($log['reimbursed']) === '0')
                                 ->values();
                     $rowspan = $logs->count() > 0 ? $logs->count() : 1;
                     $totalPrice += $payment->price;
