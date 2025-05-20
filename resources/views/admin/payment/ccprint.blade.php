@@ -85,42 +85,41 @@
                                 ->filter(fn($log) => isset($log['method']) && strtolower($log['method']) === 'cc' && strtolower($log['reimbursed']) === '0')
                                 ->values();
                     $rowspan = $logs->count() > 0 ? $logs->count() : 1;
-                    $totalPrice += $payment->price;
-                    $totalPaid += $payment->deposit_total;
-                    $totalTips += $payment->tips;
-                    $totalFees += $payment->fees;
-                    $totalShopPercentage += $payment->shop_percentage;
-                    $totalArtistPercentage += $payment->artist_percentage;
-                    $currentCounter = $counter++; // Increment counter once per payment
+                    $totalPrice += (float)$payment->price;
+                    $totalPaid += (float)$payment->deposit_total;
+                    $totalTips += (float)$payment->tips;
+                    $totalFees += (float)$payment->fees;
+                    $currentCounter = $counter++;
                 @endphp
 
                 @if ($logs->count() > 0)
                     @foreach ($logs as $index => $log)
                         @php
-                            $totalAmount += $log['amount'];
+                            $amount = (float)($log['amount'] ?? 0);
+                            $shopPerc = (float)($payment->artistData->shop_percentage ?? 0);
+                            $artistPerc = 100 - $shopPerc;
+                            $shopValue = round($amount * $shopPerc / 100, 2);
+                            $artistValue = round($amount * $artistPerc / 100, 2);
+                            $totalAmount += $amount;
+                            $totalShopPercentage += $shopValue;
+                            $totalArtistPercentage += $artistValue;
                         @endphp
                         <tr>
                             @if ($index === 0)
                                 <td rowspan="{{ $rowspan }}">{{ $currentCounter }}</td>
-                            @else
-                                <td style="display: none;"></td>
-                            @endif
-                            @if ($index === 0)
-                                <td rowspan="{{ $rowspan }}">{{ $payment->artist->name ?? '' }}</td>
+                                <td rowspan="{{ $rowspan }}">{{ $payment->artist->name ?? '' }}, {{ $shopPerc }}</td>
                                 <td rowspan="{{ $rowspan }}">{{ $payment->customers_name ?? '' }}</td>
-                                <td rowspan="{{ $rowspan }}">{{ number_format($payment->price, 2) }}</td>
-                                <td rowspan="{{ $rowspan }}">{{ $payment->deposit_total }}</td>
-                                <td rowspan="{{ $rowspan }}">{{ number_format($payment->tips, 2) }}</td>
-                                <td rowspan="{{ $rowspan }}">{{ number_format($payment->fees, 2) }}</td>
+                                <td rowspan="{{ $rowspan }}">{{ number_format((float)$payment->price, 2) }}</td>
+                                <td rowspan="{{ $rowspan }}">{{ number_format((float)$payment->deposit_total, 2) }}</td>
+                                <td rowspan="{{ $rowspan }}">{{ number_format((float)$payment->tips, 2) }}</td>
+                                <td rowspan="{{ $rowspan }}">{{ number_format((float)$payment->fees, 2) }}</td>
                             @endif
-                            <td>{{ $log['method'] }}</td>
-                            <td>{{ $log['amount'] }}</td>
+                            <td>{{ ucfirst($log['method']) }}</td>
+                            <td>{{ number_format($amount, 2) }}</td>
                             <td>{{ $log['reimbursed'] == 1 ? 'Yes' : 'No' }}</td>
                             <td>{{ \Carbon\Carbon::parse($log['date'])->format('m-d-Y') }}</td>
-                            @if ($index === 0)
-                                <td rowspan="{{ $rowspan }}">{{ $payment->shop_percentage }}</td>
-                                <td rowspan="{{ $rowspan }}">{{ $payment->artist_percentage }}</td>
-                            @endif
+                            <td>{{ number_format($shopValue, 2) }}</td>
+                            <td>{{ number_format($artistValue, 2) }}</td>
                         </tr>
                     @endforeach
                 @else
@@ -128,10 +127,10 @@
                         <td>{{ $currentCounter }}</td>
                         <td>{{ $payment->artist->name ?? '' }}</td>
                         <td>{{ $payment->customers_name ?? '' }}</td>
-                        <td>{{ number_format($payment->price, 2) }}</td>
-                        <td>{{ $payment->deposit_total }}</td>
-                        <td>{{ number_format($payment->tips, 2) }}</td>
-                        <td>{{ number_format($payment->fees, 2) }}</td>
+                        <td>{{ number_format((float)$payment->price, 2) }}</td>
+                        <td>{{ number_format((float)$payment->deposit_total, 2) }}</td>
+                        <td>{{ number_format((float)$payment->tips, 2) }}</td>
+                        <td>{{ number_format((float)$payment->fees, 2) }}</td>
                         <td colspan="6">No CC Payments</td>
                     </tr>
                 @endif

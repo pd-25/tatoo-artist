@@ -96,87 +96,7 @@ class PaymentController extends Controller
         // Remove dd($payments) to allow the view to render
         return view('admin.payment.deposit', compact('payments', 'customers','ccfees'));
     }
-    // public function getDepositSlips(Request $request){
-    //     if (Auth::guard('artists')->check()){
-    //         $payments = PaymentModel::with('user','artist')->where('artist_id',Auth::guard('artists')->user()->id)->where('isarchive',0)->orderBy('id','desc')->paginate('10');
-    //         dd($payments);
-    //     }
-    //     elseif (Auth::guard('admins')->check()){
-    //         $payments = PaymentModel::with('user','artist')->where('isarchive',0)->orderBy('id','desc')->paginate('10');
-    //         dd($payments);
-    //     }else{
-    //         $salespersonId = Auth::guard('sales')->id(); 
-    //         $artists = User::where('created_by', $salespersonId)->get();
-
-    //         $payments = PaymentModel::with('user','artist')->whereIn('artist_id', $artists->pluck('id'))->where('isarchive',0)->orderBy('id','desc')->paginate('10');
-    //         dd($payments);
-    //     }
-
-    //     //dd($payments);
-    //     return view('admin.payment.deposit',compact('payments'));
-    // }
-
-    // public function getFilteredDeposits(Request $request){
-
-    //     if ($request->has('start_date')) {
-    //         $requestStartDate = explode('/',$request->start_date);
-    //         $startDate = $requestStartDate[2].'-'.$requestStartDate[0].'-'.$requestStartDate[1];
-    //     }else{
-    //         $startDate = null;
-    //     }
-
-    //     if ($request->has('end_date')) {
-    //         $requestEndDate = explode('/',$request->end_date);
-    //         $endDate = $requestEndDate[2].'-'.$requestEndDate[0].'-'.$requestEndDate[1];
-    //     }else{
-    //         $endDate = null;
-    //     }
-
-    //     $request->flash();
-
-    //     if (Auth::guard('artists')->check()){
-    //         $query = PaymentModel::where('artist_id',Auth::guard('artists')->user()->id);
-
-    //         if(!empty($startDate)):
-    //             $query->where('date', '>=', $startDate);
-    //         endif;    
-
-    //         if(!empty($endDate)):
-    //             $query->where('date', '<=', $endDate);
-    //         endif;    
-
-    //         $payments = $query->paginate(10);
-    //     }
-    //     elseif (Auth::guard('admins')->check()){
-    //         $query = PaymentModel::with('user');
-
-    //         if(!empty($startDate)):
-    //             $query->where('date', '>=', $startDate);
-    //         endif;    
-
-    //         if(!empty($endDate)):
-    //             $query->where('date', '<=', $endDate);
-    //         endif;    
-
-    //         $payments = $query->paginate(10);
-    //     }else{
-    //         $salespersonId = Auth::guard('sales')->id(); 
-    //         $artists = User::where('created_by', $salespersonId)->get();
-
-    //         $query = PaymentModel::with('user');
-
-    //         if(!empty($startDate)):
-    //             $query->where('date', '>=', $startDate);
-    //         endif;    
-
-    //         if(!empty($endDate)):
-    //             $query->where('date', '<=', $endDate);
-    //         endif;    
-
-    //         $payments = $query->whereIn('artist_id', $artists->pluck('id'))->paginate(10);
-    //     }
-    //     return view('admin.payment.deposit',compact('payments'));
-    // }
+   
     public function getFilteredDeposits(Request $request)
     {
         // Format the start and end dates from request safely
@@ -285,92 +205,6 @@ class PaymentController extends Controller
 
 
 
-
-    // public function printDepositPDF(Request $request)
-    // {
-    //     // Format the start and end dates from request
-    //     if ($request->has('start_date')) {
-    //         $requestStartDate = explode('/', $request->start_date);
-    //         $startDate = $requestStartDate[2] . '-' . $requestStartDate[0] . '-' . $requestStartDate[1];
-    //     } else {
-    //         $startDate = null;
-    //     }
-
-    //     if ($request->has('end_date')) {
-    //         $requestEndDate = explode('/', $request->end_date);
-    //         $endDate = $requestEndDate[2] . '-' . $requestEndDate[0] . '-' . $requestEndDate[1];
-    //     } else {
-    //         $endDate = null;
-    //     }
-
-    //     // Query logic for different user guards
-    //     if (Auth::guard('artists')->check()) {
-    //         $query = PaymentModel::where('artist_id', Auth::guard('artists')->user()->id);
-
-    //         if (!empty($startDate)) {
-    //             $query->where('date', '>=', $startDate);
-    //         }
-
-    //         if (!empty($endDate)) {
-    //             $query->where('date', '<=', $endDate);
-    //         }
-
-    //         $payments = $query->get();
-    //     } elseif (Auth::guard('admins')->check()) {
-    //         $query = PaymentModel::with('user');
-
-    //         if (!empty($startDate)) {
-    //             $query->where('date', '>=', $startDate);
-    //         }
-
-    //         if (!empty($endDate)) {
-    //             $query->where('date', '<=', $endDate);
-    //         }
-
-    //         $payments = $query->get();
-    //     } else {
-    //         $salespersonId = Auth::guard('sales')->id();
-    //         $artists = User::where('created_by', $salespersonId)->get();
-
-    //         $query = PaymentModel::with('user');
-
-    //         if (!empty($startDate)) {
-    //             $query->where('date', '>=', $startDate);
-    //         }
-
-    //         if (!empty($endDate)) {
-    //             $query->where('date', '<=', $endDate);
-    //         }
-
-    //         $payments = $query->whereIn('artist_id', $artists->pluck('id'))->get();
-    //     }
-       
-    //     if (Route::currentRouteName() === 'admin.printCCPDF') {
-    //         // Filter payments where deposit_log has method = 'cc'
-    //         $ccPayments = $payments->filter(function ($payment) {
-    //             $logs = json_decode($payment->deposit_log, true);
-    //             if (!is_array($logs)) return false;
-        
-    //             foreach ($logs as $log) {
-    //                 if (isset($log['method']) && strtolower($log['method']) === 'cc') {
-    //                     return true;
-    //                 }
-    //             }
-    //             return false;
-    //         });
-        
-    //         return view('admin.payment.ccprint', [
-    //             'payments' => $ccPayments,
-    //             'startDate' => $startDate,
-    //             'endDate' => $endDate
-    //         ]);
-    //     }
-        
-    //     // Pass the payments data to a PDF view
-    //     return view('admin.payment.reportprint', compact('payments', 'startDate', 'endDate'));
-    // }
-
-
     public function printDepositPDF(Request $request)
 {
     // Format the start and end dates
@@ -460,15 +294,25 @@ class PaymentController extends Controller
         $ccPayments = $payments->filter(function ($payment) {
             $logs = json_decode($payment->deposit_log, true);
             if (!is_array($logs)) return false;
-
+    
             foreach ($logs as $log) {
-                if (isset($log['method']) && strtolower($log['method']) === 'cc' && strtolower($log['reimbursed']) === '0') {
+                if (
+                    isset($log['method']) && strtolower($log['method']) === 'cc' &&
+                    isset($log['reimbursed']) && strtolower($log['reimbursed']) === '0'
+                ) {
                     return true;
                 }
             }
             return false;
         });
-
+    
+        // Convert to array and manually attach artistData
+        $ccPayments = $ccPayments->map(function ($payment) {
+            $artistData = ArtistData::where('artist_id', $payment->artist_id)->first();
+            $payment->artistData = $artistData;
+            return $payment;
+        });
+    
         return view('admin.payment.ccprint', [
             'payments' => $ccPayments,
             'startDate' => $startDate,
@@ -476,6 +320,8 @@ class PaymentController extends Controller
             'customerName' => $customerName,
         ]);
     }
+    
+    
 
     return view('admin.payment.reportprint', compact('payments', 'startDate', 'endDate', 'customerName'));
 }
@@ -551,81 +397,6 @@ class PaymentController extends Controller
 
 
 
-
-
-
-
-    // public function AddpaymentPost(Request $request)
-    // {
-    //     // Validate the request inputs
-    //     $this->validate($request, [
-    //         'artist_id'        => 'required',
-    //         'customers_name'   => 'required|string', // Ensuring it's a string
-    //         'design'           => 'required|string', // Ensuring it's a string
-    //         'price'            => 'required|numeric', // Ensure price is numeric
-    //         'deposit'          => 'nullable|numeric', // Ensure deposit is numeric
-    //         'tips'             => 'nullable|numeric', // Ensure tips is numeric
-    //         'fees'             => 'nullable|numeric', // Ensure fees is numeric
-    //         'total_due'       => 'nullable|numeric', // Ensure total_due is numeric
-    //         'bill_image'       => 'image|mimes:jpeg,png,jpg,gif'
-    //     ], [
-    //         'artist_id.required' => 'Please select an artist',
-    //         'customers_name.required' => 'Please enter customer name',
-    //         'design.required' => 'Please enter Design',
-    //         'price.required' => 'Please enter price',
-    //         'bill_image.required' => 'Please upload Bill Document',
-    //     ]);
-
-    //     // Determine the user ID based on the authenticated guard
-    //     if (Auth::guard('artists')->check()) {
-    //         $userid = Auth::guard('artists')->user()->id;
-    //     } elseif (Auth::guard('admins')->check()) {
-    //         $userid = Auth::guard('admins')->user()->id;
-    //     } else {
-    //         $userid = Auth::guard('sales')->id();
-    //     }
-
-    //     // Handle the bill image upload
-    //     $path = '';
-    //     if ($request->hasFile('bill_image')) {
-    //         $file = $request->file('bill_image');
-    //         $filename = $file->getClientOriginalName();
-    //         $file->storeAs('public/DepositSlip/', $filename);
-    //         $path = Storage::url('public/DepositSlip/' . $filename);
-    //     }
-
-    //     // Create a new payment record
-    //     $pmodel = new PaymentModel();
-    //     $pmodel->user_id          = $userid;
-    //     $pmodel->date             = now()->format('Y-m-d'); // Automatically set today's date
-    //     $pmodel->artist_id        = $request->artist_id;
-    //     $pmodel->customers_name    = $request->customers_name;
-    //     $pmodel->design           = $request->design;
-    //     $pmodel->placement        = $request->placement;
-    //     $pmodel->price            = $request->price;
-    //     $pmodel->deposit          = $request->deposit ?? 0; // Default to 0 if null
-    //     $pmodel->tips             = $request->tips ?? 0; // Default to 0 if null
-    //     $pmodel->fees             = $request->fees ?? 0; // Default to 0 if null
-    //     $pmodel->total_due        = $request->total_due ?? 0; // Default to 0 if null
-    //     $pmodel->payment_method   = $request->payment_method;
-    //     $pmodel->bill_image       = $path;
-
-    //     // Save the payment model
-    //     $pmodel->save();
-
-    //     return redirect()->back()->with('message', 'Payment added successfully.');
-    // }
-
-
-
-
-
-
-
-
-
-
-//payment add edit delete show etc.....
     public function AddpaymentPost(Request $request)
     {
         // Validate inputs
