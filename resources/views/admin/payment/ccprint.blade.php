@@ -107,7 +107,7 @@
                         <tr>
                             @if ($index === 0)
                                 <td rowspan="{{ $rowspan }}">{{ $currentCounter }}</td>
-                                <td rowspan="{{ $rowspan }}">{{ $payment->artist->name ?? '' }}, {{ $shopPerc }}</td>
+                                <td rowspan="{{ $rowspan }}">{{ $payment->artist->name ?? '' }}</td>
                                 <td rowspan="{{ $rowspan }}">{{ $payment->customers_name ?? '' }}</td>
                                 <td rowspan="{{ $rowspan }}">{{ number_format((float)$payment->price, 2) }}</td>
                                 <td rowspan="{{ $rowspan }}">{{ number_format((float)$payment->deposit_total, 2) }}</td>
