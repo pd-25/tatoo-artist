@@ -1,86 +1,83 @@
 <?php
 // proxy.php
 
-// Allow CORS for all origins or specify your frontend URL instead of '*'
+// Allow from any origin (adjust for production)
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-header("Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Requested-With");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-// Handle preflight OPTIONS request
+// Handle OPTIONS preflight request and exit early
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(204);
+    http_response_code(200);
     exit;
 }
 
-// Get the target URL from the 'url' query parameter
+// Get the URL parameter to proxy
 if (!isset($_GET['url'])) {
     http_response_code(400);
-    echo json_encode(['error' => 'No url specified']);
+    echo json_encode(['error' => 'No url parameter provided']);
     exit;
 }
 
+// The URL you want to proxy to
 $targetUrl = $_GET['url'];
 
-// Initialize cURL session
-$ch = curl_init();
+// Initialize cURL
+$ch = curl_init($targetUrl);
 
-// Prepare headers to forward from client (optional, can be improved)
+// Forward HTTP method
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $_SERVER['REQUEST_METHOD']);
+
+// Forward headers from client (except Host and some restricted ones)
 $headers = [];
 foreach (getallheaders() as $name => $value) {
-    if (strtolower($name) !== 'host' && strtolower($name) !== 'content-length') {
-        $headers[] = "$name: $value";
-    }
+    if (strtolower($name) === 'host') continue; // don't send original host header
+    if (strtolower($name) === 'content-length') continue; // let curl set content length
+    $headers[] = "$name: $value";
+}
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+// Forward POST/PUT/PATCH body
+if (in_array($_SERVER['REQUEST_METHOD'], ['POST', 'PUT', 'PATCH'])) {
+    $input = file_get_contents('php://input');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $input);
 }
 
-// Set cURL options
-curl_setopt($ch, CURLOPT_URL, $targetUrl);
+// Return response headers and body
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HEADER, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
-// Detect method and forward body for POST/PUT/PATCH
-$method = $_SERVER['REQUEST_METHOD'];
-if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, file_get_contents('php://input'));
-} elseif ($method === 'DELETE') {
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-}
-
-// Execute cURL request
+// Execute the request
 $response = curl_exec($ch);
+
 if ($response === false) {
     http_response_code(500);
-    echo json_encode(['error' => 'Proxy error: ' . curl_error($ch)]);
+    echo json_encode(['error' => curl_error($ch)]);
     curl_close($ch);
     exit;
 }
 
 // Separate headers and body
-$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-$response_headers = substr($response, 0, $header_size);
-$response_body = substr($response, $header_size);
+$headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+$header = substr($response, 0, $headerSize);
+$body = substr($response, $headerSize);
 
-// Forward status code from target server
-$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-http_response_code($httpcode);
+// Forward status code from backend
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+http_response_code($httpCode);
 
-// Forward selected headers from target response (avoid overriding CORS headers)
-$headersToSkip = ['content-length', 'transfer-encoding', 'connection', 'access-control-allow-origin'];
-$header_lines = explode("\r\n", $response_headers);
-foreach ($header_lines as $header_line) {
-    if (stripos($header_line, ':') !== false) {
-        list($key, $value) = explode(':', $header_line, 2);
-        $key = trim($key);
-        $value = trim($value);
-        if (!in_array(strtolower($key), $headersToSkip)) {
-            header("$key: $value");
-        }
+// Forward headers from backend (filter some headers)
+$headerLines = explode("\r\n", $header);
+foreach ($headerLines as $headerLine) {
+    if (stripos($headerLine, 'Transfer-Encoding:') === 0) continue;
+    if (stripos($headerLine, 'Content-Length:') === 0) continue;
+    if (stripos($headerLine, 'Content-Encoding:') === 0) continue;
+    if (stripos($headerLine, 'Connection:') === 0) continue;
+    if ($headerLine !== '') {
+        header($headerLine);
     }
 }
 
-curl_close($ch);
+echo $body;
 
-// Output the response body
-echo $response_body;
+curl_close($ch);
