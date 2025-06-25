@@ -47,6 +47,7 @@
             <a href="{{ route('adminLogin') }}" class="btn btn-primary btn-lg">Admin Login</a>
             <a href="{{ route('salesLogin') }}" class="btn btn-success btn-lg">Sales Login</a>
             <a href="{{ route('artistLogin') }}" class="btn btn-info btn-lg">Artist Login</a>
+            <a href="{{ route('customerLogin') }}" class="btn btn-warning btn-lg">Customer Login</a>
         </div>
     </div>
 </body>

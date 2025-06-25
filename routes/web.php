@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\Artist\ArtistController;
 use App\Http\Controllers\Admin\Sales\SalesController;
+use App\Http\Controllers\Customers\CustomersController;
+use App\Http\Controllers\Customers\TestsController;
 use App\Http\Controllers\Admin\Artworks\ArtworkController;
 use App\Http\Controllers\Admin\Banner\BannerController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
@@ -48,10 +50,19 @@ Route::get('/sales/login', function () {
     return view('auth/sales_login');
 })->name('salesLogin');
 
+Route::get('/customer/login', function () {
+    return view('customers/auth/login');
+})->name('customerLogin');
+
+// Route::get('/customer/register', function () {
+//     return view('customers/auth/register');
+// })->name('customerRegistration');
+
 
 Route::get('/user/logout', [AuthController::class, 'logoutArtist'])->name('artist.logout');
 Route::get('/sales/logout', [AuthController::class, 'logoutSales'])->name('sales.logout');
 Route::get('/admin/logout', [AuthController::class, 'logoutAdmin'])->name('admin.logout');
+Route::get('/customer/logout', [AuthController::class, 'logoutCustomer'])->name('customer.logout');
 
 Auth::routes();
 
@@ -64,8 +75,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminCheck'], function () {
 
 
     Route::resource('artworks', ArtworkController::class);
-
     Route::resource('sales', SalesController::class);
+
     Route::get('/add-customer', [ArtistController::class, 'addCustomer'])->name('admin.addCustomer');
     Route::post('/store-customer', [ArtistController::class, 'storeCustomer'])->name('admin.storeCustomer');
     Route::get('/customers', [ArtistController::class, 'customers'])->name('admin.customers');
@@ -195,6 +206,19 @@ Route::get('/admin/subscriptions/{id}/edit', [SubscriptionController::class, 'ed
 // Route to handle the subscription update form submission
 Route::put('/admin/subscriptions/{id}', [SubscriptionController::class, 'update'])->name('subscriptions.update');
 });
+
+//---------------------------CUSTOMER ROUTES--------------------------//
+Route::resource('custs', CustomersController::class);
+Route::get('customer/register-success', [CustomersController::class, 'registerSuccess'])->name('customerRegister.success');
+Route::get('customer/profile', [CustomersController::class, 'customerProfile'])->name('customerProfile');
+Route::get('customer/forget-password', [CustomersController::class, 'forgetPassword'])->name('customer.forgetPassword');
+Route::post('customer/forget-password', [CustomersController::class, 'checkCustomerEmail'])->name('customer.checkEmail');
+Route::get('customer/email-sent', [CustomersController::class, 'forgetPasswordMailSuccess'])->name('customer.forgetPsswordMailSuccess');
+Route::get('customer/reset-new-password', [CustomersController::class, 'resetPassword'])->name('customerReset.password');
+Route::post('customer/reset-password', [CustomersController::class, 'storeResetPassword'])->name('customerResetPassword.store');
+Route::get('customer/reset-password-success', [CustomersController::class, 'resetPasswordSuccess'])->name('customer.resetPasswordSuccess');
+
+
 
 Route::get('artistblock', function () {
     if(Auth::guard('artists')->user()->account_hold == 1) {

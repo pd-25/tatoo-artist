@@ -16,22 +16,27 @@ class AuthController extends Controller
         try {
 
             $guard_type = $request->guard_type;
-
+            //dd(Auth::guard());
+            //exit;
             if($guard_type == "admins"){
                 $type = "admin";
-            }
-
-            else if($guard_type == "sales"){
+            }else if($guard_type == "sales"){
                 $type = "sales";
-            }else{
+            }else if($guard_type == "artists"){
                 $type = "artist";
+            }else if($guard_type == "customers"){
+                $type = "customer";
             }
     
             if(Auth::guard($guard_type)->attempt(["email" => $request->email, "password" => $request->password, "type" => $type])){
 
                 if ($guard_type === 'admins') {
                     return redirect()->route('admin.dashboard'); // Redirect admin to dashboard
-                } 
+                }else if ($guard_type === 'customers') {
+                    session()->put('cust_email', $request->email);
+                    
+                    return redirect()->route('customerProfile'); // Redirect admin to dashboard
+                }  
                 else if ($guard_type === 'sales') {
                     return redirect()->route('admin.dashboard'); // Redirect admin to dashboard
                 } else {
@@ -41,7 +46,9 @@ class AuthController extends Controller
             }else{
                 if ($guard_type === 'admins') {
                     return redirect()->route('adminLogin')->with("msg", "Invalid credentials")->withInput();
-                } 
+                }else if($guard_type === 'customers'){
+                    return redirect()->route('customerLogin')->with("msg", "Invalid credentials")->withInput();
+                }
                 else if ($guard_type === 'sales') {
                     return redirect()->route('salesLogin')->with("msg", "Invalid credentials")->withInput();
                 } else {
@@ -77,5 +84,13 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('adminLogin');
+    }
+
+    public function logoutCustomer(Request $request)
+    {
+        Auth::guard('customers')->logout(); // Logout admin user
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('customerLogin');
     }
 }
