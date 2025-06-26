@@ -110,7 +110,7 @@
 <body>
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">tattoostudio™</a>
+      <!-- <a class="navbar-brand" href="#">tattoostudio™</a> -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -130,12 +130,29 @@
   </nav>
 
   <div class="container mt-4">
-    <div class="profile-header text-center">
+    <div class="profile-header">
+      <div class="row mb-6">
+        <div class="col-md-3">
+          @if (!empty($profile->profile_image) && File::exists(public_path('storage/ProfileImage/' . $profile->profile_image)))
+          <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%" src="{{ asset('storage/ProfileImage/'.$profile->profile_image) }}" alt="">
+              
+          @else
+          <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%" src="{{asset('noimg.png') }}" alt="">
+              
+          @endif
+        </div>
+        <div class="col-md-6 text-center">
+          <h2>{{ $profile->name }}</h2>
+          <p>{{ $profile->phone }}</p>
+          <p>{{ $profile->email }}</p>
+        </div>
+        
+      </div>
+      
       <?php //echo '<pre>'; print_r($profile); echo '</pre>'; ?>
-      <h2>{{ $profile->name }}</h2>
+      
       <!-- <p>VA 01234</p> -->
-      <p>{{ $profile->phone }}</p>
-      <p>{{ $profile->email }}</p>
+      
       <!-- <div class="unused-deposits mt-3">
         <strong>$50 Unused Deposits</strong>
       </div> -->
@@ -186,8 +203,21 @@
           </div>
           <div class="col-md-6">
             <label class="form-label">Date of Birth</label>
-            <input type="date" class="form-control" value="{{ $profile->dob }}">
+            <input type="text" class="form-control" value="{{ $dob }}">
           </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Lead Source</label>
+            <input type="text" class="form-control" value="{{ $lead_name }}">
+          </div>
+          @if(!empty($profile->other_lead_source))
+          <div class="col-md-6">
+            <label class="form-label">Other Lead Source</label>
+            <input type="text" class="form-control" value="{{ $profile->other_lead_source }}">
+          </div>
+          @endif
         </div>
       </form>
       <!-- <h4 class="mb-3">Release Forms</h4>

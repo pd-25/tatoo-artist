@@ -46,7 +46,7 @@
                             @if (Session::has('msg'))
                                 <p class="alert alert-danger">{{ Session::get('msg') }}</p>
                             @endif
-                            <form method="POST" action="{{ route('custs.store') }}" enctype="multipart/form-data">
+                            <form method="POST" action="{{ route('customers.store') }}" enctype="multipart/form-data">
                                 @csrf
                                 
                                 <div class="row">
@@ -141,18 +141,24 @@
                                         <label>Sex</label><span class="text-danger">*</span>
                                         <div class="form-group">
                                             
-                                            <input type="radio" name="sex" value="Male">
+                                            <input type="radio" name="sex" id="male_radio" value="">
                                             <label class="form-check-label" for="sex">
                                                 1) Male
                                             </label><br>
-                                            <input type="radio" name="sex" value="Female">
+                                            <input type="radio" name="sex" id="female_radio" value="">
                                             <label class="form-check-label" for="sex">
                                                 2) Female
                                             </label><br>
-                                            <input type="radio" name="sex" value="Other">
+                                            <input type="radio" name="sex" id="other_radio" value="">
                                             <label class="form-check-label" for="sex">
                                                 3) Other
                                             </label>
+
+                                            @error('sex')
+                                                <span class="text-danger" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                             
                                         </div>
                                     </div>
@@ -190,12 +196,12 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Lead Source</label><span class="text-danger">*</span>
-                                            <select class="form-control" name="lead_source">
+                                            <select class="form-control" name="lead_source" id="lead_source" onchange="show_other_lead_field()">
                                                 <option value="">Select</option>
                                         
                                                 @foreach($leads as $key=>$value)
                                                     
-                                                    <option @if($value->id == old('lead_source')) selected @endif value="{{ $value->id }}">{{ $value->lead_source_name }}</option>
+                                                    <option value="{{ $value->id }}">{{ $value->lead_source_name }}</option>
                                                     
                                                 @endforeach
                                                   
@@ -207,6 +213,12 @@
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="other_lead" style="display:none;">
+                                            <label>Other Lead Source</label><span class="text-danger">*</span>
+                                            <input type="text" name="other_lead_source" id="other_lead_source" value="{{ old('other_lead_source') }}" class="form-control" placeholder="">
                                         </div>
                                     </div>
                                 </div>
@@ -225,8 +237,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Re-enter Password</label>
-                                            <input type="password" name="conf_password" class="form-control" placeholder="Re-enter Password">
-                                            @error('conf_password')
+                                            <input type="password" name="confirm_password" class="form-control" placeholder="Re-enter Password">
+                                            @error('confirm_password')
                                                 <span class="text-danger" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -248,7 +260,9 @@
         </div>
     </div>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
+
     document.addEventListener("DOMContentLoaded", function() {
         flatpickr(".flatpickr", {
             dateFormat: "m-d-Y", // Customize the date format
@@ -256,6 +270,39 @@
             // defaultDate: "today", // Set default date to today
         });
     });
+
+    
+    $("#male_radio").on('change', function(){
+        $("#male_radio").val('Male');
+        $("#female_radio").val('');
+        $("#other_radio").val('');
+    });
+
+    $("#female_radio").on('change', function(){
+        $("#female_radio").val('Female');
+        $("#male_radio").val('');
+        $("#other_radio").val('');
+    });
+
+    $("#other_radio").on('change', function(){
+        $("#other_radio").val('Other');
+        $("#male_radio").val('');
+        $("#female_radio").val('');
+    });
+
+    function show_other_lead_field(){
+        
+        var lead_source = $("#lead_source option:selected").text();
+        //alert(lead_source);
+        
+        if(lead_source == 'Other'){
+            $("#other_lead").show();
+            $("#other_lead_source").focus();
+        }else{
+            $("#other_lead").hide();
+            $("#other_lead_source").val("");
+        }
+    }
 </script>
 
 </body>

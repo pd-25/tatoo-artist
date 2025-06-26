@@ -208,7 +208,7 @@ Route::put('/admin/subscriptions/{id}', [SubscriptionController::class, 'update'
 });
 
 //---------------------------CUSTOMER ROUTES--------------------------//
-Route::resource('custs', CustomersController::class);
+Route::resource('customers', CustomersController::class);
 Route::get('customer/register-success', [CustomersController::class, 'registerSuccess'])->name('customerRegister.success');
 Route::get('customer/profile', [CustomersController::class, 'customerProfile'])->name('customerProfile');
 Route::get('customer/forget-password', [CustomersController::class, 'forgetPassword'])->name('customer.forgetPassword');

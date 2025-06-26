@@ -27,6 +27,8 @@ class AuthController extends Controller
             }else if($guard_type == "customers"){
                 $type = "customer";
             }
+            // echo $guard_type;
+            // exit;
     
             if(Auth::guard($guard_type)->attempt(["email" => $request->email, "password" => $request->password, "type" => $type])){
 
@@ -34,8 +36,7 @@ class AuthController extends Controller
                     return redirect()->route('admin.dashboard'); // Redirect admin to dashboard
                 }else if ($guard_type === 'customers') {
                     session()->put('cust_email', $request->email);
-                    
-                    return redirect()->route('customerProfile'); // Redirect admin to dashboard
+                    return redirect()->route('customerProfile'); // Redirect customer profile
                 }  
                 else if ($guard_type === 'sales') {
                     return redirect()->route('admin.dashboard'); // Redirect admin to dashboard

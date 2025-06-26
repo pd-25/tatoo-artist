@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Customers;
 use App\core\customers\CustomersInterface;
 use App\Http\Controllers\Controller;
 use App\Mail\CustomerResetPasswordMail;
+use App\Mail\CustomerRegisterSuccessMail;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\LeadSource;
 use Illuminate\Support\Facades\Hash;
 use DB;
 use Auth;
@@ -48,38 +50,45 @@ class CustomersController extends Controller
             'lastname' => 'required|string',
             'username' => 'required|string|unique:users',
             'email' => 'required|email|unique:users',
+            'customer_state' => 'required',
             'zipcode' => 'required',
             'mobile_number' => 'required',
             'sex' => 'required',
-            'dob' => 'required',
+            'dob' => 'date',
             'profile_image' => 'required|image|mimes:jpeg,png,jpg|max:100',
+            'lead_source' => 'required',
+            'other_lead_source'=>'required_if:lead_source,12',
             'password' => 'required',
-            'conf_password' => 'required',
+            'confirm_password' => 'same:password|required',
         ],
         [
             'firstname.required' => 'First Name is required.',
             'lastname.required' => 'Last Name is required.',
             'username.required' => 'Username is required.',
             'email.required' => 'Email is required.',
+            'customer_state.required' => 'State is required.',
             'zipcode.required' => 'Zipcode is required.',
             'mobile_number.required' => 'Mobile number is required.',
             'sex.required' => 'Sex field is required.',
             'dob.required' => 'Enter your date of birth',
             'profile_image.required' => 'The image field must be an image file of type: PNG, JPG of max size 100KB',
+            'lead_source.required' => 'Select lead source',
+            'other_lead_source.required'=>'Please enter other lead source',
             'password.required' => 'Password field is required.',
-            'conf_password.required' => 'Please re-enter your password',
+            'confirm_password.required' => 'Please re-enter your password',
             
-        
         ]);
 
-        $data = $request->only('firstname', 'lastname', 'username', 'email', 'customer_state', 'zipcode', 'mobile_number', 'password', 'profile_image', 'sex',  'dob', 'lead_source');
+        $data = $request->only('firstname', 'lastname', 'username', 'email', 'customer_state', 'zipcode', 'mobile_number', 'password', 'profile_image', 'sex',  'dob', 'lead_source', 'other_lead_source');
         //$customerInfo = $request->only('sex',  'dob', 'lead_source');
         // echo '<pre>'; print_r($data); echo '</pre>';
         // echo '<pre>'; print_r($customerInfo); echo '</pre>';
         // exit;
+        $mailsubject = 'Welcome to TattooMe – Your Ink Journey Starts Here';
+        $customer_name = $request->firstname.' '.$request->firstname;
         $store = $this->customersInterface->storeCustomerData($data);
         if ($store) {
-
+            Mail::to($request->email)->send(new CustomerRegisterSuccessMail($customer_name, $mailsubject));
             return redirect()->route('customerRegister.success')->with('msg', 'Thank You For Registering With Tattoome.');
         } else {
             return back()->with('msg', 'Some error occur.');
@@ -123,14 +132,25 @@ class CustomersController extends Controller
     }
 
     public function customerProfile(){
-        $profile = User::where('email', session()->get('cust_email'))->first();
-        //$dob = UserHelper::display_dateformat($profile->dob);
-        return view('customers/profile', ['profile'=>$profile]);
-        if(!empty($profile)){
-            return view('customers/profile');
+        $sess_email = session()->get('cust_email');
+        if(!empty($sess_email)){
+            $profile = User::where('email', $sess_email)->first();
+            $lead_data = LeadSource::where('id', $profile->lead_source)->first();
+            // echo $lead_data->lead_source_name;
+            // echo '<pre>'; print_r($lead_data); echo '</pre>';
+            // exit;
+            $dob = UserHelper::display_dateformat($profile->dob);
+            $lead_name = $lead_data->lead_source_name;
+
+            if(!empty($profile)){
+                return view('customers/profile', ['profile'=>$profile, 'dob'=>$dob, 'lead_name'=>$lead_name]);
+            }else{
+                return redirect()->route('customerLogin');
+            }
         }else{
             return redirect()->route('customerLogin');
         }
+        
         
     }
 
