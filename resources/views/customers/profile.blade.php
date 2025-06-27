@@ -1,44 +1,4 @@
-
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
   <meta charset="UTF-8">
@@ -110,21 +70,13 @@
 <body>
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <!-- <a class="navbar-brand" href="#">tattoostudio™</a> -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="{{ route('customer.logout') }}">Logout</a></li>
-          <!-- <li class="nav-item"><a class="nav-link" href="#">Queue (10)</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Appointments (5)</a></li>
-          <li class="nav-item"><a class="nav-link active" href="#">Clients</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Staff</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Reports</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Forms</a></li> -->
         </ul>
-        <!-- <span class="time-display ms-3">Tue Jun 24 08:09 PM IST</span> -->
       </div>
     </div>
   </nav>
@@ -135,32 +87,16 @@
         <div class="col-md-3">
           @if (!empty($profile->profile_image) && File::exists(public_path('storage/ProfileImage/' . $profile->profile_image)))
           <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%" src="{{ asset('storage/ProfileImage/'.$profile->profile_image) }}" alt="">
-              
           @else
           <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%" src="{{asset('noimg.png') }}" alt="">
-              
           @endif
         </div>
         <div class="col-md-6 text-center">
           <h2>{{ $profile->name }}</h2>
-          <p>{{ $profile->phone }}</p>
+          <p id="display-phone">{{ $profile->phone }}</p>
           <p>{{ $profile->email }}</p>
         </div>
-        
       </div>
-      
-      <?php //echo '<pre>'; print_r($profile); echo '</pre>'; ?>
-      
-      <!-- <p>VA 01234</p> -->
-      
-      <!-- <div class="unused-deposits mt-3">
-        <strong>$50 Unused Deposits</strong>
-      </div> -->
-      <!-- <div class="mt-3">
-        <button class="btn btn-custom btn-sm me-2">Call</button>
-        <button class="btn btn-custom btn-sm me-2">Message</button>
-        <button class="btn btn-custom btn-sm">Email</button>
-      </div> -->
     </div>
     <div class="profile-info">
       <h4 class="mb-4">Client Information</h4>
@@ -189,7 +125,7 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label">Phone</label>
-            <input type="text" class="form-control" value="{{ $profile->phone }}">
+            <input type="text" class="form-control" id="profile-phone" value="{{ $profile->phone }}" readonly>
           </div>
           <div class="col-md-6">
             <label class="form-label">Email</label>
@@ -220,15 +156,42 @@
           @endif
         </div>
       </form>
-      <!-- <h4 class="mb-3">Release Forms</h4>
-      <button class="btn btn-custom btn-sm">New Form</button>
-      <h4 class="mb-3">Appointments</h4>
-      <button class="btn btn-custom btn-sm">New Appointment</button>
-      <h4 class="mb-3">Notes</h4>
-      <button class="btn btn-custom btn-sm">New Note</button> -->
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Function to format phone number
+    function formatPhoneNumber(phoneNumber) {
+      // Remove all non-digit characters
+      const cleaned = ('' + phoneNumber).replace(/\D/g, '');
+      
+      // Check if the number is valid length
+      if (cleaned.length !== 10) return phoneNumber; // Return original if not 10 digits
+      
+      // Format as (XXX) XXX-XXXX
+      const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+      if (match) {
+        return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+      }
+      return phoneNumber;
+    }
+
+    // Format phone numbers on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const phoneInput = document.getElementById('profile-phone');
+      const displayPhone = document.getElementById('display-phone');
+      
+      if (phoneInput) {
+        const formattedPhone = formatPhoneNumber(phoneInput.value);
+        phoneInput.value = formattedPhone;
+      }
+      
+      if (displayPhone) {
+        const formattedDisplayPhone = formatPhoneNumber(displayPhone.textContent);
+        displayPhone.textContent = formattedDisplayPhone;
+      }
+    });
+  </script>
 </body>
 </html>
