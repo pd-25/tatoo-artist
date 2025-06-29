@@ -584,9 +584,9 @@
 
                       $("#allError").text('');
 
-                      // setTimeout(function() {
-                      //   location.reload(true);
-                      // }, 3000);
+                      setTimeout(function() {
+                        location.reload(true);
+                      }, 3000);
 
                     }
 
