@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Artist\ArtistController;
 use App\Http\Controllers\Admin\Sales\SalesController;
 use App\Http\Controllers\Customers\CustomersController;
+use App\Http\Controllers\Customers\TattoQuoteController;
 use App\Http\Controllers\Customers\TestsController;
 use App\Http\Controllers\Admin\Artworks\ArtworkController;
 use App\Http\Controllers\Admin\Banner\BannerController;
@@ -210,6 +211,7 @@ Route::put('/admin/subscriptions/{id}', [SubscriptionController::class, 'update'
 //---------------------------CUSTOMER ROUTES--------------------------//
 Route::resource('customers', CustomersController::class);
 Route::get('customer/register-success', [CustomersController::class, 'registerSuccess'])->name('customerRegister.success');
+
 Route::get('customer/profile', [CustomersController::class, 'customerProfile'])->name('customerProfile');
 Route::get('customer/forget-password', [CustomersController::class, 'forgetPassword'])->name('customer.forgetPassword');
 Route::post('customer/forget-password', [CustomersController::class, 'checkCustomerEmail'])->name('customer.checkEmail');
@@ -217,7 +219,11 @@ Route::get('customer/email-sent', [CustomersController::class, 'forgetPasswordMa
 Route::get('customer/reset-new-password', [CustomersController::class, 'resetPassword'])->name('customerReset.password');
 Route::post('customer/reset-password', [CustomersController::class, 'storeResetPassword'])->name('customerResetPassword.store');
 Route::get('customer/reset-password-success', [CustomersController::class, 'resetPasswordSuccess'])->name('customer.resetPasswordSuccess');
+Route::post('customer/update-profile', [CustomersController::class, 'updateCustomerProfile'])->name('customerProfile.update');
 
+//---------------------------------TATOO ROUTES----------------------------//
+Route::resource('tatto-quotes', TattoQuoteController::class);
+Route::post('tatto/ref-image', [TattoQuoteController::class, 'storeReferenceImage'])->name('tatooRefImage.store');
 
 
 Route::get('artistblock', function () {

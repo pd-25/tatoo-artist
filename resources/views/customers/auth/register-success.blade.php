@@ -42,10 +42,7 @@
                         <div class="login-form">
                             <h4>Welcome</h4>
                             <center><p style="color:green; font-weight: bold; font-size:15px;">Thank You For Registering With Tattoome.</p></center>
-                            @if (Session::has('msg'))
-                            <center><p style="color:green; font-weight: bold; font-size:15px;">Thank You For Registering With Tattoome.</p></center>
-                            <!-- <p class="alert alert-success">{{ Session::get('msg') }}</p> -->
-                            @endif
+                            
                             
                             <center><a href="{{ route('customerLogin') }}">Login your Account</a></center>
 

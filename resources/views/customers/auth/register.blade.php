@@ -38,9 +38,6 @@
             <div class="row justify-content-center">
                 <div class="col-lg-6">
                     <div class="login-content">
-                        <!-- <div class="login-logo">
-                            <a href="javascript:void(0)"><span>{{ env('APP_NAME') }}</span></a>
-                        </div> -->
                         <div class="login-form">
                             <h4>Customer Registration</h4>
                             @if (Session::has('msg'))
@@ -75,7 +72,6 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
-
                                         <div class="form-group">
                                             <label>Email address</label><span class="text-danger">*</span>
                                             <input type="text" name="email" value="{{ old('email') }}" 
@@ -129,7 +125,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Mobile No.</label><span class="text-danger">*</span>
-                                            <input type="text" name="mobile_number" value="{{ old('mobile_number') }}" class="form-control" placeholder="Mobile No.">
+                                            <input type="text" name="mobile_number" id="mobile_number" value="{{ old('mobile_number') }}" class="form-control" placeholder="(999) 999-9999">
                                             @error('mobile_number')
                                                 <span class="text-danger" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -140,7 +136,6 @@
                                     <div class="col-md-6">
                                         <label>Sex</label><span class="text-danger">*</span>
                                         <div class="form-group">
-                                            
                                             <input type="radio" name="sex" id="male_radio" value="">
                                             <label class="form-check-label" for="sex">
                                                 1) Male
@@ -159,7 +154,6 @@
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
-                                            
                                         </div>
                                     </div>
                                 </div>
@@ -192,21 +186,14 @@
                                 </div>
 
                                 <div class="row">
-                                    
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Lead Source</label><span class="text-danger">*</span>
                                             <select class="form-control" name="lead_source" id="lead_source" onchange="show_other_lead_field()">
                                                 <option value="">Select</option>
-                                        
                                                 @foreach($leads as $key=>$value)
-                                                    
                                                     <option value="{{ $value->id }}">{{ $value->lead_source_name }}</option>
-                                                    
                                                 @endforeach
-                                                  
-                                            </select>
-
                                             </select>
                                             @error('lead_source')
                                                 <span class="text-danger" role="alert">
@@ -251,7 +238,6 @@
                                 <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Register</button>
                                 <center><span style="color:blue;">Already have account?</span><a href="{{ route('customerLogin') }}"> Sign In</a></center>
 
-
                             </form>
                         </div>
                     </div>
@@ -262,16 +248,39 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-
     document.addEventListener("DOMContentLoaded", function() {
         flatpickr(".flatpickr", {
             dateFormat: "m-d-Y", // Customize the date format
             allowInput: true, // Allow manual input
-            // defaultDate: "today", // Set default date to today
         });
     });
 
-    
+    // Mobile number formatting
+    document.getElementById('mobile_number').addEventListener('input', function(e) {
+        // Remove all non-digit characters
+        let phoneNumber = e.target.value.replace(/\D/g, '');
+        
+        // Format the phone number
+        if (phoneNumber.length > 0) {
+            phoneNumber = '(' + phoneNumber.substring(0, 3) + ') ' + phoneNumber.substring(3, 6) + '-' + phoneNumber.substring(6, 10);
+        }
+        
+        // Update the input value
+        e.target.value = phoneNumber;
+        
+        // Store the raw numbers in a data attribute
+        const rawNumber = e.target.value.replace(/\D/g, '');
+        e.target.setAttribute('data-raw-value', rawNumber);
+    });
+
+    // Before form submission, update the value with raw numbers
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const mobileInput = document.getElementById('mobile_number');
+        const rawValue = mobileInput.getAttribute('data-raw-value') || mobileInput.value.replace(/\D/g, '');
+        mobileInput.value = rawValue;
+    });
+
+    // Radio button value handling
     $("#male_radio").on('change', function(){
         $("#male_radio").val('Male');
         $("#female_radio").val('');
@@ -291,9 +300,7 @@
     });
 
     function show_other_lead_field(){
-        
         var lead_source = $("#lead_source option:selected").text();
-        //alert(lead_source);
         
         if(lead_source == 'Other'){
             $("#other_lead").show();
@@ -303,8 +310,7 @@
             $("#other_lead_source").val("");
         }
     }
-</script>
+    </script>
 
 </body>
-
 </html>

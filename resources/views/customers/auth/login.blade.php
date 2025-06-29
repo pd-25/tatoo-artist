@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Customer: {{ env('APP_NAME') }}</title>
+    <title>Customer: Login {{ env('APP_NAME') }}</title>
 
     <!-- ================= Favicon ================== -->
     <!-- Standard -->

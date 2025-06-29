@@ -39,7 +39,7 @@
                             <a href="javascript:void(0)"><span>{{ env('APP_NAME') }}</span></a>
                         </div> -->
                         <div class="login-form">
-                            <h4>Forget Password</h4>
+                            <h4>Forgot Password</h4>
                             @if (Session::has('msg'))
                                 <p class="alert alert-danger">{{ Session::get('msg') }}</p>
                             @endif

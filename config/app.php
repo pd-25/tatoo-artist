@@ -172,6 +172,7 @@ return [
         App\ServiceProvider\ArtistServiceProvider::class,
         App\ServiceProvider\SalesServiceProvider::class,
         App\ServiceProvider\CustomersServiceProvider::class,
+        App\ServiceProvider\TattoQuoteServiceProvider::class,
         App\ServiceProvider\ArtworkServiceProvider::class,
         App\ServiceProvider\PlacementServiceProvider::class,
         App\ServiceProvider\SubjectServiceProvider::class,

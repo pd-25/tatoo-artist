@@ -40,14 +40,14 @@
                             <a href="javascript:void(0)"><span>{{ env('APP_NAME') }}</span></a>
                         </div> -->
                         <div class="login-form">
-                            <h4>Forget Password</h4>
+                            <h4>Forgot Password</h4>
                             @if (Session::has('msg'))
                             <center><p style="color:green; font-weight: bold; font-size:15px;">{{ Session::get('msg') }}</p></center>
                             
                             @endif
-                            <h3>Forget password</h3>
-                            <p>Hi {{ Session::get('cname') }}</p>
-                            <p><a href="{{ route('customerReset.password') }}"><strong>Click Here</strong></a></p>
+                            
+                            <!-- <p>Hi {{ Session::get('cname') }}</p>
+                            <p><a href="{{ route('customerReset.password') }}"><strong>Click Here</strong></a></p> -->
                             <center><a href="{{ route('customerLogin') }}">Login your Account</a></center>
 
                         </div>

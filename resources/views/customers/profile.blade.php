@@ -110,19 +110,17 @@
 <body>
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <!-- <a class="navbar-brand" href="#">tattoostudio™</a> -->
+      <a class="navbar-brand" href="{{ url('/') }}"><img src="{{asset('logo.jpeg') }}" style="width: 150px; height: 28px; object-fit:cover;" /></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
+          
+          <li class="nav-item"><a class="nav-link" href="{{ route('tatto-quotes.create') }}">Get Quote Now</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ route('customerProfile') }}">Profile</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ route('customer.logout') }}">Logout</a></li>
-          <!-- <li class="nav-item"><a class="nav-link" href="#">Queue (10)</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Appointments (5)</a></li>
-          <li class="nav-item"><a class="nav-link active" href="#">Clients</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Staff</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Reports</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Forms</a></li> -->
+          
         </ul>
         <!-- <span class="time-display ms-3">Tue Jun 24 08:09 PM IST</span> -->
       </div>
@@ -149,86 +147,103 @@
         
       </div>
       
-      <?php //echo '<pre>'; print_r($profile); echo '</pre>'; ?>
       
-      <!-- <p>VA 01234</p> -->
-      
-      <!-- <div class="unused-deposits mt-3">
-        <strong>$50 Unused Deposits</strong>
-      </div> -->
-      <!-- <div class="mt-3">
-        <button class="btn btn-custom btn-sm me-2">Call</button>
-        <button class="btn btn-custom btn-sm me-2">Message</button>
-        <button class="btn btn-custom btn-sm">Email</button>
-      </div> -->
     </div>
     <div class="profile-info">
       <h4 class="mb-4">Client Information</h4>
-      <form>
+      @if (Session::has('msg'))
+          <p class="alert alert-success">{{ Session::get('msg') }}</p>
+      @endif
+      <form method="POST" action="{{ route('customerProfile.update') }}" enctype="multipart/form-data">
+        @csrf
         <div class="row mb-3">
           <div class="col-md-6">
             @php $exp_name = explode(' ', $profile->name); @endphp
             <label class="form-label">First Name</label>
-            <input type="text" class="form-control" value="{{ $exp_name[0] }}">
+            <input type="text" name="firstname" class="form-control" value="{{ $exp_name[0] }}" readonly>
           </div>
           <div class="col-md-6">
             <label class="form-label">Last Name</label>
-            <input type="text" class="form-control" value="{{ $exp_name[1] }}">
+            <input type="text" name="lastname" class="form-control" value="{{ $exp_name[1] }}" readonly>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label">State / Province</label>
-            <input type="text" class="form-control" value="{{ $profile->state }}">
+            <input type="text" name="state" class="form-control" value="{{ $profile->state }}">
           </div>
           <div class="col-md-6">
             <label class="form-label">Zip / Postal Code</label>
-            <input type="text" class="form-control" value="{{ $profile->zipcode }}">
+            <input type="text" name="zipcode" class="form-control" value="{{ $profile->zipcode }}">
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label">Phone</label>
-            <input type="text" class="form-control" value="{{ $profile->phone }}">
+            <input type="text" name="mobile_number" id="mobile_number" class="form-control" value="{{ $profile->phone }}" placeholder="(999) 999-9999">
           </div>
           <div class="col-md-6">
             <label class="form-label">Email</label>
-            <input type="email" class="form-control" value="{{ $profile->email }}">
+            <input type="email" class="form-control" value="{{ $profile->email }}" readonly disabled>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label">Sex</label>
-            <input type="text" class="form-control" value="{{ $profile->sex }}">
+            <input type="text" class="form-control" value="{{ $profile->sex }}" readonly>
           </div>
           <div class="col-md-6">
             <label class="form-label">Date of Birth</label>
-            <input type="text" class="form-control" value="{{ $dob }}">
+            <input type="text" class="form-control" value="{{ $dob }}" readonly>
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label">Lead Source</label>
-            <input type="text" class="form-control" value="{{ $lead_name }}">
+            <input type="text" class="form-control" value="{{ $lead_name }}" readonly>
           </div>
           @if(!empty($profile->other_lead_source))
           <div class="col-md-6">
             <label class="form-label">Other Lead Source</label>
-            <input type="text" class="form-control" value="{{ $profile->other_lead_source }}">
+            <input type="text" class="form-control" value="{{ $profile->other_lead_source }}" readonly>
           </div>
           @endif
         </div>
+        <button type="submit" class="btn btn-primary" name="Update">Update</button>
       </form>
-      <!-- <h4 class="mb-3">Release Forms</h4>
-      <button class="btn btn-custom btn-sm">New Form</button>
-      <h4 class="mb-3">Appointments</h4>
-      <button class="btn btn-custom btn-sm">New Appointment</button>
-      <h4 class="mb-3">Notes</h4>
-      <button class="btn btn-custom btn-sm">New Note</button> -->
+      
     </div>
   </div>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script type="text/javascript">
+    // Mobile number formatting
+    document.getElementById('mobile_number').addEventListener('input', function(e) {
+        // Remove all non-digit characters
+        let phoneNumber = e.target.value.replace(/\D/g, '');
+        
+        // Format the phone number
+        if (phoneNumber.length > 0) {
+            phoneNumber = '(' + phoneNumber.substring(0, 3) + ') ' + phoneNumber.substring(3, 6) + '-' + phoneNumber.substring(6, 10);
+        }
+        
+        // Update the input value
+        e.target.value = phoneNumber;
+        
+        // Store the raw numbers in a data attribute
+        const rawNumber = e.target.value.replace(/\D/g, '');
+        e.target.setAttribute('data-raw-value', rawNumber);
+    });
+
+    // Before form submission, update the value with raw numbers
+    // document.querySelector('form').addEventListener('submit', function(e) {
+    //     const mobileInput = document.getElementById('mobile_number');
+    //     const rawValue = mobileInput.getAttribute('data-raw-value') || mobileInput.value.replace(/\D/g, '');
+    //     mobileInput.value = rawValue;
+    // });
+  </script>
 </body>
 </html>
