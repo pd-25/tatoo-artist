@@ -89,7 +89,7 @@ class CustomersController extends Controller
         // echo '<pre>'; print_r($customerInfo); echo '</pre>';
         // exit;
         $mailsubject = 'Welcome to TattooMe – Your Ink Journey Starts Here';
-        $customer_name = $request->firstname . ' ' . $request->firstname;
+        $customer_name = $request->firstname . ' ' . $request->lastname;
         $store = $this->customersInterface->storeCustomerData($data);
         if ($store) {
             try {
