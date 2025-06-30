@@ -67,7 +67,7 @@
                                 </div>
 
                                 <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Sign in</button>
-                                <a href="{{ route('customer.forgetPassword') }}">Forget password?</a>
+                                <a href="{{ route('customer.forgetPassword') }}">Forgot password?</a>
                                 <center><a href="{{ route('customers.create') }}">Create Account</a></center>
 
 
