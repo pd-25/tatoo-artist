@@ -78,7 +78,7 @@
 
   <div class="container mt-4">
     <div class="profile-header">
-      <div class="row">
+      <div class="row p-4 align-items-center">
         <div class="col-md-3">
           @if (!empty($profile->profile_image) && File::exists(public_path('storage/ProfileImage/' . $profile->profile_image)))
             <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%" src="{{ asset('storage/ProfileImage/'.$profile->profile_image) }}" alt="">
