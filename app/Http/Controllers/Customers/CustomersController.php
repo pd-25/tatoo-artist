@@ -55,7 +55,7 @@ class CustomersController extends Controller
                 'email' => 'required|email|unique:users',
                 'address' =>'required',
                 'customer_state' => 'required',
-                'zipcode' => 'required|digits:6|min:6|max:6',
+                'zipcode' => 'required',
                 'mobile_number' => 'required',
                 'sex' => 'required',
                 'dob' => 'date',
@@ -170,7 +170,7 @@ class CustomersController extends Controller
             [
                 'address' =>'required',
                 'state' => 'required',
-                'zipcode' => 'required|digits:6|min:6|max:6',
+                'zipcode' => 'nullable',
                 'mobile_number' => 'required',
             ],
             [

@@ -112,7 +112,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>State</label><span class="text-danger">*</span>
-                                            <input type="text" name="customer_state" id="state" value="{{ old('customer_state') }}" class="form-control" placeholder="State">
+                                            <input type="text" name="customer_state" id="state" value="{{ old('customer_state') }}" class="form-control" placeholder="State" readonly>
                                             @error('customer_state')
                                                 <span class="text-danger" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -123,7 +123,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Zip Code</label><span class="text-danger">*</span>
-                                            <input type="text" name="zipcode" value="{{ old('zipcode') }}" class="form-control" placeholder="Zip Code">
+                                            <input type="text" name="zipcode" value="{{ old('zipcode') }}" class="form-control" placeholder="Zip Code" id="zipcode" readonly>
                                             @error('zipcode')
                                                 <span class="text-danger" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -261,11 +261,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        flatpickr(".flatpickr", {
-            dateFormat: "m-d-Y", // Customize the date format
-            allowInput: true, // Allow manual input
-        });
+    flatpickr(".flatpickr", {
+        dateFormat: "m-d-Y",
+        allowInput: true,
+        maxDate: new Date(new Date().setFullYear(new Date().getFullYear() - 13)),
+        minDate: new Date(new Date().setFullYear(new Date().getFullYear() - 100)),
+        defaultDate: new Date(new Date().setFullYear(new Date().getFullYear() - 25))
     });
+});
 
     // Mobile number formatting
     document.getElementById('mobile_number').addEventListener('input', function(e) {

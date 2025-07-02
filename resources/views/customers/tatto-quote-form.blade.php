@@ -170,13 +170,13 @@
 
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url('/') }}"><img src="{{asset('logo.jpeg') }}" style="width: 150px; height: 28px; object-fit:cover;" /></a>
+      <a class="navbar-brand" href="#"><img src="{{asset('logo.jpeg') }}" style="width: 150px; height: 28px; object-fit:cover;" /></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item" style="color:#fff;"><a class="nav-link" href="{{ route('tatto-quotes.create') }}">Get Quote Now</a></li>
+          {{-- <li class="nav-item" style="color:#fff;"><a class="nav-link" href="{{ route('tatto-quotes.create') }}">Get Quote Now</a></li> --}}
           <li class="nav-item"><a class="nav-link" href="{{ route('customerProfile') }}">Profile</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ route('customer.logout') }}">Logout</a></li>
           <!-- 

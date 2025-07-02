@@ -33,7 +33,7 @@
 	    </div>
 		<div class="section">
 			<p>Hi {{ $userdata }}</p>
-			<p><a href="{{ url('/') }}/{{ route('customerReset.password') }}"><strong>Click Here</strong></a></p>
+			<p><a href="{{ route('customerReset.password') }}"><strong>Click Here</strong></a></p>
 		</div>
 	</body>
 </html>

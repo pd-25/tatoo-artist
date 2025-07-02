@@ -1,44 +1,4 @@
-
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
   <meta charset="UTF-8">
@@ -50,6 +10,15 @@
     body {
       background-color: #f4f6f9;
       font-family: 'Arial', sans-serif;
+    }
+    input[readonly] {
+      background-color: #f8f9fa;
+      border-color: #ced4da;
+      color: #495057;
+      cursor: not-allowed;
+    }
+    input:disabled {
+      background-color: #e9ecef;
     }
     .navbar {
       background-color: #2c3e50;
@@ -74,15 +43,6 @@
       border-radius: 0 0 15px 15px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    .profile-header h2 {
-      margin-bottom: 0.5rem;
-    }
-    .unused-deposits {
-      background-color: rgba(255, 255, 255, 0.2);
-      padding: 0.75rem;
-      border-radius: 10px;
-      display: inline-block;
-    }
     .profile-info {
       background-color: #ffffff;
       padding: 2rem;
@@ -101,274 +61,184 @@
     .btn-custom:hover {
       background-color: #2980b9;
     }
-    .time-display {
-      color: #ecf0f1;
-      font-size: 0.9rem;
-    }
   </style>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url('/') }}"><img src="{{asset('logo.jpeg') }}" style="width: 150px; height: 28px; object-fit:cover;" /></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+      <a class="navbar-brand" href="#"><img src="{{asset('logo.jpeg') }}" style="width: 150px; height: 28px; object-fit:cover;" /></a>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          
-          <li class="nav-item"><a class="nav-link" href="{{ route('tatto-quotes.create') }}">Get Quote Now</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ route('customerProfile') }}">Profile</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ route('customer.logout') }}">Logout</a></li>
-          
         </ul>
-        <!-- <span class="time-display ms-3">Tue Jun 24 08:09 PM IST</span> -->
       </div>
     </div>
   </nav>
 
   <div class="container mt-4">
     <div class="profile-header">
-      <div class="row mb-6">
+      <div class="row">
         <div class="col-md-3">
           @if (!empty($profile->profile_image) && File::exists(public_path('storage/ProfileImage/' . $profile->profile_image)))
-          <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%" src="{{ asset('storage/ProfileImage/'.$profile->profile_image) }}" alt="">
-              
+            <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%" src="{{ asset('storage/ProfileImage/'.$profile->profile_image) }}" alt="">
           @else
-          <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%" src="{{asset('noimg.png') }}" alt="">
-              
+            <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%" src="{{asset('noimg.png') }}" alt="">
           @endif
         </div>
         <div class="col-md-6 text-center">
           <h2>{{ $profile->name }}</h2>
-          <p>{{ $profile->phone }}</p>
-          <p>{{ $profile->email }}</p>
+          {{-- <p>{{ $profile->username }}</p> --}}
         </div>
-        
       </div>
-      
-      
     </div>
+
     <div class="profile-info">
       <h4 class="mb-4">Client Information</h4>
       @if (Session::has('msg'))
-          <p class="alert alert-success">{{ Session::get('msg') }}</p>
+        <p class="alert alert-success">{{ Session::get('msg') }}</p>
       @endif
       <form method="POST" action="{{ route('customerProfile.update') }}" enctype="multipart/form-data">
         @csrf
         <div class="row mb-3">
-          <div class="col-md-6">
+          <div class="col-md-4">
+            <label class="form-label">User Name</label>
+            <input type="text" class="form-control" value="{{ $profile->username }}" readonly>
+          </div>
+          
+          <div class="col-md-4">
             @php $exp_name = explode(' ', $profile->name); @endphp
             <label class="form-label">First Name</label>
             <input type="text" name="firstname" class="form-control" value="{{ $exp_name[0] }}" readonly>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="form-label">Last Name</label>
-            <input type="text" name="lastname" class="form-control" value="{{ $exp_name[1] }}" readonly>
+            <input type="text" name="lastname" class="form-control" value="{{ $exp_name[1] ?? '' }}" readonly>
           </div>
         </div>
+
         <div class="row mb-3">
           <div class="col-md-12">
             <label class="form-label">Main Address</label>
-            <input type="text" class="form-control" placeholder="address" name="address" id="autocomplete" value="{{ $profile->address }}"> 
-            <input type="hidden" name="latitude" id="latitude">    
-            <input type="hidden" name="longitude" id="longitude"> 
+            <input type="text" class="form-control" name="address" id="autocomplete" value="{{ $profile->address }}">
+            <input type="hidden" name="latitude" id="latitude">
+            <input type="hidden" name="longitude" id="longitude">
             @error('address')
-                <span class="text-danger" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror 
+              <span class="text-danger"><strong>{{ $message }}</strong></span>
+            @enderror
           </div>
         </div>
+
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label">State / Province</label>
-            <input type="text" name="state" id="state" class="form-control" value="{{ $profile->state }}">
-            @error('state')
-                <span class="text-danger" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
+            <input type="text" name="state" id="state" class="form-control" value="{{ $profile->state }}" readonly>
           </div>
           <div class="col-md-6">
             <label class="form-label">Zip / Postal Code</label>
-            <input type="text" name="zipcode" class="form-control" value="{{ $profile->zipcode }}">
-            @error('zipcode')
-                <span class="text-danger" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
+            <input type="text" id="zipcode" name="zipcode" class="form-control" value="{{ $profile->zipcode }}" readonly>
           </div>
         </div>
+
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label">Phone</label>
-            <input type="text" name="mobile_number" id="mobile_number" class="form-control" value="{{ $profile->phone }}" placeholder="(999) 999-9999">
-            @error('mobile_number')
-                <span class="text-danger" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror
+            @php
+              $rawPhone = preg_replace('/\D/', '', $profile->phone);
+              $formattedPhone = strlen($rawPhone) === 10 ? '(' . substr($rawPhone, 0, 3) . ') ' . substr($rawPhone, 3, 4) . '-' . substr($rawPhone, 7) : $rawPhone;
+            @endphp
+            <input type="text" name="mobile_number" id="mobile_number" class="form-control" value="{{ $formattedPhone }}" placeholder="(999) 9999-999">
           </div>
           <div class="col-md-6">
             <label class="form-label">Email</label>
             <input type="email" class="form-control" value="{{ $profile->email }}" readonly disabled>
           </div>
         </div>
+
         <div class="row mb-3">
-          <div class="col-md-6">
-            <label class="form-label">Sex</label>
-            <input type="text" class="form-control" value="{{ $profile->sex }}" readonly>
-          </div>
-          <div class="col-md-6">
+           <div class="col-md-4">
             <label class="form-label">Date of Birth</label>
             <input type="text" class="form-control" value="{{ $dob }}" readonly>
           </div>
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-md-6">
+          <div class="col-md-4">
+            <label class="form-label">Sex</label>
+            <input type="text" class="form-control" value="{{ $profile->sex }}" readonly>
+          </div>
+          <div class="col-md-4">
             <label class="form-label">Lead Source</label>
             <input type="text" class="form-control" value="{{ $lead_name }}" readonly>
           </div>
           @if(!empty($profile->other_lead_source))
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="form-label">Other Lead Source</label>
             <input type="text" class="form-control" value="{{ $profile->other_lead_source }}" readonly>
           </div>
           @endif
         </div>
+
         <button type="submit" class="btn btn-primary" name="Update">Update</button>
       </form>
-      
     </div>
   </div>
 
+  <!-- Scripts -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script type="text/javascript">
-    // Mobile number formatting
-    document.getElementById('mobile_number').addEventListener('input', function(e) {
-        // Remove all non-digit characters
-        let phoneNumber = e.target.value.replace(/\D/g, '');
-        
-        // Format the phone number
-        if (phoneNumber.length > 0) {
-            phoneNumber = '(' + phoneNumber.substring(0, 3) + ') ' + phoneNumber.substring(3, 6) + '-' + phoneNumber.substring(6, 10);
-        }
-        
-        // Update the input value
-        e.target.value = phoneNumber;
-        
-        // Store the raw numbers in a data attribute
-        const rawNumber = e.target.value.replace(/\D/g, '');
-        e.target.setAttribute('data-raw-value', rawNumber);
+  <!-- Format mobile input as (999) 9999-999 -->
+  <script>
+    document.getElementById('mobile_number').addEventListener('input', function (e) {
+      let input = e.target.value.replace(/\D/g, '').substring(0, 10);
+      let formatted = '';
+      if (input.length > 0) {
+        formatted += '(' + input.substring(0, 3) + ') ';
+      }
+      if (input.length > 3) {
+        formatted += input.substring(3, 7);
+      }
+      if (input.length > 7) {
+        formatted += '-' + input.substring(7);
+      }
+      e.target.value = formatted;
+      e.target.setAttribute('data-raw-value', input);
     });
 
-    // Before form submission, update the value with raw numbers
-    // document.querySelector('form').addEventListener('submit', function(e) {
-    //     const mobileInput = document.getElementById('mobile_number');
-    //     const rawValue = mobileInput.getAttribute('data-raw-value') || mobileInput.value.replace(/\D/g, '');
-    //     mobileInput.value = rawValue;
-    // });
+    document.querySelector('form').addEventListener('submit', function(e) {
+      const mobileInput = document.getElementById('mobile_number');
+      const raw = mobileInput.getAttribute('data-raw-value') || mobileInput.value.replace(/\D/g, '');
+      mobileInput.value = raw;
+    });
   </script>
 
-<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAE6dk-Oc544R2gZpwVqPQDhN0VGAjkxhw&loading=async&libraries=places&callback=initAutocomplete"></script>
+  <!-- Google Maps Autocomplete -->
+  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAE6dk-Oc544R2gZpwVqPQDhN0VGAjkxhw&libraries=places&callback=initAutocomplete"></script>
+  <script>
+    function initAutocomplete() {
+      var input = document.getElementById('autocomplete');
+      var autocomplete = new google.maps.places.Autocomplete(input, {
+        types: ['address'],
+        componentRestrictions: { country: 'us' }
+      });
 
+      autocomplete.addListener('place_changed', function () {
+        var place = autocomplete.getPlace();
+        if (!place.geometry) return;
 
-        <script>
-            // Function to initialize the autocomplete
-            function initAutocomplete() {
-                // Create the autocomplete object, restricting the search to the US
-                var input = $('#autocomplete')[0];
-                var options = {
-                    types: ['address'],
-                    componentRestrictions: {
-                        country: 'us'
-                    }
-                };
-                var autocomplete = new google.maps.places.Autocomplete(input, options);
-        
-                // Event listener for when a place is selected
-                autocomplete.addListener('place_changed', function() {
-                    var place = autocomplete.getPlace();
-                    if (!place.geometry) {
-                        console.log("No details available for input: '" + place.name + "'");
-                        return;
-                    }
-        
-                    // Extracting address components
-                    var addressComponents = place.address_components;
-                    var country = '';
-                    var state = '';
-                    var city = '';
-                    var zipCode = '';
-                    var streetNumber = '';
-                    var route = '';  // To store the street name
-                    
+        let address = {
+          state: '', zip: '', lat: '', lng: ''
+        };
 
-                    // Loop through each component to find country, state, city, zip code, and route
-                    $.each(addressComponents, function(index, component) {
-                        var componentType = component.types[0];
-                        if (componentType === 'country') {
-                            country = component.long_name;
-                        } else if (componentType === 'administrative_area_level_1') {
-                            state = component.long_name;
-                        } else if (componentType === 'locality') {
-                            city = component.long_name;
-                        } else if (componentType === 'postal_code') {
-                            zipCode = component.long_name;
-                        } else if (componentType === 'street_number') {
-                            streetNumber = component.long_name; // Get street number
-                        } else if (componentType === 'route') {
-                            route = component.long_name; // Get route name
-                        }
-                    });
+        place.address_components.forEach(function (comp) {
+          if (comp.types.includes('administrative_area_level_1')) address.state = comp.long_name;
+          if (comp.types.includes('postal_code')) address.zip = comp.long_name;
+        });
 
-                    // Combine street number and route
-                    if (streetNumber && route) {
-                        route = streetNumber + ' ' + route;
-                    }
-
-        
-                    // Extract latitude and longitude
-                    var latitude = place.geometry.location.lat();
-                    var longitude = place.geometry.location.lng();
-        
-                    // Fill in the form fields with the extracted values
-                    if (country.length > 0) {
-                        $("#country").val(country);
-                    }
-        
-                    if (state.length > 0) {
-                        $("#state").val(state);
-                    }
-        
-                    if (city.length > 0) {
-                        $("#city").val(city);
-                    }
-        
-                    if (zipCode.length > 0) {
-                        $("#zipcode").val(zipCode);
-                    }
-        
-                    $("#latitude").val(latitude);
-                    $("#longitude").val(longitude);
-                    
-                    // Set only the route name as the shop address
-                    $("#shop_address").val(route);
-        
-                    // Display the extracted address components
-                    console.log('Country:', country);
-                    console.log('State:', state);
-                    console.log('City:', city);
-                    console.log('Zip Code:', zipCode);
-                    console.log('Route (Shop Address):', route);
-                    console.log('Latitude:', latitude);
-                    console.log('Longitude:', longitude);
-                });
-            }
-        </script>
+        document.getElementById('state').value = address.state;
+        document.getElementById('zipcode').value = address.zip;
+        document.getElementById('latitude').value = place.geometry.location.lat();
+        document.getElementById('longitude').value = place.geometry.location.lng();
+      });
+    }
+  </script>
 </body>
 </html>
