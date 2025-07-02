@@ -168,19 +168,47 @@
           </div>
         </div>
         <div class="row mb-3">
+          <div class="col-md-12">
+            <label class="form-label">Main Address</label>
+            <input type="text" class="form-control" placeholder="address" name="address" id="autocomplete" value="{{ $profile->address }}"> 
+            <input type="hidden" name="latitude" id="latitude">    
+            <input type="hidden" name="longitude" id="longitude"> 
+            @error('address')
+                <span class="text-danger" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror 
+          </div>
+        </div>
+        <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label">State / Province</label>
-            <input type="text" name="state" class="form-control" value="{{ $profile->state }}">
+            <input type="text" name="state" id="state" class="form-control" value="{{ $profile->state }}">
+            @error('state')
+                <span class="text-danger" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
           </div>
           <div class="col-md-6">
             <label class="form-label">Zip / Postal Code</label>
             <input type="text" name="zipcode" class="form-control" value="{{ $profile->zipcode }}">
+            @error('zipcode')
+                <span class="text-danger" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label">Phone</label>
             <input type="text" name="mobile_number" id="mobile_number" class="form-control" value="{{ $profile->phone }}" placeholder="(999) 999-9999">
+            @error('mobile_number')
+                <span class="text-danger" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
           </div>
           <div class="col-md-6">
             <label class="form-label">Email</label>
@@ -245,5 +273,102 @@
     //     mobileInput.value = rawValue;
     // });
   </script>
+
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAE6dk-Oc544R2gZpwVqPQDhN0VGAjkxhw&loading=async&libraries=places&callback=initAutocomplete"></script>
+
+
+        <script>
+            // Function to initialize the autocomplete
+            function initAutocomplete() {
+                // Create the autocomplete object, restricting the search to the US
+                var input = $('#autocomplete')[0];
+                var options = {
+                    types: ['address'],
+                    componentRestrictions: {
+                        country: 'us'
+                    }
+                };
+                var autocomplete = new google.maps.places.Autocomplete(input, options);
+        
+                // Event listener for when a place is selected
+                autocomplete.addListener('place_changed', function() {
+                    var place = autocomplete.getPlace();
+                    if (!place.geometry) {
+                        console.log("No details available for input: '" + place.name + "'");
+                        return;
+                    }
+        
+                    // Extracting address components
+                    var addressComponents = place.address_components;
+                    var country = '';
+                    var state = '';
+                    var city = '';
+                    var zipCode = '';
+                    var streetNumber = '';
+                    var route = '';  // To store the street name
+                    
+
+                    // Loop through each component to find country, state, city, zip code, and route
+                    $.each(addressComponents, function(index, component) {
+                        var componentType = component.types[0];
+                        if (componentType === 'country') {
+                            country = component.long_name;
+                        } else if (componentType === 'administrative_area_level_1') {
+                            state = component.long_name;
+                        } else if (componentType === 'locality') {
+                            city = component.long_name;
+                        } else if (componentType === 'postal_code') {
+                            zipCode = component.long_name;
+                        } else if (componentType === 'street_number') {
+                            streetNumber = component.long_name; // Get street number
+                        } else if (componentType === 'route') {
+                            route = component.long_name; // Get route name
+                        }
+                    });
+
+                    // Combine street number and route
+                    if (streetNumber && route) {
+                        route = streetNumber + ' ' + route;
+                    }
+
+        
+                    // Extract latitude and longitude
+                    var latitude = place.geometry.location.lat();
+                    var longitude = place.geometry.location.lng();
+        
+                    // Fill in the form fields with the extracted values
+                    if (country.length > 0) {
+                        $("#country").val(country);
+                    }
+        
+                    if (state.length > 0) {
+                        $("#state").val(state);
+                    }
+        
+                    if (city.length > 0) {
+                        $("#city").val(city);
+                    }
+        
+                    if (zipCode.length > 0) {
+                        $("#zipcode").val(zipCode);
+                    }
+        
+                    $("#latitude").val(latitude);
+                    $("#longitude").val(longitude);
+                    
+                    // Set only the route name as the shop address
+                    $("#shop_address").val(route);
+        
+                    // Display the extracted address components
+                    console.log('Country:', country);
+                    console.log('State:', state);
+                    console.log('City:', city);
+                    console.log('Zip Code:', zipCode);
+                    console.log('Route (Shop Address):', route);
+                    console.log('Latitude:', latitude);
+                    console.log('Longitude:', longitude);
+                });
+            }
+        </script>
 </body>
 </html>

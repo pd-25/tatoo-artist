@@ -53,8 +53,9 @@ class CustomersController extends Controller
                 'lastname' => 'required|string',
                 'username' => 'required|string|unique:users',
                 'email' => 'required|email|unique:users',
+                'address' =>'required',
                 'customer_state' => 'required',
-                'zipcode' => 'required',
+                'zipcode' => 'required|digits:6|min:6|max:6',
                 'mobile_number' => 'required',
                 'sex' => 'required',
                 'dob' => 'date',
@@ -69,6 +70,7 @@ class CustomersController extends Controller
                 'lastname.required' => 'Last Name is required.',
                 'username.required' => 'Username is required.',
                 'email.required' => 'Email is required.',
+                'address.required' => 'Address field is required',
                 'customer_state.required' => 'State is required.',
                 'zipcode.required' => 'Zipcode is required.',
                 'mobile_number.required' => 'Mobile number is required.',
@@ -83,7 +85,7 @@ class CustomersController extends Controller
             ]
         );
 
-        $data = $request->only('firstname', 'lastname', 'username', 'email', 'customer_state', 'zipcode', 'mobile_number', 'password', 'profile_image', 'sex',  'dob', 'lead_source', 'other_lead_source');
+        $data = $request->only('firstname', 'lastname', 'username', 'email', 'address', 'latitude', 'longitude', 'customer_state', 'zipcode', 'mobile_number', 'password', 'profile_image', 'sex',  'dob', 'lead_source', 'other_lead_source');
         //$customerInfo = $request->only('sex',  'dob', 'lead_source');
         // echo '<pre>'; print_r($data); echo '</pre>';
         // echo '<pre>'; print_r($customerInfo); echo '</pre>';
@@ -164,8 +166,23 @@ class CustomersController extends Controller
 
     public function updateCustomerProfile(Request $request){
         $sess_email = session()->get('cust_email');
-        //dd($request->all());
+        $request->validate(
+            [
+                'address' =>'required',
+                'state' => 'required',
+                'zipcode' => 'required|digits:6|min:6|max:6',
+                'mobile_number' => 'required',
+            ],
+            [
+                'address.required' => 'Address field is required',
+                'state.required' => 'State is required.',
+                'zipcode.required' => 'Zipcode is required.',
+                'mobile_number.required' => 'Mobile number is required.',
+            ]);
         $update = User::where('email', $sess_email)->update([
+            'address' => $request->address,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
             'state' => $request->state,
             'zipcode' => $request->zipcode,
             'phone' => $request->mobile_number,
