@@ -96,34 +96,45 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label>Main Address</label>
-                                    <input type="text" class="form-control" placeholder="address" name="address" id="autocomplete"> 
-                                    <input type="hidden" name="latitude" id="latitude">    
-                                    <input type="hidden" name="longitude" id="longitude">    
-                                    @error('address')
-                                        <span class="text-danger" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-
+                               
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>State</label><span class="text-danger">*</span>
-                                            <input type="text" name="customer_state" id="state" value="{{ old('customer_state') }}" class="form-control" placeholder="State" readonly>
-                                            @error('customer_state')
-                                                <span class="text-danger" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
+                                          <select name="customer_state" id="state" class="form-control">
+    <option value="">Select State</option>
+    @php
+        $states = [
+            'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
+            'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho',
+            'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
+            'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+            'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada',
+            'New Hampshire', 'New Jersey', 'New Mexico', 'New York',
+            'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
+            'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
+            'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington',
+            'West Virginia', 'Wisconsin', 'Wyoming'
+        ];
+    @endphp
+    @foreach ($states as $state)
+        <option value="{{ $state }}" {{ old('customer_state') == $state ? 'selected' : '' }}>
+            {{ $state }}
+        </option>
+    @endforeach
+</select>
+@error('customer_state')
+    <span class="text-danger" role="alert">
+        <strong>{{ $message }}</strong>
+    </span>
+@enderror
+
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Zip Code</label><span class="text-danger">*</span>
-                                            <input type="text" name="zipcode" value="{{ old('zipcode') }}" class="form-control" placeholder="Zip Code" id="zipcode" readonly>
+                                            <input type="text" name="zipcode" value="{{ old('zipcode') }}" class="form-control" placeholder="Zip Code" id="zipcode" >
                                             @error('zipcode')
                                                 <span class="text-danger" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -248,7 +259,7 @@
                                 
 
                                 <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Register</button>
-                                <center><span style="color:blue;">Already have account?</span><a href="{{ route('customerLogin') }}"> Sign In</a></center>
+                                <span style="color:blue;">Already have account?</span><a href="{{ route('customerLogin') }}"> Sign In</a>
 
                             </form>
                         </div>
@@ -326,106 +337,6 @@
         }
     }
     </script>
-
-    <!-- Include Inputmask from CDN -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
-<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAE6dk-Oc544R2gZpwVqPQDhN0VGAjkxhw&loading=async&libraries=places&callback=initAutocomplete"></script>
-
-
-        <script>
-            // Function to initialize the autocomplete
-            function initAutocomplete() {
-                // Create the autocomplete object, restricting the search to the US
-                var input = $('#autocomplete')[0];
-                var options = {
-                    types: ['address'],
-                    componentRestrictions: {
-                        country: 'us'
-                    }
-                };
-                var autocomplete = new google.maps.places.Autocomplete(input, options);
-        
-                // Event listener for when a place is selected
-                autocomplete.addListener('place_changed', function() {
-                    var place = autocomplete.getPlace();
-                    if (!place.geometry) {
-                        console.log("No details available for input: '" + place.name + "'");
-                        return;
-                    }
-        
-                    // Extracting address components
-                    var addressComponents = place.address_components;
-                    var country = '';
-                    var state = '';
-                    var city = '';
-                    var zipCode = '';
-                    var streetNumber = '';
-                    var route = '';  // To store the street name
-                    
-
-                    // Loop through each component to find country, state, city, zip code, and route
-                    $.each(addressComponents, function(index, component) {
-                        var componentType = component.types[0];
-                        if (componentType === 'country') {
-                            country = component.long_name;
-                        } else if (componentType === 'administrative_area_level_1') {
-                            state = component.long_name;
-                        } else if (componentType === 'locality') {
-                            city = component.long_name;
-                        } else if (componentType === 'postal_code') {
-                            zipCode = component.long_name;
-                        } else if (componentType === 'street_number') {
-                            streetNumber = component.long_name; // Get street number
-                        } else if (componentType === 'route') {
-                            route = component.long_name; // Get route name
-                        }
-                    });
-
-                    // Combine street number and route
-                    if (streetNumber && route) {
-                        route = streetNumber + ' ' + route;
-                    }
-
-        
-                    // Extract latitude and longitude
-                    var latitude = place.geometry.location.lat();
-                    var longitude = place.geometry.location.lng();
-        
-                    // Fill in the form fields with the extracted values
-                    if (country.length > 0) {
-                        $("#country").val(country);
-                    }
-        
-                    if (state.length > 0) {
-                        $("#state").val(state);
-                    }
-        
-                    if (city.length > 0) {
-                        $("#city").val(city);
-                    }
-        
-                    if (zipCode.length > 0) {
-                        $("#zipcode").val(zipCode);
-                    }
-        
-                    $("#latitude").val(latitude);
-                    $("#longitude").val(longitude);
-                    
-                    // Set only the route name as the shop address
-                    $("#shop_address").val(route);
-        
-                    // Display the extracted address components
-                    console.log('Country:', country);
-                    console.log('State:', state);
-                    console.log('City:', city);
-                    console.log('Zip Code:', zipCode);
-                    console.log('Route (Shop Address):', route);
-                    console.log('Latitude:', latitude);
-                    console.log('Longitude:', longitude);
-                });
-            }
-        </script>
 
 
 </body>

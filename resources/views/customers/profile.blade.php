@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
   <meta charset="UTF-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -11,31 +12,38 @@
       background-color: #f4f6f9;
       font-family: 'Arial', sans-serif;
     }
+
     input[readonly] {
       background-color: #f8f9fa;
       border-color: #ced4da;
       color: #495057;
       cursor: not-allowed;
     }
+
     input:disabled {
       background-color: #e9ecef;
     }
+
     .navbar {
       background-color: #2c3e50;
       padding: 1rem;
     }
+
     .navbar-brand {
       color: #ffffff;
       font-size: 1.5rem;
       font-weight: bold;
     }
+
     .nav-link {
       color: #ecf0f1 !important;
       margin: 0 1rem;
     }
+
     .nav-link:hover {
       color: #3498db !important;
     }
+
     .profile-header {
       background: linear-gradient(135deg, #3498db, #2c3e50);
       color: #ffffff;
@@ -43,6 +51,7 @@
       border-radius: 0 0 15px 15px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+
     .profile-info {
       background-color: #ffffff;
       padding: 2rem;
@@ -50,23 +59,32 @@
       margin-top: -2rem;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+
     .form-label {
       font-weight: 500;
     }
+
     .btn-custom {
       background-color: #3498db;
       color: #ffffff;
       border: none;
     }
+
     .btn-custom:hover {
       background-color: #2980b9;
     }
+
+    #profile_image {
+      display: none;
+    }
   </style>
 </head>
+
 <body>
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#"><img src="{{asset('logo.jpeg') }}" style="width: 150px; height: 28px; object-fit:cover;" /></a>
+      <a class="navbar-brand" href="#"><img src="{{asset('logo.jpeg') }}"
+          style="width: 150px; height: 28px; object-fit:cover;" /></a>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="{{ route('customerProfile') }}">Profile</a></li>
@@ -75,79 +93,148 @@
       </div>
     </div>
   </nav>
+  <form method="POST" action="{{ route('customerProfile.update') }}" enctype="multipart/form-data">
+    @csrf
+    <div class="container mt-4">
+      <div class="profile-header">
+        <div class="row p-4 align-items-center">
+          <div class="col-md-3 d-flex flex-column align-items-center">
+            @if (!empty($profile->profile_image) && File::exists(public_path('storage/ProfileImage/' . $profile->profile_image)))
+        <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%"
+          src="{{ asset('storage/ProfileImage/' . $profile->profile_image) }}" alt="">
+      @else
+        <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%" src="{{asset('noimg.png') }}"
+          alt="">
+      @endif
+            <!-- Hidden File Input -->
+            <input type="file" name="profile_image" id="profile_image" accept="image/*" style="display: none;"
+              onchange="this.form.submit();">
 
-  <div class="container mt-4">
-    <div class="profile-header">
-      <div class="row p-4 align-items-center">
-        <div class="col-md-3">
-          @if (!empty($profile->profile_image) && File::exists(public_path('storage/ProfileImage/' . $profile->profile_image)))
-            <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%" src="{{ asset('storage/ProfileImage/'.$profile->profile_image) }}" alt="">
-          @else
-            <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%" src="{{asset('noimg.png') }}" alt="">
-          @endif
-        </div>
-        <div class="col-md-6 text-center">
-          <h2>{{ $profile->name }}</h2>
-          {{-- <p>{{ $profile->username }}</p> --}}
+            <!-- Visible Button -->
+            <button type="button" class="btn btn-warning mt-2"
+              onclick="document.getElementById('profile_image').click();">
+              Update Image
+            </button>
+          </div>
+
+          <div class="col-md-6 text-center">
+            <h2>{{ $profile->name }}</h2>
+            {{-- <p>{{ $profile->username }}</p> --}}
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="profile-info">
-      <h4 class="mb-4">Client Information</h4>
-      @if (Session::has('msg'))
-        <p class="alert alert-success">{{ Session::get('msg') }}</p>
-      @endif
-      <form method="POST" action="{{ route('customerProfile.update') }}" enctype="multipart/form-data">
-        @csrf
+      <div class="profile-info">
+        <h4 class="mb-4">Client Information</h4>
+        @if (Session::has('msg'))
+      <p class="alert alert-success">{{ Session::get('msg') }}</p>
+    @endif
+
         <div class="row mb-3">
           <div class="col-md-4">
             <label class="form-label">User Name</label>
             <input type="text" class="form-control" value="{{ $profile->username }}" readonly>
           </div>
-          
+
           <div class="col-md-4">
             @php $exp_name = explode(' ', $profile->name); @endphp
             <label class="form-label">First Name</label>
-            <input type="text" name="firstname" class="form-control" value="{{ $exp_name[0] }}" readonly>
+            <input type="text" name="firstname" class="form-control" value="{{ $exp_name[0] }}" >
           </div>
           <div class="col-md-4">
             <label class="form-label">Last Name</label>
-            <input type="text" name="lastname" class="form-control" value="{{ $exp_name[1] ?? '' }}" readonly>
+            <input type="text" name="lastname" class="form-control" value="{{ $exp_name[1] ?? '' }}" >
           </div>
         </div>
 
-        <div class="row mb-3">
-          <div class="col-md-12">
-            <label class="form-label">Main Address</label>
-            <input type="text" class="form-control" name="address" id="autocomplete" value="{{ $profile->address }}">
-            <input type="hidden" name="latitude" id="latitude">
-            <input type="hidden" name="longitude" id="longitude">
-            @error('address')
-              <span class="text-danger"><strong>{{ $message }}</strong></span>
-            @enderror
-          </div>
-        </div>
+
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label">State / Province</label>
-            <input type="text" name="state" id="state" class="form-control" value="{{ $profile->state }}" readonly>
+            <select name="state" id="state" class="form-control">
+              <option value="">Select State</option>
+              @php
+        $states = [
+          'Alabama',
+          'Alaska',
+          'Arizona',
+          'Arkansas',
+          'California',
+          'Colorado',
+          'Connecticut',
+          'Delaware',
+          'Florida',
+          'Georgia',
+          'Hawaii',
+          'Idaho',
+          'Illinois',
+          'Indiana',
+          'Iowa',
+          'Kansas',
+          'Kentucky',
+          'Louisiana',
+          'Maine',
+          'Maryland',
+          'Massachusetts',
+          'Michigan',
+          'Minnesota',
+          'Mississippi',
+          'Missouri',
+          'Montana',
+          'Nebraska',
+          'Nevada',
+          'New Hampshire',
+          'New Jersey',
+          'New Mexico',
+          'New York',
+          'North Carolina',
+          'North Dakota',
+          'Ohio',
+          'Oklahoma',
+          'Oregon',
+          'Pennsylvania',
+          'Rhode Island',
+          'South Carolina',
+          'South Dakota',
+          'Tennessee',
+          'Texas',
+          'Utah',
+          'Vermont',
+          'Virginia',
+          'Washington',
+          'West Virginia',
+          'Wisconsin',
+          'Wyoming'
+        ];
+        @endphp
+              @foreach ($states as $state)
+          <option value="{{ $state }}" {{ $profile->state == $state ? 'selected' : '' }}>
+          {{ $state }}
+          </option>
+        @endforeach
+            </select>
           </div>
+
           <div class="col-md-6">
             <label class="form-label">Zip / Postal Code</label>
-            <input type="text" id="zipcode" name="zipcode" class="form-control" value="{{ $profile->zipcode }}" readonly>
+            <input type="text" id="zipcode" name="zipcode" class="form-control" value="{{ $profile->zipcode }}">
+            @error('zipcode')
+        <span class="text-danger"><strong>{{ $message }}</strong></span>
+      @enderror
           </div>
+
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label">Phone</label>
             @php
-              $rawPhone = preg_replace('/\D/', '', $profile->phone);
-              $formattedPhone = strlen($rawPhone) === 10 ? '(' . substr($rawPhone, 0, 3) . ') ' . substr($rawPhone, 3, 4) . '-' . substr($rawPhone, 7) : $rawPhone;
-            @endphp
-            <input type="text" name="mobile_number" id="mobile_number" class="form-control" value="{{ $formattedPhone }}" placeholder="(999) 9999-999">
+        $rawPhone = preg_replace('/\D/', '', $profile->phone);
+        $formattedPhone = strlen($rawPhone) === 10 ? '(' . substr($rawPhone, 0, 3) . ') ' . substr($rawPhone, 3, 4) . '-' . substr($rawPhone, 7) : $rawPhone;
+        @endphp
+            <input type="text" name="mobile_number" id="mobile_number" class="form-control"
+              value="{{ $formattedPhone }}" placeholder="(999) 9999-999">
           </div>
           <div class="col-md-6">
             <label class="form-label">Email</label>
@@ -156,30 +243,37 @@
         </div>
 
         <div class="row mb-3">
-           <div class="col-md-4">
+          <div class="col-md-4">
             <label class="form-label">Date of Birth</label>
             <input type="text" class="form-control" value="{{ $dob }}" readonly>
           </div>
           <div class="col-md-4">
             <label class="form-label">Sex</label>
-            <input type="text" class="form-control" value="{{ $profile->sex }}" readonly>
+             <select name="sex" class="form-control">
+    <option value="">Select Gender</option>
+    <option value="Male" {{ $profile->sex == 'Male' ? 'selected' : '' }}>1) Male</option>
+    <option value="Female" {{ $profile->sex == 'Female' ? 'selected' : '' }}>2) Female</option>
+    <option value="Other" {{ $profile->sex == 'Other' ? 'selected' : '' }}>3) Other</option>
+</select>
+
           </div>
           <div class="col-md-4">
             <label class="form-label">Lead Source</label>
             <input type="text" class="form-control" value="{{ $lead_name }}" readonly>
           </div>
           @if(!empty($profile->other_lead_source))
-          <div class="col-md-4">
-            <label class="form-label">Other Lead Source</label>
-            <input type="text" class="form-control" value="{{ $profile->other_lead_source }}" readonly>
-          </div>
-          @endif
+        <div class="col-md-4">
+        <label class="form-label">Other Lead Source</label>
+        <input type="text" class="form-control" value="{{ $profile->other_lead_source }}" readonly>
+        </div>
+      @endif
         </div>
 
         <button type="submit" class="btn btn-primary" name="Update">Update</button>
-      </form>
+
+      </div>
     </div>
-  </div>
+  </form>
 
   <!-- Scripts -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -203,7 +297,7 @@
       e.target.setAttribute('data-raw-value', input);
     });
 
-    document.querySelector('form').addEventListener('submit', function(e) {
+    document.querySelector('form').addEventListener('submit', function (e) {
       const mobileInput = document.getElementById('mobile_number');
       const raw = mobileInput.getAttribute('data-raw-value') || mobileInput.value.replace(/\D/g, '');
       mobileInput.value = raw;
@@ -211,7 +305,8 @@
   </script>
 
   <!-- Google Maps Autocomplete -->
-  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAE6dk-Oc544R2gZpwVqPQDhN0VGAjkxhw&libraries=places&callback=initAutocomplete"></script>
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAE6dk-Oc544R2gZpwVqPQDhN0VGAjkxhw&libraries=places&callback=initAutocomplete"></script>
   <script>
     function initAutocomplete() {
       var input = document.getElementById('autocomplete');
@@ -241,4 +336,5 @@
     }
   </script>
 </body>
+
 </html>

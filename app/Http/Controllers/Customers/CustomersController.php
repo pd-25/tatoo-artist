@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use DB;
 use Auth;
 use App\Helper\UserHelper;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -53,9 +54,9 @@ class CustomersController extends Controller
                 'lastname' => 'required|string',
                 'username' => 'required|string|unique:users',
                 'email' => 'required|email|unique:users',
-                'address' =>'required',
+                'address' =>'null',
                 'customer_state' => 'required',
-                'zipcode' => 'required',
+                'zipcode' => 'required|min:5|max:5',
                 'mobile_number' => 'required',
                 'sex' => 'required',
                 'dob' => 'date',
@@ -164,36 +165,59 @@ class CustomersController extends Controller
         }
     }
 
-    public function updateCustomerProfile(Request $request){
-        $sess_email = session()->get('cust_email');
-        $request->validate(
-            [
-                'address' =>'required',
-                'state' => 'required',
-                'zipcode' => 'nullable',
-                'mobile_number' => 'required',
-            ],
-            [
-                'address.required' => 'Address field is required',
-                'state.required' => 'State is required.',
-                'zipcode.required' => 'Zipcode is required.',
-                'mobile_number.required' => 'Mobile number is required.',
-            ]);
-        $update = User::where('email', $sess_email)->update([
-            'address' => $request->address,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'state' => $request->state,
-            'zipcode' => $request->zipcode,
-            'phone' => $request->mobile_number,
+public function updateCustomerProfile(Request $request)
+{
+    $sess_email = session()->get('cust_email');
 
-        ]);
+    $request->validate(
+        [
+            'state' => 'required',
+            'zipcode' => 'required|min:5|max:5',
+            'mobile_number' => 'required',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2000',
+            'firstname' => 'nullable',
+            'lastname' => 'nullable',
+            'sex'=>'nullable',
+        ],
+        [
+            'state.required' => 'State is required.',
+            'zipcode.required' => 'Zipcode is required.',
+            'mobile_number.required' => 'Mobile number is required.',
+        ]
+    );
 
-        if($update){
-            return redirect()->route('customerProfile')->with('msg', 'Profile updated!');
+    $user = User::where('email', $sess_email)->first();
+
+    if (!$user) {
+        return redirect()->back()->with('error', 'User not found');
+    }
+
+    // Handle image replacement
+    if ($request->hasFile('profile_image')) {
+        // Delete old image if exists
+        if (!empty($user->profile_image) && File::exists(public_path('storage/ProfileImage/' . $user->profile_image))) {
+            File::delete(public_path('storage/ProfileImage/' . $user->profile_image));
         }
 
+        // Store new image
+        $newImageName = time() . rand(1000, 9999) . '.' . $request->profile_image->getClientOriginalExtension();
+        $request->profile_image->storeAs('public/ProfileImage', $newImageName);
+        $user->profile_image = $newImageName;
     }
+
+    // Update other fields
+    $user->latitude = $request->latitude;
+    $user->longitude = $request->longitude;
+    $user->state = $request->state;
+    $user->zipcode = $request->zipcode;
+    $user->phone = $request->mobile_number;
+    $user->name =  $request->firstname.' '.$request->lastname;
+    $user->sex = $request->sex;
+
+    $user->save();
+
+    return redirect()->route('customerProfile')->with('msg', 'Profile updated!');
+}
 
     public function forgetPassword()
     {
