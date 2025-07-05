@@ -214,6 +214,9 @@
           </option>
         @endforeach
             </select>
+            @error('state')
+        <span class="text-danger"><strong>{{ $message }}</strong></span>
+      @enderror
           </div>
 
           <div class="col-md-6">
