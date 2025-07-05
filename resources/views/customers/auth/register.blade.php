@@ -134,7 +134,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Zip Code</label><span class="text-danger">*</span>
-                                            <input type="text" name="zipcode" value="{{ old('zipcode') }}" class="form-control" placeholder="Zip Code" id="zipcode" >
+                                            <input type="number" name="zipcode" value="{{ old('zipcode') }}" class="form-control" placeholder="Zip Code" id="zipcode" >
                                             @error('zipcode')
                                                 <span class="text-danger" role="alert">
                                                     <strong>{{ $message }}</strong>

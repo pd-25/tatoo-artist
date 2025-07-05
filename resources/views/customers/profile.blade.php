@@ -231,7 +231,9 @@
             <label class="form-label">Phone</label>
             @php
         $rawPhone = preg_replace('/\D/', '', $profile->phone);
-        $formattedPhone = strlen($rawPhone) === 10 ? '(' . substr($rawPhone, 0, 3) . ') ' . substr($rawPhone, 3, 4) . '-' . substr($rawPhone, 7) : $rawPhone;
+        $formattedPhone = strlen($rawPhone) === 10
+    ? '(' . substr($rawPhone, 0, 3) . ') ' . substr($rawPhone, 3, 3) . '-' . substr($rawPhone, 6)
+    : $rawPhone;
         @endphp
             <input type="text" name="mobile_number" id="mobile_number" class="form-control"
               value="{{ $formattedPhone }}" placeholder="(999) 9999-999">
@@ -284,18 +286,19 @@
     document.getElementById('mobile_number').addEventListener('input', function (e) {
       let input = e.target.value.replace(/\D/g, '').substring(0, 10);
       let formatted = '';
-      if (input.length > 0) {
-        formatted += '(' + input.substring(0, 3) + ') ';
-      }
-      if (input.length > 3) {
-        formatted += input.substring(3, 7);
-      }
-      if (input.length > 7) {
-        formatted += '-' + input.substring(7);
-      }
-      e.target.value = formatted;
-      e.target.setAttribute('data-raw-value', input);
-    });
+     if (input.length > 0) {
+    formatted += '(' + input.substring(0, 3);
+  }
+  if (input.length >= 4) {
+    formatted += ') ' + input.substring(3, 6);
+  }
+  if (input.length >= 7) {
+    formatted += '-' + input.substring(6, 10);
+  }
+
+  e.target.value = formatted;
+  e.target.setAttribute('data-raw-value', input); // Optional: store raw digits
+});
 
     document.querySelector('form').addEventListener('submit', function (e) {
       const mobileInput = document.getElementById('mobile_number');
