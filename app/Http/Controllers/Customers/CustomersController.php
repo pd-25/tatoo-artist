@@ -147,7 +147,7 @@ class CustomersController extends Controller
     {
         $sess_email = session()->get('cust_email');
         if (!empty($sess_email)) {
-            $profile = User::where('email', $sess_email)->first();
+            $profile = User::where('id', auth()->guard('customers')->user()->id)->first();
             $lead_data = LeadSource::where('id', $profile->lead_source)->first();
             // echo $lead_data->lead_source_name;
             // echo '<pre>'; print_r($lead_data); echo '</pre>';
@@ -185,13 +185,13 @@ public function updateCustomerProfile(Request $request)
             'mobile_number.required' => 'Mobile number is required.',
         ]
     );
-
-    $user = User::where('email', $sess_email)->first();
-
-    if (!$user) {
-        return redirect()->back()->with('error', 'User not found');
+    $checkIfEmailExists = User::where('email', $request->email)
+        ->where('id', '!=', auth()->guard('customers')->user()->id)
+        ->first();
+    if ($checkIfEmailExists) {
+        return redirect()->back()->with('error', 'Email already exists. Please use a different email.');
     }
-
+    $user = User::where('id', auth()->guard('customers')->user()->id)->first();
     // Handle image replacement
     if ($request->hasFile('profile_image')) {
         // Delete old image if exists
@@ -206,6 +206,7 @@ public function updateCustomerProfile(Request $request)
     }
 
     // Update other fields
+  
     $user->latitude = $request->latitude;
     $user->longitude = $request->longitude;
     $user->state = $request->state;
@@ -213,6 +214,7 @@ public function updateCustomerProfile(Request $request)
     $user->phone = $request->mobile_number;
     $user->name =  $request->firstname.' '.$request->lastname;
     $user->sex = $request->sex;
+    $user->email = $request->email;
 
     $user->save();
 
