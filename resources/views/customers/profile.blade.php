@@ -87,7 +87,7 @@
                     style="width: 150px; height: 28px; object-fit:cover;" /></a>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('customerProfile') }}">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('customerProfile') }}">Profile1</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('customer.logout') }}">Logout</a></li>
                 </ul>
             </div>
@@ -118,7 +118,7 @@
                     </div>
 
                     <div class="col-md-6 text-center">
-                      
+
                         <h2>{{ $profile->name }}</h2>
                         {{-- <p>{{ $profile->username }}</p> --}}
                     </div>
