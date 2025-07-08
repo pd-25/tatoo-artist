@@ -118,6 +118,7 @@
                     </div>
 
                     <div class="col-md-6 text-center">
+                      
                         <h2>{{ $profile->name }}</h2>
                         {{-- <p>{{ $profile->username }}</p> --}}
                     </div>

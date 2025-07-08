@@ -199,7 +199,8 @@ public function updateCustomerProfile(Request $request)
             File::delete(public_path('storage/ProfileImage/' . $user->profile_image));
         }
 
-        // Store new image
+
+        
         $newImageName = time() . rand(1000, 9999) . '.' . $request->profile_image->getClientOriginalExtension();
         $request->profile_image->storeAs('public/ProfileImage', $newImageName);
         $user->profile_image = $newImageName;
