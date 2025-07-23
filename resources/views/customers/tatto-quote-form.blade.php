@@ -570,7 +570,7 @@
       var when = $("input[name='when']:checked").val();
       var description = $("#description").val();
       var tattooZones = $("#tattooZones").val();
-      var artistID = $("#artist_id").val();
+
       //alert(size);
       if (size == '' || color == '' || budget == '' || when == '' || availability == '') {
         //alert('select size');
@@ -593,7 +593,6 @@
             budget: budget,
             when_get_tattooed: when,
             availability: availability,
-            artist_id: artistID,
             description: description,
             reference_image: photoname,
             front_back_view: tattooZones
