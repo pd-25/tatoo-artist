@@ -170,9 +170,13 @@
                                         Convert to Customer
                                     </a>
                                     @else
-                                    <a href="{{ route('artists.view-user-details', $quote->user->id) }}" class="btn btn-sm btn-success">
+                                    <!-- <a href="{{ route('artists.view-user-details', $quote->user->id) }}" class="btn btn-sm btn-success">
                                         View Profile
-                                    </a>
+                                    </a> -->
+
+                                    <button class="btn btn-sm btn-success" disabled>
+                                        View Profile
+                                    </button>
                                     @endif
                                     @endif
 
