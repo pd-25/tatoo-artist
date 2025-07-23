@@ -169,8 +169,13 @@
                                     <a href="{{ route('artists.convert-customer', $quote->user->id) }}" class="btn btn-sm btn-info">
                                         Convert to Customer
                                     </a>
+                                    @else
+                                    <a href="{{ route('artists.view-user-details', $quote->user->id) }}" class="btn btn-sm btn-success">
+                                        View Profile
+                                    </a>
                                     @endif
                                     @endif
+
 
 
 

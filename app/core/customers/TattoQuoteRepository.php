@@ -15,7 +15,7 @@ class TattoQuoteRepository implements TattoQuoteInterface
 	public function storeTattoQuoteData(array $data)
     {
     
-        $data['artist_id'] = 1;
+
         return Quote::create($data);
 
     }

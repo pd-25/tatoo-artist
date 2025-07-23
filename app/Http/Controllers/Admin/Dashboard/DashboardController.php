@@ -771,6 +771,11 @@ class DashboardController extends Controller
         return redirect()->back()->with('info', 'User is already a Customer.');
     }
 
+    public function viewUserDetails($id){
+        $user = User::findOrFail($id);
+        return view('admin.clientProfile', compact('user'));
+    }
+
     public function getWalkinArchives()
     { {
 

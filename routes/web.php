@@ -158,6 +158,7 @@ Route::get('/all-comment', [ArtworkController::class, 'allComment'])->name('admi
 
 Route::get('/walk-in', [DashboardController::class, 'getWalkIn'])->name('artists.getWalkIn');
 Route::get('/convert-to-customer/{id}', [DashboardController::class, 'convertToCustomer'])->name('artists.convert-customer');
+Route::get('/user/view/{id}', [DashboardController::class, 'viewUserDetails'])->name('artists.view-user-details');
 Route::get('/walkin-archive', [DashboardController::class, 'getWalkinArchives'])->name('artists.getWalkInArchive');
 Route::post('/quote-arcihve-move',[DashboardController::class,'qouteArchiveMove'])->name('quote.moveToArchives');
 Route::get('/quote-archive', [DashboardController::class, 'getQuoteArchives'])->name('admin.quoteArchive');
