@@ -161,24 +161,30 @@
                                 <td>{{ date('m-d-Y',strtotime( $quote->created_at)) }}</td>
 
                                 <td>
-                                    <!-- a convert to customer button -->
+                                    <!-- a convert to button -->
                                     @if ($quote->user)
-                                    @php $quote->user->refresh(); @endphp
+                                    @php
+                                    $user = $quote->user;
+                                    $hasTattoForm = \App\Models\TattoForm::where('user_id', $user->id)->exists();
+                                    $isCreatedByAuthenticatedArtist = $user->created_by == auth('artists')->id();
+                                    @endphp
 
-                                    @if (strtolower($quote->user->type) !== 'customer')
-                                    <a href="{{ route('artists.convert-customer', $quote->user->id) }}" class="btn btn-sm btn-info">
-                                        Convert to Customer
+                                    @if ($hasTattoForm)
+                                    @if ($isCreatedByAuthenticatedArtist)
+                                    <a href="{{ route('artists.view-user-details', $user->id) }}" class="btn btn-sm btn-success">
+                                        View Profile
                                     </a>
                                     @else
-                                    <!-- <a href="{{ route('artists.view-user-details', $quote->user->id) }}" class="btn btn-sm btn-success">
-                                        View Profile
-                                    </a> -->
+                                    <a href="{{ route('artists.convert-customer', $user->id) }}" class="btn btn-sm btn-info">
+                                        Convert to Customer
+                                    </a>
+                                    @endif
+                                    @endif
+                                    @endif
 
-                                    <button class="btn btn-sm btn-success" disabled>
-                                        View Profile
-                                    </button>
-                                    @endif
-                                    @endif
+
+
+
 
 
 

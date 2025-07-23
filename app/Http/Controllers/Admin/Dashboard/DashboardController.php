@@ -755,18 +755,11 @@ class DashboardController extends Controller
     {
         $user = User::findOrFail($id);
 
-        if ($user->type === 'Walk-In') {
-            $user->type = 'Customer';
-
-            // Check if admin is logged in and set created_by
             if (Auth::guard('artists')->check()) {
                 $user->created_by = Auth::guard('artists')->id();
             }
 
             $user->save();
-
-            return redirect()->back()->with('success', 'User converted to Customer.');
-        }
 
         return redirect()->back()->with('info', 'User is already a Customer.');
     }
