@@ -10,6 +10,7 @@ use DB;
 use Auth;
 use App\Helper\UserHelper;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class TattoQuoteController extends Controller
 {
@@ -31,14 +32,17 @@ class TattoQuoteController extends Controller
      */
     public function create()
     {
-        return view('customers/tatto-quote-form');
+
+        $artists = User::where('type', 'artist')->get();
+
+        return view('customers.tatto-quote-form', compact('artists'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    { 
         // $validator = Validator::make($request->all(), [
         //     'color'  => 'required',
         //     'size' => 'required',
@@ -54,6 +58,7 @@ class TattoQuoteController extends Controller
         $data = $request->only('color','size','description','artist_id','when_get_tattooed','reference_image','budget','availability','front_back_view');
         // echo '<pre>'; print_r($data); echo '</pre>';
         // exit;
+        dd($data); 
         $store = $this->tattoQuoteInterface->storeTattoQuoteData($data);
         if ($store) {
             return response()->json([

@@ -85,7 +85,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          {{-- <li class="nav-item" style="color:#fff;"><a class="nav-link" href="{{ route('tatto-quotes.create') }}">Get Quote Now</a></li> --}}
+          <li class="nav-item" style="color:#fff;"><a class="nav-link" href="{{ route('tatto-quotes.create') }}">Get Quote Now</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ route('customer.logout') }}">Logout</a></li>
           <!-- 
           <li class="nav-item"><a class="nav-link" href="#">Appointments (5)</a></li>
