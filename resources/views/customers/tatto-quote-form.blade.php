@@ -570,6 +570,7 @@
       var when = $("input[name='when']:checked").val();
       var description = $("#description").val();
       var tattooZones = $("#tattooZones").val();
+      var artist_id = $("#artist_id").val();
 
       //alert(size);
       if (size == '' || color == '' || budget == '' || when == '' || availability == '') {
@@ -595,7 +596,8 @@
             availability: availability,
             description: description,
             reference_image: photoname,
-            front_back_view: tattooZones
+            front_back_view: tattooZones,
+            artist_id: artist_id
           },
           dataType: "json"
         });

@@ -34,7 +34,6 @@ class TattoQuoteController extends Controller
     {
 
         $artists = User::where('type', 'artist')->get();
-
         return view('customers.tatto-quote-form', compact('artists'));
     }
 
@@ -54,11 +53,13 @@ class TattoQuoteController extends Controller
         //         'errors' => $validator->errors(),
         //     ]);
         // }
+// dd($request->all());
 
         $data = $request->only('color','size','description','artist_id','when_get_tattooed','reference_image','budget','availability','front_back_view');
+        $data['user_id'] = auth()->guard('customers')->id();
         // echo '<pre>'; print_r($data); echo '</pre>';
         // exit;
-        dd($data); 
+        // dd($data); 
         $store = $this->tattoQuoteInterface->storeTattoQuoteData($data);
         if ($store) {
             return response()->json([
