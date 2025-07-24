@@ -196,9 +196,9 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          {{-- <li class="nav-item" style="color:#fff;"><a class="nav-link" href="{{ route('tatto-quotes.create') }}">Get Quote Now</a></li> --}}
-          <li class="nav-item"><a class="nav-link" href="{{ route('customerProfile') }}">Profile</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ route('customer.logout') }}">Logout</a></li>
+          <li class="nav-item" style="color:#fff;"><a style="color: white;" class="nav-link" href="{{ route('tatto-quotes.create') }}">Get Quote Now</a></li>
+          <li class="nav-item"><a style="color: white;" class="nav-link" href="{{ route('customerProfile') }}">Profile</a></li>
+          <li class="nav-item"><a style="color: white;" class="nav-link" href="{{ route('customer.logout') }}">Logout</a></li>
           <!-- 
           <li class="nav-item"><a class="nav-link" href="#">Appointments (5)</a></li>
           <li class="nav-item"><a class="nav-link active" href="#">Clients</a></li>
@@ -213,7 +213,7 @@
 
   <div class="container mt-4">
     <div class="profile-header">
-      <h2 class="text-center text-info">Quote Now</h2>
+      <h2 class="text-center" style="color: white;">Quote Now</h2>
     </div>
 
     <div class="tab-content bg-dark rounded-bottom" id="quoteTabsContent" style="padding: 10px;">
@@ -288,7 +288,7 @@
 
           <!-- Description -->
           <h5 class="mt-3">Describe your tattoo idea and where you'd like it on your body.</h5>
-          <textarea class="form-control" rows="1" placeholder="Describe your text here..." name="description" id="description"></textarea>
+          <textarea class="form-control" rows="3" name="description" id="description" style="color: white;"></textarea>
 
           <!-- Next Button -->
           <div class="text-end mt-4">
