@@ -66,6 +66,7 @@ class TattoQuoteController extends Controller
                 'flag' => 1,
                 'status' => 200,
                 'msg' => 'Your Quote request is saved and sent.'
+                
             ]);
             //return redirect()->route('tatto-quotes.create')->with('msg', 'Your Quote request is save and sent.');
         } else {
