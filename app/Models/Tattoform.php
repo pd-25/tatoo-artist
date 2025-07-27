@@ -11,6 +11,7 @@ class Tattoform extends Model
     protected $table = 'tatto_form';
 
     // protected $primaryKey = 'id';
+    
 
     // protected $fillable = [
     //     'COMMENT', 'ROLE_ID', 'GROUP_ID'
