@@ -168,7 +168,7 @@
                                             <td>
                                                 <!-- a convert to button -->
                                                 @if ($quote->user)
-                                                @dd($quote->user)
+                                                {{-- @dd($quote->user) --}}
                                                     @php
                                                         $user = $quote->user;
                                                         $hasTattoForm = \App\Models\TattoForm::where(
