@@ -176,7 +176,7 @@
                                                         //     $user->id,
                                                         // )->exists();
                                                         try {
-                                                            $hasTattoForm = \App\Models\TattoForm::where('user_id', $quote->user->id)->exists();
+                                                            $hasTattoForm = \App\Models\Tattoform::where('user_id', $quote->user->id)->exists();
                                                         } catch (\Throwable $e) {
                                                             dd('Error:', $e->getMessage());
                                                         }
