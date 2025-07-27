@@ -171,10 +171,15 @@
                                                 {{-- @dd($quote->user) --}}
                                                     @php
                                                         $user = $quote->user;
-                                                        $hasTattoForm = \App\Models\TattoForm::where(
-                                                            'user_id',
-                                                            $user->id,
-                                                        )->exists();
+                                                        // $hasTattoForm = \App\Models\TattoForm::where(
+                                                        //     'user_id',
+                                                        //     $user->id,
+                                                        // )->exists();
+                                                        try {
+                                                            $hasTattoForm = \App\Models\TattoForm::where('user_id', $quote->user->id)->exists();
+                                                        } catch (\Throwable $e) {
+                                                            dd('Error:', $e->getMessage());
+                                                        }
                                                         $isCreatedByAuthenticatedArtist =
                                                             $user->created_by == auth('artists')->id();
                                                     @endphp
