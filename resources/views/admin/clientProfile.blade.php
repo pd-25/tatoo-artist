@@ -65,7 +65,7 @@
                         <div class="col-md-6">
                             @php $exp_name = explode(' ', $user->name); @endphp
                             <label class="form-label">Full Name</label>
-                            <input type="text" name="username" class="form-control" value="{{$user->name}}" readonly>
+                            <input type="text" name="username" class="form-control" value="{{$user->first_name}}" readonly>
                         </div>
 
                     </div>
@@ -118,7 +118,11 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Date of Birth</label>
-                            <input type="text" name="dob" class="form-control" value="{{ $user->dob ?? 'NA' }}" readonly>
+                            <input type="text" name="dob" class="form-control"
+                                value="{{ $user->dob ? \Carbon\Carbon::parse($user->dob)->format('d-m-Y') : 'NA' }}"
+                                readonly>
+
+
 
                         </div>
                         <div class="col-md-6">

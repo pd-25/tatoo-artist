@@ -185,7 +185,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>DOB</label><span class="text-danger">*</span>
-                                            <input type="text" name="dob" id="dob" value="{{ old('dob') }}" class="form-control flatpickr" placeholder="DOB">
+                                            <input type="date" name="dob" id="dob" value="{{ old('dob') }}" class="form-control flatpickr" placeholder="DOB">
                                             
                                             @error('dob')
                                                 <span class="text-danger" role="alert">
