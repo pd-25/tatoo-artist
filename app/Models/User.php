@@ -22,7 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'walkin',
-        'username','phone','address', 'address2', 'country','state','city','zipcode','latitude','longitude','profile_image','banner_image', 'type', 'created_by','account_hold', 'sex', 'dob', 'lead_source', 'other_lead_source'
+        'username','phone','address', 'address2', 'country','state','city','zipcode','latitude','longitude','profile_image','banner_image', 'type', 'created_by', 'coverted_date', 'note', 'account_hold', 'sex', 'dob', 'lead_source', 'other_lead_source'
     ];
 
     /**
@@ -85,5 +85,10 @@ class User extends Authenticatable
     public function expenses()
     {
         return $this->hasMany(ExpenseModel::class, 'user_id');
+    }
+
+    public function leadSource()
+    {
+        return $this->belongsTo(LeadSource::class, 'lead_source');
     }
 }

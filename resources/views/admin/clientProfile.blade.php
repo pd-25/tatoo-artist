@@ -28,6 +28,22 @@
 </style>
 <div class="row justify-content-center">
     <div class="col-lg-11 mb-4">
+        <div class="d-flex">
+            <form method="GET" action="" id="userSelectForm" class="w-100">
+                <select name="user_id" class="form-control" style="color: black; font-size: 1.5rem; font-weight: 500;" onchange="if(this.value) window.location.href=this.value;">
+                    <option value="" selected>Select to view customers</option>
+                    @foreach ($users as $u)
+                    <option
+                        value="{{ route('artists.view-user-details', $u->id) }}"
+                        @if($u->id == $user->id) @endif>
+                        {{ $u->name }} ({{ $u->email }})
+                    </option>
+                    @endforeach
+                </select>
+            </form>
+
+
+        </div>
         <form method="POST" action="" enctype="multipart/form-data">
             @csrf
             <div class="container mt-4">
@@ -47,6 +63,7 @@
                         <div class="col-md-6 text-center">
 
                             <h2 style="font-weight: bold;">{{ $user->name }}</h2>
+                            <p style="font-weight: 500; font-size: 1.42rem;">Converted as customer: {{ \Carbon\Carbon::parse($user->coverted_date)->format('d-m-Y') }}</p>
                             {{-- <p>{{ $user->username }}</p> --}}
                         </div>
                     </div>
@@ -57,25 +74,44 @@
 
 
                     <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">User Name</label>
-                            <input type="text" class="form-control" value="{{ $user->username }}" readonly>
+
+                        @php
+                        $exp_name = explode(' ', $user->name, 2);
+                        $first_name = $exp_name[0] ?? '';
+                        $last_name = $exp_name[1] ?? '';
+                        @endphp
+
+                        <div class="col-md-4">
+                            <label class="form-label">First Name</label>
+                            <input type="text" name="first_name" class="form-control" value="{{ $first_name }}" readonly>
                         </div>
 
-                        <div class="col-md-6">
-                            @php $exp_name = explode(' ', $user->name); @endphp
-                            <label class="form-label">Full Name</label>
-                            <input type="text" name="username" class="form-control" value="{{$user->first_name}}" readonly>
+                        <div class="col-md-4">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" name="last_name" class="form-control" value="{{ $last_name }}" readonly>
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <label class="form-label">User Name</label>
+                            <input type="text" class="form-control" value="{{ $user->username }}" readonly>
                         </div>
 
                     </div>
 
 
                     <div class="row mb-3">
+                        @php
+                        $formattedPhone = $user->phone
+                        ? preg_replace("/(\d{3})(\d{3})(\d{4})/", "($1) $2-$3", preg_replace('/\D/', '', $user->phone))
+                        : 'NA';
+                        @endphp
+
                         <div class="col-md-6">
                             <label class="form-label">Phone Number</label>
-                            <input type="text" name="phone" class="form-control" value="{{ $user->phone ?? 'NA' }}" readonly>
+                            <input type="text" name="phone" class="form-control" value="{{ $formattedPhone }}" readonly>
                         </div>
+
                         <div class="col-md-6">
                             <label class="form-label">Email ID</label>
                             <input type="email" name="email" class="form-control" value="{{ $user->email }}" readonly>
@@ -136,34 +172,34 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label class="form-label">Lead Source</label>
-                            <input type="text" class="form-control" value="{{ $user->lead_source ?? 'NA' }}"
+                            <input type="text" class="form-control" value="{{ $user->leadSource->lead_source_name ?? 'NA' }}"
                                 readonly>
                         </div>
 
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <label class="form-label">Other Lead Source</label>
                             <input type="text" class="form-control" value="{{ $user->other_lead_source ?? 'NA' }}"
                                 readonly>
-                        </div>
+                        </div> -->
                     </div>
 
 
 
 
                     <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Address 1</label>
+                        <div class="col-md-12">
+                            <label class="form-label">Note</label>
 
-                            <textarea name="address" id="address" rows="3" class="form-control" readonly>{{ $user->address ?? 'NA' }}</textarea>
+                            <textarea name="address" id="address" rows="4" class="form-control" readonly>{{ $user->note ?? 'NA' }}</textarea>
                         </div>
-
+<!-- 
                         <div class="col-md-6">
                             <label class="form-label">Address 2</label>
                             <textarea name="address2" id="address2" rows="3" class="form-control" readonly>{{ $user->address2 ?? 'NA' }}</textarea>
 
-                        </div>
+                        </div> -->
                     </div>
 
                 </div>

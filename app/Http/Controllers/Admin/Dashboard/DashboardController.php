@@ -753,20 +753,30 @@ class DashboardController extends Controller
 
     public function convertToCustomer($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::with('leadSource')->findOrFail($id);
 
-            if (Auth::guard('artists')->check()) {
-                $user->created_by = Auth::guard('artists')->id();
-            }
+        if (Auth::guard('artists')->check()) {
+            $user->created_by = Auth::guard('artists')->id();
+            $user->coverted_date = now();
+        }
 
-            $user->save();
+        $user->save();
 
         return redirect()->back()->with('info', 'User is already a Customer.');
     }
 
-    public function viewUserDetails($id){
+    public function viewUserDetails($id)
+    {
         $user = User::findOrFail($id);
-        return view('admin.clientProfile', compact('user'));
+
+        if (Auth::guard('artists')->check()) {
+            $artistId = Auth::guard('artists')->id();
+            $users = User::where('created_by', $artistId)->get();
+        } else {
+            $users = collect();
+        }
+
+        return view('admin.clientProfile', compact('user', 'users'));
     }
 
     public function getWalkinArchives()
