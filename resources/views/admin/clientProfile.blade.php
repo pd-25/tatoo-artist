@@ -92,10 +92,10 @@
                         </div>
 
 
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <label class="form-label">User Name</label>
                             <input type="text" class="form-control" value="{{ $user->username }}" readonly>
-                        </div>
+                        </div> --}}
 
                     </div>
 
@@ -192,12 +192,12 @@
                         <div class="col-md-12">
                             <label class="form-label">Note</label>
 
-                            <textarea name="address" id="address" rows="4" class="form-control" readonly>{{ $user->note ?? 'NA' }}</textarea>
+                            <textarea id="address" rows="4" class="form-control" readonly>{{ $user->note ?? 'NA' }}</textarea>
                         </div>
 <!-- 
                         <div class="col-md-6">
                             <label class="form-label">Address 2</label>
-                            <textarea name="address2" id="address2" rows="3" class="form-control" readonly>{{ $user->address2 ?? 'NA' }}</textarea>
+                            <textarea name="address2" id="address2" rows="3" class="form-control" readonly>{/{ $user->address2 ?? 'NA' }}</textarea>
 
                         </div> -->
                     </div>
