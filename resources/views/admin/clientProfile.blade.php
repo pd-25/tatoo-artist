@@ -63,7 +63,7 @@
                         <div class="col-md-6 text-center">
 
                             <h2 style="font-weight: bold;">{{ $user->name }}</h2>
-                            <p style="font-weight: 500; font-size: 1.42rem;">Converted as customer: {{ \Carbon\Carbon::parse($user->coverted_date)->format('d-m-Y') }}</p>
+                            <p style="font-weight: 500; font-size: 1.42rem;">Converted as customer: {{ \Carbon\Carbon::parse($user->coverted_date)->format('m-d-Y') }}</p>
                             {{-- <p>{{ $user->username }}</p> --}}
                         </div>
                     </div>
@@ -155,7 +155,7 @@
                         <div class="col-md-6">
                             <label class="form-label">Date of Birth</label>
                             <input type="text" name="dob" class="form-control"
-                                value="{{ $user->dob ? \Carbon\Carbon::parse($user->dob)->format('d-m-Y') : 'NA' }}"
+                                value="{{ $user->dob ? \Carbon\Carbon::parse($user->dob)->format('m-d-Y') : 'NA' }}"
                                 readonly>
 
 

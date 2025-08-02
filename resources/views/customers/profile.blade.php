@@ -262,7 +262,7 @@
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <label class="form-label">Date of Birth</label>
-                        <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($dob)->format('d-m-Y') }}" readonly>
+                        <input type="text" class="form-control" value="{{ \Carbon\Carbon::parse($dob)->format('m-d-Y') }}" readonly>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Sex</label>

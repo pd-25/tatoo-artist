@@ -186,10 +186,10 @@
 
                                                     @if ($hasTattoForm)
                                                         @if ($isCreatedByAuthenticatedArtist)
-                                                            <a href="{{ route('artists.view-user-details', $user->id) }}"
+                                                            <!-- <a href="{{ route('artists.view-user-details', $user->id) }}"
                                                                 class="btn btn-sm btn-success">
                                                                 View Profile
-                                                            </a>
+                                                            </a> -->
                                                         @else
                                                             <a href="{{ route('artists.convert-customer', $user->id) }}"
                                                                 class="btn btn-sm btn-info">

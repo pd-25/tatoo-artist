@@ -216,69 +216,69 @@
       <h2 class="text-center" style="color: white;">Quote Now</h2>
     </div>
 
-    <div class="tab-content bg-dark rounded-bottom" id="quoteTabsContent" style="padding: 10px;">
+    <div class="tab-content rounded-bottom" id="quoteTabsContent" style="padding: 10px; background-color: #EBF2FA;">
       <!-- TAB 1 -->
       <div class="tab-pane fade show active form-section" id="form1" role="tabpanel">
         <!-- method="POST" action="{{ route('tatto-quotes.store') }}" enctype="multipart/form-data" -->
         <form>
           @csrf
           <!-- Tattoo Size -->
-          <h5>How big would you like the tattoo?<span class="text-danger">*</span></h5>
+          <h5 style="color: #2c3e50">How big would you like the tattoo?<span class="text-danger">*</span></h5>
           <div class="row">
-            <div class="col-md-4 form-check"><input class="form-check-input" type="radio" name="size" id="credit" value=""><label class="form-check-label" for="credit">Size of a Credit Card</label></div>
-            <div class="col-md-4 form-check"><input class="form-check-input" type="radio" name="size" id="palm" value=""><label class="form-check-label" for="palm">Palm Sized</label></div>
-            <div class="col-md-4 form-check"><input class="form-check-input" type="radio" name="size" id="hand" value=""><label class="form-check-label" for="hand">Hand Sized</label></div>
-            <div class="col-md-4 form-check"><input class="form-check-input" type="radio" name="size" id="half" value=""><label class="form-check-label" for="half">Half-Sleeve or Larger</label></div>
-            <div class="col-md-4 form-check"><input class="form-check-input" type="radio" name="size" id="undecided" value=""><label class="form-check-label" for="undecided">Haven't Decided</label></div>
+            <div class="col-md-4 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="size" id="credit" value=""><label class="form-check-label" for="credit" style="color: #2c3e50">Size of a Credit Card</label></div>
+            <div class="col-md-4 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="size" id="palm" value=""><label class="form-check-label" for="palm" style="color: #2c3e50">Palm Sized</label></div>
+            <div class="col-md-4 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="size" id="hand" value=""><label class="form-check-label" for="hand" style="color: #2c3e50">Hand Sized</label></div>
+            <div class="col-md-4 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="size" id="half" value=""><label class="form-check-label" for="half" style="color: #2c3e50">Half-Sleeve or Larger</label></div>
+            <div class="col-md-4 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="size" id="undecided" value=""><label class="form-check-label" for="undecided" style="color: #2c3e50">Haven't Decided</label></div>
             <span class="text-danger" id="sizeError"></span>
           </div>
 
           <!-- Color -->
-          <h5 class="mt-3">Would you like your tattoo to have color or only black & grey ink?<span class="text-danger">*</span></h5>
+          <h5 style="color: #2c3e50" class="mt-4">Would you like your tattoo to have color or only black & grey ink?<span class="text-danger">*</span></h5>
           <div class="row">
-            <div class="col-md-3 "><input class="" type="radio" name="color" id="color" value=""><label class="" for="">Color</label></div>
-            <div class="col-md-3 "><input class="" type="radio" name="color" id="black" value=""><label class="" for="black">Black & Grey</label></div>
-            <div class="col-md-3 form-check"><input class="form-check-input" type="radio" name="color" id="notSure" value=""><label class="form-check-label" for="notSure">Haven't Decided</label></div>
+            <div class="col-md-3 "><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="color" id="color" value=""> <label class="" for="" style="color: #2c3e50"> Color</label></div>
+            <div class="col-md-3 "><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="color" id="black" value=""> <label class="" for="black" style="color: #2c3e50"> Black & Grey</label></div>
+            <div class="col-md-3 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="color" id="notSure" value=""><label class="form-check-label" for="notSure" style="color: #2c3e50">Haven't Decided</label></div>
             <span class="text-danger" id="colorError"></span>
           </div>
         </form>
 
         <!-- Image Upload -->
         <form id="image-upload" enctype="multipart/form-data">
-          <h5 class="mt-3">Do you have any reference images for your tattoo?</h5>
-          <input class="form-control" type="file" name="reference_image">
+          <h5 class="mt-4" style="color: #2c3e50">Do you have any reference images for your tattoo?</h5>
+          <input class="form-control" type="file" name="reference_image" style="background-color: #e1eef5; color: black; border: 1px solid #31AFD4">
 
         </form>
 
         <!-- Availability -->
         <form>
-          <h5 class="mt-3">Are you flexible with the availability of the tattoo artist?<span class="text-danger">*</span></h5>
-          <input class="form-control col-md-3" type="date" name="availability" id="availability">
+          <h5 class="mt-4" style="color: #2c3e50">Are you flexible with the availability of the tattoo artist?<span class="text-danger">*</span></h5>
+          <input class="form-control col-md-3" type="date" name="availability" id="availability" style="background-color: #e1eef5; color: black; border: 1px solid #31AFD4">
           <span class="text-danger" id="dateError"></span>
           <!-- Budget -->
-          <h5 class="mt-3">What is your budget for this tattoo?<span class="text-danger">*</span></h5>
+          <h5 class="mt-4" style="color: #2c3e50">What is your budget for this tattoo?<span class="text-danger">*</span></h5>
           <div class="row">
-            <div class="col-md-3 form-check"><input class="form-check-input" type="radio" name="budget" id="b1" value=""><label class="form-check-label" for="b1">Under $100</label></div>
-            <div class="col-md-3 form-check"><input class="form-check-input" type="radio" name="budget" id="b2" value=""><label class="form-check-label" for="b2">$100 - $200</label></div>
-            <div class="col-md-3 form-check"><input class="form-check-input" type="radio" name="budget" id="b3" value=""><label class="form-check-label" for="b3">$200 - $500</label></div>
-            <div class="col-md-3 form-check"><input class="form-check-input" type="radio" name="budget" id="b4" value=""><label class="form-check-label" for="b4">$500 - $1000</label></div>
-            <div class="col-md-3 form-check"><input class="form-check-input" type="radio" name="budget" id="b5" value=""><label class="form-check-label" for="b5">Over $1000</label></div>
+            <div class="col-md-3 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="budget" id="b1" value=""><label class="form-check-label" for="b1" style="color: #2c3e50">Under $100</label></div>
+            <div class="col-md-3 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="budget" id="b2" value=""><label class="form-check-label" for="b2" style="color: #2c3e50">$100 - $200</label></div>
+            <div class="col-md-3 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="budget" id="b3" value=""><label class="form-check-label" for="b3" style="color: #2c3e50">$200 - $500</label></div>
+            <div class="col-md-3 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="budget" id="b4" value=""><label class="form-check-label" for="b4" style="color: #2c3e50">$500 - $1000</label></div>
+            <div class="col-md-3 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="budget" id="b5" value=""><label class="form-check-label" for="b5" style="color: #2c3e50">Over $1000</label></div>
             <span class="text-danger" id="budgetError"></span>
           </div>
 
           <!-- When -->
-          <h5 class="mt-3">When would you like to get tattooed?<span class="text-danger">*</span></h5>
+          <h5 class="mt-4" style="color: #2c3e50">When would you like to get tattooed?<span class="text-danger">*</span></h5>
           <div class="row">
-            <div class="col-md-3 form-check"><input class="form-check-input" type="radio" name="when" id="w1" value=""><label class="form-check-label" for="w1">Next few days</label></div>
-            <div class="col-md-3 form-check"><input class="form-check-input" type="radio" name="when" id="w2" value=""><label class="form-check-label" for="w2">Next week</label></div>
-            <div class="col-md-3 form-check"><input class="form-check-input" type="radio" name="when" id="w3" value=""><label class="form-check-label" for="w3">Next month</label></div>
-            <div class="col-md-3 form-check"><input class="form-check-input" type="radio" name="when" id="w4" value=""><label class="form-check-label" for="w4">I'm flexible</label></div>
+            <div class="col-md-3 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="when" id="w1" value=""><label class="form-check-label" for="w1" style="color: #2c3e50">Next few days</label></div>
+            <div class="col-md-3 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="when" id="w2" value=""><label class="form-check-label" for="w2" style="color: #2c3e50">Next week</label></div>
+            <div class="col-md-3 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="when" id="w3" value=""><label class="form-check-label" for="w3" style="color: #2c3e50">Next month</label></div>
+            <div class="col-md-3 form-check"><input style="border: 1px solid #31AFD4" class="form-check-input" type="radio" name="when" id="w4" value=""><label class="form-check-label" for="w4" style="color: #2c3e50">I'm flexible</label></div>
             <span class="text-danger" id="whenError"></span>
           </div>
 
           <!-- Choose Artist -->
-          <h5 class="mt-3">Choose your tattoo artist <span class="text-danger">*</span></h5>
-          <select name="artist_id" id="artist_id" class="form-control" required>
+          <h5 class="mt-4" style="color: #2c3e50">Choose your tattoo artist <span class="text-danger">*</span></h5>
+          <select name="artist_id" id="artist_id" class="form-control" required  style="background-color: #e1eef5; color: black; border: 1px solid #31AFD4">
             <option value="" selected>Select artist</option>
             @foreach ($artists as $artist)
             <option value="{{ $artist->id }}">{{ $artist->name }}</option>
@@ -287,8 +287,8 @@
 
 
           <!-- Description -->
-          <h5 class="mt-3">Describe your tattoo idea and where you'd like it on your body.</h5>
-          <textarea class="form-control" rows="3" name="description" id="description" style="color: white;"></textarea>
+          <h5 class="mt-4" style="color: #2c3e50">Describe your tattoo idea and where you'd like it on your body.</h5>
+          <textarea class="form-control" rows="3" name="description" id="description" style="background-color: #e1eef5; color: black; border: 1px solid #31AFD4"></textarea>
 
           <!-- Next Button -->
           <div class="text-end mt-4">
@@ -406,10 +406,10 @@
       </div>
       <ul class="nav nav-tabs" id="quoteTabs" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="form1-tab" data-bs-toggle="tab" data-bs-target="#form1" type="button" role="tab">1</button>
+          <button style="border: 1px solid #31AFD4" class="nav-link active" id="form1-tab" data-bs-toggle="tab" data-bs-target="#form1" type="button" role="tab">1</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="form2-tab" data-bs-toggle="tab" data-bs-target="#form2" type="button" role="tab">2</button>
+          <button style="border: 1px solid #31AFD4" class="nav-link" id="form2-tab" data-bs-toggle="tab" data-bs-target="#form2" type="button" role="tab">2</button>
         </li>
       </ul>
     </div>

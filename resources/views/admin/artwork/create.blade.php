@@ -85,7 +85,7 @@
                                 <div class="form-group">
                                     <label>Subject Name</label><span class="text-danger">*</span>
                                     <select name="subject_id" class="form-control" value="{{ old('subject_id') }}">
-                                        <option value="">select placement</option>
+                                        <option value="">select subject</option>
                                         @foreach ($subjects as $subject)
                                             <option value="{{ $subject->id }}">{{ $subject->title }}</option>
                                         @endforeach
