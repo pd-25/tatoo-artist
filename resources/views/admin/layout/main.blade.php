@@ -51,10 +51,10 @@
                         <li><a href="{{ route('admin.dashboard') }}"><i class="ti-desktop"></i>Dashboard </a></li> 
 
                     @endif       
-                    @if (Auth::guard('admins')->check())
+                    
                     <li><a href="{{ route('admin.customers') }}"><i class="ti-desktop"></i>Customers </a></li>
 
-                    @endif
+                   
                     @if (Auth::guard('artists')->check())
                     
 

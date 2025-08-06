@@ -757,17 +757,28 @@ class DashboardController extends Controller
 
         if (Auth::guard('artists')->check()) {
             $user->created_by = Auth::guard('artists')->id();
+            $user->type = 'customer';
             $user->coverted_date = now();
         }
 
         $user->save();
 
-        return redirect()->back()->with('info', 'User is already a Customer.');
+        return redirect()->back()->with('success', 'Converted Successfully.');
     }
 
     public function viewUserDetails($id)
     {
         $user = User::findOrFail($id);
+
+        $depositeDetails = DB::table('payments')
+            ->where('user_id', $user->id)
+            ->where('artist_id', Auth::guard('artists')->id())
+            ->get();
+
+        $medicalForms = DB::table('tatto_form')
+            ->where('user_id', $user->id)
+            ->where('artist_id', Auth::guard('artists')->id())
+            ->get();
 
         if (Auth::guard('artists')->check()) {
             $artistId = Auth::guard('artists')->id();
@@ -776,8 +787,41 @@ class DashboardController extends Controller
             $users = collect();
         }
 
-        return view('admin.clientProfile', compact('user', 'users'));
+        return view('admin.clientProfile', compact('user', 'users', 'depositeDetails', 'medicalForms'));
     }
+
+
+
+public function getMedicalForm($id)
+{
+    $artistId = Auth::guard('artists')->id();
+
+    $medicalForm = DB::table('tatto_form')
+        ->where('id', $id)
+        ->where('artist_id', $artistId)
+        ->first();
+
+    if (!$medicalForm) {
+        return redirect()->back()->with('error', 'Medical form not found.');
+    }
+
+    $user = DB::table('users')->where('id', $medicalForm->user_id)->first();
+
+    $artistdata = DB::table('users')
+        ->where('id', $artistId)
+        ->where('type', 'artist')
+        ->first();
+
+    return view('admin.medical-form', [
+        'tattodata' => $medicalForm,
+        'user' => $user,
+        'artistdata' => $artistdata,
+    ]);
+}
+
+
+
+
 
     public function getWalkinArchives()
     { {

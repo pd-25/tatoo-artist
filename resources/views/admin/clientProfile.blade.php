@@ -1,5 +1,5 @@
 @extends('admin.layout.main')
-@section('title', env('APP_NAME') . ' | Quote')
+@section('title', env('APP_NAME') . ' | User Profile')
 @section('content')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" rel="stylesheet">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -28,7 +28,7 @@
 </style>
 <div class="row justify-content-center">
     <div class="col-lg-11 mb-4">
-        <div class="d-flex">
+        <div class="d-flex mt-3">
             <form method="GET" action="" id="userSelectForm" class="w-100">
                 <select name="user_id" class="form-control" style="color: black; font-size: 1.5rem; font-weight: 500;" onchange="if(this.value) window.location.href=this.value;">
                     <option value="" selected>Select to view customers</option>
@@ -95,118 +95,197 @@
                         {{-- <div class="col-md-4">
                             <label class="form-label">User Name</label>
                             <input type="text" class="form-control" value="{{ $user->username }}" readonly>
-                        </div> --}}
+                    </div> --}}
+
+                </div>
+
+
+                <div class="row mb-3">
+                    @php
+                    $formattedPhone = $user->phone
+                    ? preg_replace("/(\d{3})(\d{3})(\d{4})/", "($1) $2-$3", preg_replace('/\D/', '', $user->phone))
+                    : 'NA';
+                    @endphp
+
+                    <div class="col-md-6">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" name="phone" class="form-control" value="{{ $formattedPhone }}" readonly>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Email ID</label>
+                        <input type="email" name="email" class="form-control" value="{{ $user->email }}" readonly>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Country</label>
+                        <input type="text" name="country" class="form-control" value="{{ $user->country ?? 'NA' }}" readonly>
+
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">City</label>
+                        <input type="text" name="city" class="form-control" value="{{ $user->city ?? 'NA' }}" readonly>
+
+                    </div>
+                </div>
+
+
+
+                <div class="row mb-3">
+
+                    <div class="col-md-6">
+                        <label class="form-label">State / Province</label>
+                        <input type="text" name="state" class="form-control" value="{{ $user->state ?? 'NA' }}" readonly>
+
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Zip / Postal Code</label>
+                        <input type="text" name="zipcode" class="form-control" value="{{ $user->zipcode ?? 'NA' }}" readonly>
+
+                    </div>
+                </div>
+
+
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Date of Birth</label>
+                        <input type="text" name="dob" class="form-control"
+                            value="{{ $user->dob ? \Carbon\Carbon::parse($user->dob)->format('m-d-Y') : 'NA' }}"
+                            readonly>
+
+
+
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Sex</label>
+                        <input type="text" name="sex" class="form-control" value="{{ $user->sex ?? 'NA' }}" readonly>
+
 
                     </div>
 
 
-                    <div class="row mb-3">
-                        @php
-                        $formattedPhone = $user->phone
-                        ? preg_replace("/(\d{3})(\d{3})(\d{4})/", "($1) $2-$3", preg_replace('/\D/', '', $user->phone))
-                        : 'NA';
-                        @endphp
+                </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Phone Number</label>
-                            <input type="text" name="phone" class="form-control" value="{{ $formattedPhone }}" readonly>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Email ID</label>
-                            <input type="email" name="email" class="form-control" value="{{ $user->email }}" readonly>
-                        </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label">Lead Source</label>
+                        <input type="text" class="form-control" value="{{ $user->leadSource->lead_source_name ?? 'NA' }}"
+                            readonly>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Country</label>
-                            <input type="text" name="country" class="form-control" value="{{ $user->country ?? 'NA' }}" readonly>
-
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">City</label>
-                            <input type="text" name="city" class="form-control" value="{{ $user->city ?? 'NA' }}" readonly>
-
-                        </div>
-                    </div>
-
-
-
-                    <div class="row mb-3">
-
-                        <div class="col-md-6">
-                            <label class="form-label">State / Province</label>
-                            <input type="text" name="state" class="form-control" value="{{ $user->state ?? 'NA' }}" readonly>
-
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Zip / Postal Code</label>
-                            <input type="text" name="zipcode" class="form-control" value="{{ $user->zipcode ?? 'NA' }}" readonly>
-
-                        </div>
-                    </div>
-
-
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Date of Birth</label>
-                            <input type="text" name="dob" class="form-control"
-                                value="{{ $user->dob ? \Carbon\Carbon::parse($user->dob)->format('m-d-Y') : 'NA' }}"
-                                readonly>
-
-
-
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Sex</label>
-                            <input type="text" name="sex" class="form-control" value="{{ $user->sex ?? 'NA' }}" readonly>
-
-
-                        </div>
-
-
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label class="form-label">Lead Source</label>
-                            <input type="text" class="form-control" value="{{ $user->leadSource->lead_source_name ?? 'NA' }}"
-                                readonly>
-                        </div>
-
-                        <!-- <div class="col-md-6">
+                    <!-- <div class="col-md-6">
                             <label class="form-label">Other Lead Source</label>
                             <input type="text" class="form-control" value="{{ $user->other_lead_source ?? 'NA' }}"
                                 readonly>
                         </div> -->
+                </div>
+
+
+
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label">Note</label>
+
+                        <textarea id="address" rows="4" class="form-control" readonly>{{ $user->note ?? 'NA' }}</textarea>
                     </div>
-
-
-
-
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label class="form-label">Note</label>
-
-                            <textarea id="address" rows="4" class="form-control" readonly>{{ $user->note ?? 'NA' }}</textarea>
-                        </div>
-<!-- 
+                    <!-- 
                         <div class="col-md-6">
                             <label class="form-label">Address 2</label>
                             <textarea name="address2" id="address2" rows="3" class="form-control" readonly>{/{ $user->address2 ?? 'NA' }}</textarea>
 
                         </div> -->
-                    </div>
+                </div>
 
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <h4 class="mb-4" style="font-weight: bold">Payment Information</h4>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Tips</th>
+                                    <th>Payment Method</th>
+                                    <th>Artist Received</th>
+                                    <th>Design</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($depositeDetails as $payment)
+                                <tr>
+                                    <td>#{{ $loop->iteration }}</td>
+                                    <td>{{ $payment->date ? \Carbon\Carbon::parse($payment->date)->format('m-d-Y') : 'NA' }}</td>
+                                    <td>${{ number_format($payment->deposit_total, 2) }}</td>
+                                    <td>${{ number_format($payment->tips, 2) }}</td>
+                                    <td style="text-transform: capitalize;">{{ $payment->payment_method ?? 'NA' }}</td>
+                                    <td>
+                                        {{ $payment->artist_percentage}}%
+                                    </td>
+                                    <td>{{ $payment->design ?? 'NA' }}</td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">No payments done yet.</td>
+                                </tr>
+                                @endforelse
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <h4 class="mb-4" style="font-weight: bold">Medical History</h4>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Date</th>
+                                    <th>Form</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($medicalForms as $form)
+                                <tr>
+                                    <td>#{{ $loop->iteration }}</td>
+                                    <td>{{ $form->todaysdate ? \Carbon\Carbon::parse($form->todaysdate)->format('m-d-Y') : 'NA' }}</td>
+                                    <td>
+                                        <a href="{{ route('artists.view-user-medical-details', $form->id) }}" target="_blank" class="btn btn-primary">PDF</a>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">No medical forms found.</td>
+                                </tr>
+                                @endforelse
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>
+
     </div>
-    </form>
+</div>
+
+
+
+
+
+</form>
 </div>
 
 </div>
