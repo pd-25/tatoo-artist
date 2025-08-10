@@ -74,7 +74,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Email address</label><span class="text-danger">*</span>
-                                            <input type="text" name="email" value="{{ old('email') }}"
+                                            <input type="email" name="email" value="{{ old('email') }}"
                                                 autocomplete="email" autofocus class="form-control" placeholder="Email">
                                             @error('email')
                                             <span class="text-danger" role="alert">
@@ -134,7 +134,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Zip Code</label><span class="text-danger">*</span>
-                                            <input type="number" name="zipcode" value="{{ old('zipcode') }}" class="form-control" placeholder="Zip Code" id="zipcode">
+                                            <input type="number" name="zipcode" value="{{ old('zipcode') }}" class="form-control" placeholder="Zip Code" id="zipcode" maxlength="5"
+                                                oninput="this.value=this.value.slice(0,5)">
                                             @error('zipcode')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -232,20 +233,20 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12">
+                                    <!-- <div class="col-md-12">
                                         <div class="form-group" id="note">
                                             <label>Give A Note</label><span class="text-danger">*</span>
                                             <textarea type="text" name="note" id="note" value="{{ old('not') }}" class="form-control" style="height: 100px;" placeholder="Give a note" rows="5">{{ old('note') }}</textarea>
 
                                             </textarea>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Password</label>
-                                            <input type="password" name="password" class="form-control" placeholder="Password">
+                                            <input type="password" name="password" class="form-control" placeholder="Password" value="{{ old('password') }}">
                                             @error('password')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -256,7 +257,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Re-enter Password</label>
-                                            <input type="password" name="confirm_password" class="form-control" placeholder="Re-enter Password">
+                                            <input type="password" name="confirm_password" class="form-control" placeholder="Re-enter Password" value="{{ old('confirm_password') }}">
                                             @error('confirm_password')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
