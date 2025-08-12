@@ -188,19 +188,19 @@
 
 
 
-                <div class="row mb-3">
+                <!-- <div class="row mb-3">
                     <div class="col-md-12">
                         <label class="form-label">Note</label>
 
                         <textarea id="address" rows="4" class="form-control" readonly>{{ $user->note ?? 'NA' }}</textarea>
                     </div>
-                    <!-- 
+                    
                         <div class="col-md-6">
                             <label class="form-label">Address 2</label>
                             <textarea name="address2" id="address2" rows="3" class="form-control" readonly>{/{ $user->address2 ?? 'NA' }}</textarea>
 
-                        </div> -->
-                </div>
+                        </div>
+                </div> -->
 
 
                 <div class="row mb-3">
