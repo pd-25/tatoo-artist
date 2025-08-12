@@ -78,14 +78,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminCheck'], function () {
     Route::resource('artworks', ArtworkController::class);
     Route::resource('sales', SalesController::class);
 
-    Route::get('/add-customer', [ArtistController::class, 'addCustomer'])->name('admin.addCustomer');
-    Route::post('/store-customer', [ArtistController::class, 'storeCustomer'])->name('admin.storeCustomer');
-    Route::get('/customers', [ArtistController::class, 'customers'])->name('admin.customers');
-    Route::get('/customers/{id}', [ArtistController::class, 'editCustomer'])->name('admin.editCustomer');
-    Route::post('/customers/{id}', [ArtistController::class, 'updateCustomer'])->name('admin.updateCustomer');
-    Route::delete('/customers/{id}', [ArtistController::class, 'destroyCustomer'])->name('admin.destroyCustomer');
+    // Route::get('/add-customer', [ArtistController::class, 'addCustomer'])->name('admin.addCustomer');
+    // Route::post('/store-customer', [ArtistController::class, 'storeCustomer'])->name('admin.storeCustomer');
+    // Route::get('/customers', [ArtistController::class, 'customers'])->name('admin.customers');
+    // Route::get('/customers/{id}', [ArtistController::class, 'editCustomer'])->name('admin.editCustomer');
+    // Route::post('/customers/{id}', [ArtistController::class, 'updateCustomer'])->name('admin.updateCustomer');
+    // Route::delete('/customers/{id}', [ArtistController::class, 'destroyCustomer'])->name('admin.destroyCustomer');
 
-    Route::delete('/delete-comment/{id}', [ArtworkController::class, 'deleteComment'])->name('comment.delete');
+    // Route::delete('/delete-comment/{id}', [ArtworkController::class, 'deleteComment'])->name('comment.delete');
 
     Route::resource('banners', BannerController::class);
 
@@ -159,6 +159,7 @@ Route::get('/all-comment', [ArtworkController::class, 'allComment'])->name('admi
 Route::get('/walk-in', [DashboardController::class, 'getWalkIn'])->name('artists.getWalkIn');
 Route::get('/convert-to-customer/{id}', [DashboardController::class, 'convertToCustomer'])->name('artists.convert-customer');
 Route::get('/user/view/{id}', [DashboardController::class, 'viewUserDetails'])->name('artists.view-user-details');
+Route::post('/user/view/{id}', [DashboardController::class, 'editUserNoteField'])->name('artist.user-note.update');
 Route::get('/user/medical/{id}', [DashboardController::class, 'getMedicalForm'])->name('artists.view-user-medical-details');
 Route::get('/walkin-archive', [DashboardController::class, 'getWalkinArchives'])->name('artists.getWalkInArchive');
 Route::post('/quote-arcihve-move',[DashboardController::class,'qouteArchiveMove'])->name('quote.moveToArchives');

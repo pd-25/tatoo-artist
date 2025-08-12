@@ -188,20 +188,47 @@
 
 
 
-                <!-- <div class="row mb-3">
+                <div class="row mb-3">
                     <div class="col-md-12">
-                        <label class="form-label">Note</label>
-
-                        <textarea id="address" rows="4" class="form-control" readonly>{{ $user->note ?? 'NA' }}</textarea>
+                        <form action="{{ route('artist.user-note.update', $user->id) }}" method="POST" encript="multipart/form-data">
+                            <label class="form-label" for="note">Note</label>
+                            @csrf
+                            <textarea id="note" name="note" rows="7" class="form-control">{{ old('note', $user->note) }}</textarea>
+                            <button type="submit" class="btn btn-primary mt-3">Update Note</button>
+                        </form>
                     </div>
                     
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <label class="form-label">Address 2</label>
                             <textarea name="address2" id="address2" rows="3" class="form-control" readonly>{/{ $user->address2 ?? 'NA' }}</textarea>
 
-                        </div>
-                </div> -->
+                        </div> -->
+                </div>
 
+                @push('scripts')
+                <script>
+                    function updateUserNote() {
+                        var note = document.getElementById("address").value;
+                        var userId = {{ $user->id }};
+
+                        fetch(`/edit-user-note/${userId}`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                            },
+                            body: JSON.stringify({ note: note })
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                alert("Note updated successfully.");
+                            } else {
+                                alert("Failed to update note.");
+                            }
+                        });
+                    }
+                </script>
+                @endpush
 
                 <div class="row mb-3">
                     <div class="col-md-12">

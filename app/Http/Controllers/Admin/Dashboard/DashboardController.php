@@ -790,34 +790,54 @@ class DashboardController extends Controller
         return view('admin.clientProfile', compact('user', 'users', 'depositeDetails', 'medicalForms'));
     }
 
+    public function editUserNoteField(Request $request, $id)
+    {
+        // Validate input
+        $request->validate([
+            'note' => 'nullable|string|max:5000',
+        ]);
 
+        // Find user
+        $user = User::findOrFail($id);
 
-public function getMedicalForm($id)
-{
-    $artistId = Auth::guard('artists')->id();
+        // Optional: check if the logged-in artist can edit this user’s note
+        if (auth()->id() !== $user->artist_id) {
+            abort(403, 'Unauthorized action.');
+        }
 
-    $medicalForm = DB::table('tatto_form')
-        ->where('id', $id)
-        ->where('artist_id', $artistId)
-        ->first();
+        // Update note field
+        $user->note = $request->note;
+        $user->save();
 
-    if (!$medicalForm) {
-        return redirect()->back()->with('error', 'Medical form not found.');
+        return redirect()->back()->with('success', 'Note updated successfully.');
     }
 
-    $user = DB::table('users')->where('id', $medicalForm->user_id)->first();
+    public function getMedicalForm($id)
+    {
+        $artistId = Auth::guard('artists')->id();
 
-    $artistdata = DB::table('users')
-        ->where('id', $artistId)
-        ->where('type', 'artist')
-        ->first();
+        $medicalForm = DB::table('tatto_form')
+            ->where('id', $id)
+            ->where('artist_id', $artistId)
+            ->first();
 
-    return view('admin.medical-form', [
-        'tattodata' => $medicalForm,
-        'user' => $user,
-        'artistdata' => $artistdata,
-    ]);
-}
+        if (!$medicalForm) {
+            return redirect()->back()->with('error', 'Medical form not found.');
+        }
+
+        $user = DB::table('users')->where('id', $medicalForm->user_id)->first();
+
+        $artistdata = DB::table('users')
+            ->where('id', $artistId)
+            ->where('type', 'artist')
+            ->first();
+
+        return view('admin.medical-form', [
+            'tattodata' => $medicalForm,
+            'user' => $user,
+            'artistdata' => $artistdata,
+        ]);
+    }
 
 
 
