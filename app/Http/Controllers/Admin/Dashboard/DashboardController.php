@@ -792,20 +792,16 @@ class DashboardController extends Controller
 
     public function editUserNoteField(Request $request, $id)
     {
-        // Validate input
+
         $request->validate([
             'note' => 'nullable|string|max:5000',
         ]);
-
-        // Find user
         $user = User::findOrFail($id);
 
-        // Optional: check if the logged-in artist can edit this user’s note
         if (auth()->id() !== $user->artist_id) {
             abort(403, 'Unauthorized action.');
         }
 
-        // Update note field
         $user->note = $request->note;
         $user->save();
 
