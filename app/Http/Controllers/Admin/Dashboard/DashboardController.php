@@ -957,6 +957,46 @@ class DashboardController extends Controller
         $data['artists'] = $this->artistInterface->getAllArtistss($re = null);
         return view('admin.quote', $data);
     }
+
+    public function providePrice(Request $request, $id)
+    {
+        $request->validate([
+            'provide_price' => 'required|numeric|min:0',
+        ]);
+
+        $quote = Quote::where('id', $id)
+            ->where('artist_id', Auth::guard('artists')->id())
+            ->firstOrFail();
+
+        $quote->provide_price = $request->provide_price;
+        $quote->save();
+
+        // send mail
+        Mail::send('admin.email.quotepriceprovide', [
+            'user_name'      => $quote->user->name,
+            'size'           => $quote->size,
+            'color'          => $quote->color,
+            'when_to_get_tattoo' => $quote->when_get_tattooed,
+            'budget'         => $quote->budget,
+            'availability' => Carbon::parse($quote->availability)->format('M jS Y'),
+            'front_back_view' => $quote->front_back_view,
+            'extra_request'  => $quote->extra_request ?? null,
+            'provide_price'  => $quote->provide_price,
+            'artist_name' => optional($quote->artist)->name,
+            'booking_link'   => url('/booking')
+        ], function ($message) use ($quote) {
+            $message->to($quote->user->email)
+                ->subject('Tattoo Quote Price Provided');
+        });
+
+        return redirect()->back()->with('msg', 'Price updated & email sent!.');
+    }
+
+
+
+
+
+
     public function getQuoteArchives()
     { {
 

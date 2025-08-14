@@ -78,14 +78,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminCheck'], function () {
     Route::resource('artworks', ArtworkController::class);
     Route::resource('sales', SalesController::class);
 
-    Route::get('/add-customer', [ArtistController::class, 'addCustomer'])->name('admin.addCustomer');
-    Route::post('/store-customer', [ArtistController::class, 'storeCustomer'])->name('admin.storeCustomer');
-    Route::get('/customers', [ArtistController::class, 'customers'])->name('admin.customers');
-    Route::get('/customers/{id}', [ArtistController::class, 'editCustomer'])->name('admin.editCustomer');
-    Route::post('/customers/{id}', [ArtistController::class, 'updateCustomer'])->name('admin.updateCustomer');
-    Route::delete('/customers/{id}', [ArtistController::class, 'destroyCustomer'])->name('admin.destroyCustomer');
+    // Route::get('/add-customer', [ArtistController::class, 'addCustomer'])->name('admin.addCustomer');
+    // Route::post('/store-customer', [ArtistController::class, 'storeCustomer'])->name('admin.storeCustomer');
+    // Route::get('/customers', [ArtistController::class, 'customers'])->name('admin.customers');
+    // Route::get('/customers/{id}', [ArtistController::class, 'editCustomer'])->name('admin.editCustomer');
+    // Route::post('/customers/{id}', [ArtistController::class, 'updateCustomer'])->name('admin.updateCustomer');
+    // Route::delete('/customers/{id}', [ArtistController::class, 'destroyCustomer'])->name('admin.destroyCustomer');
 
-    Route::delete('/delete-comment/{id}', [ArtworkController::class, 'deleteComment'])->name('comment.delete');
+    // Route::delete('/delete-comment/{id}', [ArtworkController::class, 'deleteComment'])->name('comment.delete');
 
     Route::resource('banners', BannerController::class);
 
@@ -100,6 +100,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminCheck'], function () {
 
 Route::post('/quotes', [DashboardController::class, 'storeQuote'])->name('admin.storeQuote');
 Route::get('/get-quote', [DashboardController::class, 'getQuote'])->name('admin.getQuote');
+Route::post('/provide-price/{id}', [DashboardController::class, 'providePrice'])->name('admin.providePrice');
+
 Route::post('/appoinment-move-archive',[DashboardController::class,'appointmentArchiveMove'])->name('appoinment.moveToArchives');
 Route::get('/get-appointment/archives', [DashboardController::class, 'getAppointmentArchives'])->name('appoinment.getArchives');
 Route::get('/get-appointment', [DashboardController::class, 'getAppointment'])->name('admin.getAppointment');
