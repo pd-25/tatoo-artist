@@ -494,6 +494,7 @@
         });
     }
 
+    const actionURL = "{{ route('admin.providePrice', ':id') }}";
 
     $(document).on("click", ".viewQuoteDetails", function() {
         let id = $(this).data('id');
@@ -507,7 +508,7 @@
         let quote_description = $(this).data('desc');
         let price = $(this).data('price');
 
-        $("#quoteForm").attr("action", "/provide-price/" + id);
+        $("#quoteForm").attr("action", actionURL.replace(':id', id));
 
         $("#quo_size").text(size || "Not Provided");
         $("#quo_color").text(color || "Not Provided");

@@ -972,7 +972,7 @@ class DashboardController extends Controller
         $quote->save();
 
         // send mail
-        Mail::send('Admin.email.quotepriceprovide', [
+        Mail::send('admin.email.quotepriceprovide', [
             'user_name'      => $quote->user->name,
             'size'           => $quote->size,
             'color'          => $quote->color,
