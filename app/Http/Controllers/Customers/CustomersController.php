@@ -54,12 +54,12 @@ class CustomersController extends Controller
                 'lastname' => 'required|string',
                 'username' => 'required|string|unique:users',
                 'email' => 'required|email:rfc,dns|unique:users',
-                'address' =>'null',
+                'address' => 'null',
                 'customer_state' => 'required',
                 'zipcode' => 'required|min:5|max:5',
                 'mobile_number' => 'required',
                 'sex' => 'required',
-                'dob' => 'date',
+                'dob' => 'required|date',
                 'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2000',
                 'lead_source' => 'required',
                 'other_lead_source' => 'required_if:lead_source,11',
@@ -76,7 +76,8 @@ class CustomersController extends Controller
                 'zipcode.required' => 'Zipcode is required.',
                 'mobile_number.required' => 'Mobile number is required.',
                 'sex.required' => 'Sex field is required.',
-                'dob.required' => 'Enter your date of birth',
+                'dob.required' => 'Enter your date of birth.',
+                'dob.date' => 'Please enter a valid date format for DOB.',
                 'profile_image.required' => 'The image field must be an image file of type: PNG, JPG of max size 100KB',
                 'lead_source.required' => 'Select lead source',
                 'other_lead_source.required' => 'Please enter other lead source',
@@ -98,7 +99,7 @@ class CustomersController extends Controller
             try {
                 Mail::to($request->email)->send(new CustomerRegisterSuccessMail($customer_name, $mailsubject));
             } catch (\Throwable $th) {
-               Log::error('Error sending registration email: ' . $th->getMessage());
+                Log::error('Error sending registration email: ' . $th->getMessage());
             }
             return redirect()->route('customerRegister.success')->with('msg', 'Thank You For Registering With Tattoome.');
         } else {
@@ -165,62 +166,62 @@ class CustomersController extends Controller
         }
     }
 
-public function updateCustomerProfile(Request $request)
-{
-    $sess_email = session()->get('cust_email');
+    public function updateCustomerProfile(Request $request)
+    {
+        $sess_email = session()->get('cust_email');
 
-    $request->validate(
-        [
-            'state' => 'required',
-            'zipcode' => 'required|min:5|max:5',
-            'mobile_number' => 'required',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2000',
-            'firstname' => 'nullable',
-            'lastname' => 'nullable',
-            'sex'=>'nullable',
-        ],
-        [
-            'state.required' => 'State is required.',
-            'zipcode.required' => 'Zipcode is required.',
-            'mobile_number.required' => 'Mobile number is required.',
-        ]
-    );
-    $checkIfEmailExists = User::where('email', $request->email)
-        ->where('id', '!=', auth()->guard('customers')->user()->id)
-        ->first();
-    if ($checkIfEmailExists) {
-        return redirect()->back()->with('error', 'Email already exists. Please use a different email.');
-    }
-    $user = User::where('id', auth()->guard('customers')->user()->id)->first();
-    // Handle image replacement
-    if ($request->hasFile('profile_image')) {
-        // Delete old image if exists
-        if (!empty($user->profile_image) && File::exists(public_path('storage/ProfileImage/' . $user->profile_image))) {
-            File::delete(public_path('storage/ProfileImage/' . $user->profile_image));
+        $request->validate(
+            [
+                'state' => 'required',
+                'zipcode' => 'required|min:5|max:5',
+                'mobile_number' => 'required',
+                'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2000',
+                'firstname' => 'nullable',
+                'lastname' => 'nullable',
+                'sex' => 'nullable',
+            ],
+            [
+                'state.required' => 'State is required.',
+                'zipcode.required' => 'Zipcode is required.',
+                'mobile_number.required' => 'Mobile number is required.',
+            ]
+        );
+        $checkIfEmailExists = User::where('email', $request->email)
+            ->where('id', '!=', auth()->guard('customers')->user()->id)
+            ->first();
+        if ($checkIfEmailExists) {
+            return redirect()->back()->with('error', 'Email already exists. Please use a different email.');
+        }
+        $user = User::where('id', auth()->guard('customers')->user()->id)->first();
+        // Handle image replacement
+        if ($request->hasFile('profile_image')) {
+            // Delete old image if exists
+            if (!empty($user->profile_image) && File::exists(public_path('storage/ProfileImage/' . $user->profile_image))) {
+                File::delete(public_path('storage/ProfileImage/' . $user->profile_image));
+            }
+
+
+
+            $newImageName = time() . rand(1000, 9999) . '.' . $request->profile_image->getClientOriginalExtension();
+            $request->profile_image->storeAs('public/ProfileImage', $newImageName);
+            $user->profile_image = $newImageName;
         }
 
+        // Update other fields
 
-        
-        $newImageName = time() . rand(1000, 9999) . '.' . $request->profile_image->getClientOriginalExtension();
-        $request->profile_image->storeAs('public/ProfileImage', $newImageName);
-        $user->profile_image = $newImageName;
+        $user->latitude = $request->latitude;
+        $user->longitude = $request->longitude;
+        $user->state = $request->state;
+        $user->zipcode = $request->zipcode;
+        $user->phone = $request->mobile_number;
+        $user->name =  $request->firstname . ' ' . $request->lastname;
+        $user->sex = $request->sex;
+        $user->email = $request->email;
+
+        $user->save();
+
+        return redirect()->route('customerProfile')->with('msg', 'Profile updated!');
     }
-
-    // Update other fields
-  
-    $user->latitude = $request->latitude;
-    $user->longitude = $request->longitude;
-    $user->state = $request->state;
-    $user->zipcode = $request->zipcode;
-    $user->phone = $request->mobile_number;
-    $user->name =  $request->firstname.' '.$request->lastname;
-    $user->sex = $request->sex;
-    $user->email = $request->email;
-
-    $user->save();
-
-    return redirect()->route('customerProfile')->with('msg', 'Profile updated!');
-}
 
     public function forgetPassword()
     {
@@ -247,7 +248,7 @@ public function updateCustomerProfile(Request $request)
             try {
                 Mail::to($email)->send(new CustomerResetPasswordMail($customer_name, $mailsubject));
             } catch (\Throwable $th) {
-               Log::error('Error sending registration email: ' . $th->getMessage());
+                Log::error('Error sending registration email: ' . $th->getMessage());
             }
             return redirect()->route('customer.forgetPsswordMailSuccess')->with(['msg' => 'Email has been sent. Please check and reset your password', 'cname' => $checkEmailRes->name]);
         } else {

@@ -989,6 +989,23 @@ class DashboardController extends Controller
                 ->subject('Tattoo Quote Price Provided');
         });
 
+        // send mail to admin mail
+        Mail::send('admin.email.quotepriceprovide', [
+            'user_name'      => $quote->user->name,
+            'size'           => $quote->size,
+            'color'          => $quote->color,
+            'when_to_get_tattoo' => $quote->when_get_tattooed,
+            'budget'         => $quote->budget,
+            'availability' => Carbon::parse($quote->availability)->format('M jS Y'),
+            'front_back_view' => $quote->front_back_view,
+            'extra_request'  => $quote->extra_request ?? null,
+            'provide_price'  => $quote->provide_price,
+            'artist_name' => optional($quote->artist)->name,
+            'booking_link'   => url('/booking')
+        ], function ($message) use ($quote) {
+            $message->to('info@tattoome.net');
+        });
+
         return redirect()->back()->with('msg', 'Price updated & email sent!.');
     }
 

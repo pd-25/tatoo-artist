@@ -12,8 +12,8 @@
                 <h2 style="color:#333;">Hello {{ $user_name }},</h2>
 
                 <p style="color:#555; font-size:15px; line-height:1.6;">
-                    I received a request for a <strong>{{ $size }}</strong> size in 
-                    <strong>{{ $color }}</strong> color around <strong>{{ $when_to_get_tattoo }}</strong> 
+                    I received a request for a Tattoo approximately <strong>{{ $size }}</strong> in 
+                    <strong>{{ $color }}</strong> around <strong>{{ $when_to_get_tattoo }}</strong> 
                     with a Budget of approximately <strong>{{ $budget }}</strong>.
                 </p>
 
