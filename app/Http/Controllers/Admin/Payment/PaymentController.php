@@ -384,7 +384,7 @@ class PaymentController extends Controller
             $artist = User::where('id', $artistId)->where('type', 'artist')->first();
             if ($artist && $artist->artistData) {
                 $artistData = $artist->artistData;
-                $paymentMethods = explode(',', $artistData->payment_method);  // Split by comma into an array
+                $paymentMethods = explode(',', $artistData->payment_method); // Split by comma into an array
             }
         }
 

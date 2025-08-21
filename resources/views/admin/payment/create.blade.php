@@ -98,9 +98,9 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label>Initial Deposit</label>
+                                        <label>Initial Deposit<span class="text-danger">*</span></label>
                                         <input type="number" class="form-control" name="deposit" id="deposit"
-                                            placeholder="Initial Deposit" value="{{ old('deposit') }}">
+                                            placeholder="Initial Deposit" value="{{ old('deposit') }}" required>
                                         <small id="deposit-error" class="text-danger d-none">Initial deposit cannot exceed
                                             price.</small>
                                         @error('deposit') <span class="text-danger">{{ $message }}</span> @enderror
@@ -111,6 +111,7 @@
                                     <div class="form-group">
                                         <label>Pay Type <span class="text-danger">*</span></label>
                                         <select name="payment_method" id="payment-method" class="form-control" required>
+                                            
                                             <option value="">Select Pay Type</option>
                                         </select>
                                         @error('payment_method') <span class="text-danger">{{ $message }}</span> @enderror
