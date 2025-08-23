@@ -173,7 +173,7 @@
                                         <br>
                                         @if ($quote->link_send_status == 0)
                                         <button class="btn btn-sm btn-primary"
-                                            onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Send Consent
+                                            onclick="AgainSendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Send Consent
                                             Link</button>
                                         @elseif($quote->link_send_status == 1)
                                         <button class="btn btn-sm btn-warning"

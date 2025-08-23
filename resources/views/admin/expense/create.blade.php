@@ -45,7 +45,7 @@
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="id_end_time">Transaction Date:</label>
+                                        <label for="id_end_time">Transaction Date<span class="text-danger">*</span></label>
                                         <div class="input-group date" id="datepicker">
                                             <input type="text" name="transaction_date" class="form-control" required>
                                             <div class="input-group-addon input-group-append">
