@@ -147,7 +147,7 @@
                                     <th class="text-center"><input type="checkbox" id="selectAll"></th>
                                     <th class="text-center">SN.</th>
                                     <th class="text-center">User Email</th>
-                                    <th class="text-center">Artist Name</th>
+                                    <!-- <th class="text-center">Artist Name</th> -->
                                     <th class="text-center">Date</th>
                                     <th class="">Actions</th>
 
@@ -162,7 +162,7 @@
                                             </td>
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ @$quote->user->email }}</td>
-                                            <td>{{ @$quote->artist->name }}</td>
+                                            <!-- <td>{{ @$quote->artist->name }}</td> -->
                                             <td>{{ date('m-d-Y', strtotime($quote->created_at)) }}</td>
 
                                             <td>

@@ -86,8 +86,8 @@
                         <h4>All Quotes</h>
                     </div>
                     <div class="d-flex align-items-center">
-                        <a href="#" class="btn btn-success" data-toggle="modal" data-target="#createQuoteModal">Create
-                            Quote</a>
+                        <!-- <a href="#" class="btn btn-success" data-toggle="modal" data-target="#createQuoteModal">Create
+                            Quote</a> -->
                         <a href="{{route('admin.quoteArchive')}}" class="btn btn-primary m-1">Archives</a>
                         <button class="btn btn-primary m-1 d-none" id="moveToArchives">Move to Archives</button>
                     </div>

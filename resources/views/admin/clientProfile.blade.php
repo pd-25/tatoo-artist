@@ -118,7 +118,7 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
+                <!-- <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Country</label>
                         <input type="text" name="country" class="form-control" value="{{ $user->country ?? 'NA' }}" readonly>
@@ -130,7 +130,7 @@
                         <input type="text" name="city" class="form-control" value="{{ $user->city ?? 'NA' }}" readonly>
 
                     </div>
-                </div>
+                </div> -->
 
 
 
@@ -172,11 +172,11 @@
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-md-12">
+                    <!-- <div class="col-md-12">
                         <label class="form-label">Lead Source</label>
                         <input type="text" class="form-control" value="{{ $user->leadSource->lead_source_name ?? 'NA' }}"
                             readonly>
-                    </div>
+                    </div> -->
 
                     <!-- <div class="col-md-6">
                             <label class="form-label">Other Lead Source</label>

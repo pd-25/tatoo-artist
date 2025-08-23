@@ -36,11 +36,12 @@
                             <tr>
                                 <th>SN.</th>
                                 <th>Full name</th>
-                                <th>Username</th>
+                                <!-- <th>Username</th> -->
                                 <th>Phone</th>
                                 <th>Email</th>
                                 @if (Auth::guard('artists')->check())
-                                <th>Address</th>
+                                <th>State</th>
+                                <th>Zip Code</th>
                                 @else
                                 <th>Created By</th>
 
@@ -61,9 +62,9 @@
                                     @endif
                                 </td>
 
-                                <td>
+                                <!-- <td>
                                     {{ $customer->username }}
-                                </td>
+                                </td> -->
 
                                 <td>
                                     {{ $customer->phone }}
@@ -74,8 +75,11 @@
                                 </td>
                                 @if (Auth::guard('artists')->check())
                                 <td>
-                                    {{ isset($customer->address) ? $customer->address : 'Not Provided!' }}
+                                    {{ isset($customer->state) ? $customer->state : 'Not Provided!' }}
 
+                                </td>
+                                <td>
+                                    {{ isset($customer->zipcode) ? $customer->zipcode : 'Not Provided!' }}
                                 </td>
                                 @else
                                 <td>
