@@ -28,9 +28,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Artist Name</label><span class="text-danger">*</span>
+                                        <label>Artist Name</label>
                                         <input type="text" class="form-control" placeholder="full name" name="name"
-                                            value="{{ $artist->name }}">
+                                            value="{{ $artist->name }}" readonly>
                                         @error('name')
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -42,7 +42,7 @@
                                         <label>Username</label><span class="text-info"></span>
 
                                         <input type="text" class="form-control" id="username" placeholder="username"
-                                            name="username" value="{{ $artist->username }}">
+                                            name="username" value="{{ $artist->username }}" readonly>
                                         @error('username')
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>

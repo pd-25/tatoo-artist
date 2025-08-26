@@ -491,7 +491,7 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                                 </div>
                                 <div class="stat-content dib">
                                     <div class="stat-text">Total Artworks</div>
-                                    <div class="stat-digit">{{ $totalArtwork }}</div>
+                                    <div class="stat-digit">{{ \App\Models\Artwork::where('user_id', Auth::guard('artists')->id())->count() }}</div>
                                 </div>
                             </div>
                         </div>
