@@ -26,5 +26,9 @@ class PaymentModel extends Model
     {
         return $this->belongsTo(Placement::class, 'placement', 'id');
     }
-    
+
+    public function customer()
+    {
+        return $this->belongsTo(User::class, 'customer_id', 'id');
+    }
 }

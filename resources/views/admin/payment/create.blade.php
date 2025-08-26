@@ -80,11 +80,10 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Customers Name <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="customers_name" required>
+                                    <select class="form-control" id="customerSelect" name="customers_name" required>
                                         <option value="">Select Customer</option>
                                         @foreach ($customers as $customer)
-                                        <option value="{{ $customer['name'] }}"
-                                            {{ old('customers_name') == $customer['name'] ? 'selected' : '' }}>
+                                        <option value="{{ $customer['name'] }}" data-id="{{ $customer['id'] }}">
                                             {{ $customer['name'] }} - {{ $customer['email'] }}
                                         </option>
                                         @endforeach
@@ -92,7 +91,11 @@
                                     @error('customers_name')
                                     <span class="text-danger">{{ $message }}</span>
                                     @enderror
+
+                                    <!-- hidden field for customer_id -->
+                                    <input type="text" id="customer_id" name="customer_id" value="">
                                 </div>
+
 
 
                                 <div class="form-group">
@@ -304,6 +307,21 @@
         });
     });
 </script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const select = document.getElementById("customerSelect");
+        const userIdField = document.getElementById("customer_id");
+
+        select.addEventListener("change", function () {
+            const selectedOption = select.options[select.selectedIndex];
+            const userId = selectedOption.getAttribute("data-id") || "";
+            userIdField.value = userId;
+        });
+    });
+</script>
+
 
 
 @endsection

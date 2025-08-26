@@ -88,16 +88,13 @@ class PaymentController extends Controller
         }
         $ccfees = $payments->sum('fees');
 
-        $customers = $payments->map(function ($payment) {
-            $user = \App\Models\User::find($payment->user_id);
-            return [
-                'name'  => $payment->customers_name,
-                'email' => $user?->email,
-            ];
-        })
-            ->unique('email')
-            ->values()
-            ->toArray();
+        $customers = \App\Models\User::join('payments', 'users.id', '=', 'payments.customer_id')
+            ->whereIn('payments.id', $payments->pluck('id'))
+            ->select('users.id', 'users.name', 'users.email')
+            ->distinct()
+            ->get();
+
+
 
 
 
@@ -106,109 +103,76 @@ class PaymentController extends Controller
         return view('admin.payment.deposit', compact('payments', 'customers', 'ccfees'));
     }
 
+
     public function getFilteredDeposits(Request $request)
     {
-        // Format the start and end dates from request safely
         $startDate = null;
         $endDate = null;
         $ccfees = 0;
 
+        // Parse start date
         if ($request->filled('start_date') && substr_count($request->start_date, '/') === 2) {
-            $requestStartDate = explode('/', $request->start_date);
-            if (count($requestStartDate) === 3) {
-                $startDate = $requestStartDate[2] . '-' . $requestStartDate[0] . '-' . $requestStartDate[1];
-            }
+            [$m, $d, $y] = explode('/', $request->start_date);
+            $startDate = "$y-$m-$d";
         }
 
+        // Parse end date
         if ($request->filled('end_date') && substr_count($request->end_date, '/') === 2) {
-            $requestEndDate = explode('/', $request->end_date);
-            if (count($requestEndDate) === 3) {
-                $endDate = $requestEndDate[2] . '-' . $requestEndDate[0] . '-' . $requestEndDate[1];
-            }
+            [$m, $d, $y] = explode('/', $request->end_date);
+            $endDate = "$y-$m-$d";
         }
 
-        // Flash old inputs
         $request->flash();
-
-        $customerName = $request->input('customers_name');
+        $customerId = $request->input('customers_name'); // we’ll use customer_id
 
         if (Auth::guard('artists')->check()) {
-            // Payments query for artists
-            $query = PaymentModel::where('artist_id', Auth::guard('artists')->user()->id);
+            $query = PaymentModel::where('artist_id', Auth::guard('artists')->id());
 
-            if (!empty($startDate)) {
-                $query->where('date', '>=', $startDate);
-            }
+            if ($startDate) $query->where('date', '>=', $startDate);
+            if ($endDate) $query->where('date', '<=', $endDate);
+            if (!empty($customerId)) $query->where('customer_id', $customerId);
 
-            if (!empty($endDate)) {
-                $query->where('date', '<=', $endDate);
-            }
+            $payments = $query->with(['user', 'customer'])->paginate(10);
 
-            if (!empty($customerName)) {
-                $query->where('customers_name', 'like', '%' . $customerName . '%');
-            }
-
-            $payments = $query->with('user')->paginate(10);
-
-            // Get all customer names for this artist
-            $customers = PaymentModel::where('artist_id', Auth::guard('artists')->user()->id)
-                ->pluck('customers_name')
-                ->unique()
-                ->values()
-                ->toArray();
+            $customers = \App\Models\User::join('payments', 'users.id', '=', 'payments.customer_id')
+                ->where('payments.artist_id', Auth::guard('artists')->id())
+                ->select('users.id', 'users.name', 'users.email')
+                ->distinct()
+                ->get();
         } elseif (Auth::guard('admins')->check()) {
-            // Payments query for admins
             $query = PaymentModel::with('user');
 
-            if (!empty($startDate)) {
-                $query->where('date', '>=', $startDate);
-            }
-
-            if (!empty($endDate)) {
-                $query->where('date', '<=', $endDate);
-            }
-
-            if (!empty($customerName)) {
-                $query->where('customers_name', 'like', '%' . $customerName . '%');
-            }
+            if ($startDate) $query->where('date', '>=', $startDate);
+            if ($endDate) $query->where('date', '<=', $endDate);
+            if (!empty($customerId)) $query->where('customer_id', $customerId);
 
             $payments = $query->paginate(10);
 
-            // Get all customer names for admins
-            $customers = PaymentModel::pluck('customers_name')
-                ->unique()
-                ->values()
-                ->toArray();
+            $customers = \App\Models\User::join('payments', 'users.id', '=', 'payments.customer_id')
+                ->select('users.id', 'users.name', 'users.email')
+                ->distinct()
+                ->get();
         } else {
             $salespersonId = Auth::guard('sales')->id();
             $artists = User::where('created_by', $salespersonId)->pluck('id');
 
-            // Payments query for sales
             $query = PaymentModel::with('user')->whereIn('artist_id', $artists);
 
-            if (!empty($startDate)) {
-                $query->where('date', '>=', $startDate);
-            }
-
-            if (!empty($endDate)) {
-                $query->where('date', '<=', $endDate);
-            }
-
-            if (!empty($customerName)) {
-                $query->where('customers_name', 'like', '%' . $customerName . '%');
-            }
+            if ($startDate) $query->where('date', '>=', $startDate);
+            if ($endDate) $query->where('date', '<=', $endDate);
+            if (!empty($customerId)) $query->where('customer_id', $customerId);
 
             $payments = $query->paginate(10);
 
-            // Get all customer names for this salesperson's artists
-            $customers = PaymentModel::whereIn('artist_id', $artists)
-                ->pluck('customers_name')
-                ->unique()
-                ->values()
-                ->toArray();
+            $customers = \App\Models\User::join('payments', 'users.id', '=', 'payments.customer_id')
+                ->whereIn('payments.artist_id', $artists)
+                ->select('users.id', 'users.name', 'users.email')
+                ->distinct()
+                ->get();
         }
+
         $ccfees = $payments->sum('fees');
-        // Pass both payments and customers to the view
+
         return view('admin.payment.deposit', compact('payments', 'customers', 'ccfees'));
     }
 
@@ -404,19 +368,20 @@ class PaymentController extends Controller
         $placements = Placement::all();
 
         // Fetch Customers Details
-        if ($artistId) {
-            // Load all payments for this artist
-            $payments = \App\Models\PaymentModel::where('artist_id', $artistId)->get();
+        if (Auth::guard('artists')->check()) {
+            $artistId = Auth::guard('artists')->user()->id;
 
-            $customers = $payments->map(function ($payment) {
-                $user = \App\Models\User::find($payment->user_id);
-                return [
-                    'name'  => $payment->customers_name,
-                    'email' => $user?->email,
-                ];
-            })
-                ->unique('email')
-                ->values()
+            // Get customers created by this artist
+            $customers = User::where('created_by', $artistId)
+                ->where('type', 'customer')
+                ->get(['id', 'name', 'email'])
+                ->map(function ($user) {
+                    return [
+                        'id'    => $user->id,
+                        'name'  => $user->name,
+                        'email' => $user->email,
+                    ];
+                })
                 ->toArray();
         }
 
@@ -431,6 +396,7 @@ class PaymentController extends Controller
     {
         // Validate inputs
         $request->validate([
+            'customer_id'        => 'required|integer',
             'artist_id'        => 'required|integer',
             'customers_name'   => 'required|string',
             'design'           => 'required|string',
@@ -512,6 +478,7 @@ class PaymentController extends Controller
         $payment = new PaymentModel();
         $payment->user_id           = $userId;
         $payment->artist_id         = $request->artist_id;
+        $payment->customer_id       = $request->customer_id;
         $payment->customers_name    = $request->customers_name;
         $payment->design            = $request->design;
         $payment->placement         = $request->placement;

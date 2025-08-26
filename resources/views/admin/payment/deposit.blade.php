@@ -45,13 +45,13 @@
                                 <select name="customers_name" class="form-control" id="customers_name">
                                     <option value="">Select Customer</option>
                                     @foreach ($customers as $customer)
-                                    <option value="{{ $customer['name'] }}"
-                                        {{ old('customers_name') == $customer['name'] ? 'selected' : '' }}>
-                                        {{ $customer['name'] }} - {{ $customer['email'] }}
+                                    <option value="{{ $customer->id }}"
+                                        {{ old('customers_name') == $customer->id ? 'selected' : '' }}>
+                                        {{ $customer->name }} - {{ $customer->email }}
                                     </option>
                                     @endforeach
-
                                 </select>
+
                             </div>
                         </div>
                         <!-- Filter and Print Buttons -->

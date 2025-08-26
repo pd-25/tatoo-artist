@@ -20,7 +20,7 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table student-data-table m-t-20">
-                        <form action="{{ route('admin.customers') }}" method="get">
+                        <!-- <form action="{{ route('admin.customers') }}" method="get">
                             <div class="row">
                                 <div class="col-md-10">
                                     <input type="text" class="form-control" name="search_customer"
@@ -30,7 +30,28 @@
                                     <Button type="submit" class="btn btn-md btn-success">Search</Button>
                                 </div>
                             </div>
+                        </form> -->
+
+
+                        <form action="{{ route('admin.customers') }}" method="get">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <select name="search_customer" class="form-control">
+                                        <option value="">Select Customer</option>
+                                        @foreach ($allCustomers as $customer)
+                                        <option value="{{ $customer->id }}"
+                                            {{ request('search_customer') == $customer->id ? 'selected' : '' }}>
+                                            {{ $customer->name }} - {{ $customer->email }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-md btn-success w-100">Search</button>
+                                </div>
+                            </div>
                         </form>
+
 
                         <thead>
                             <tr>
@@ -88,7 +109,7 @@
                                 </td>
                                 @endif
                                 <td>
-                                    @if (Auth::guard('admins')->check()) 
+                                    @if (Auth::guard('admins')->check())
                                     <a href="{{ route('admin.editCustomer', $customer->id) }}"><i
                                             class="ti-pencil btn btn-sm btn-primary"></i></a>
                                     <form method="POST"
@@ -130,10 +151,10 @@
 
 </div>
 @endsection
-@section('script')
+<!-- @section('script')
 <script>
     $(document).ready(function() {
         $('#artwork_tbl').filterTable('#artwrk_tbl_filter');
     });
 </script>
-@endsection
+@endsection -->
