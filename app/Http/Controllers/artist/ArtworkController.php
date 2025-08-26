@@ -8,7 +8,9 @@ use App\core\placement\PlacementInterface;
 use App\core\style\StyleInterface;
 use App\core\subject\SubjectInterface;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ArtworkController extends Controller
 {
@@ -21,21 +23,35 @@ class ArtworkController extends Controller
         $this->placementInterface = $placementInterface;
         $this->subjectInterface = $subjectInterface;
     }
-    public function getArtistWiseArtwork() {
+    public function getArtistWiseArtwork()
+    {
         $data['artworks'] =  $this->artworkInterface->getArtistWiseArtwork(auth()->guard('artists')->id());
         return view('admin.artwork.index', $data);
     }
 
-    public function getForm(){
+    public function getForm()
+    {
+        $artistId = Auth::guard('artists')->id(); // logged-in artist id
+
+        // Get the logged-in artist's specialty
+        $artistData = DB::table('artist_data')
+            ->leftJoin('styles', 'artist_data.specialty', '=', 'styles.id')
+            ->select('artist_data.specialty as specialty_id', 'styles.title as specialty_title')
+            ->where('artist_data.artist_id', $artistId)
+            ->first();
+
+        $data['artistData']   = $artistData;
+
         $data['artists'] = $this->artistInterface->getAllArtist();
         $data['styles'] = $this->styleInterface->getAllStyle();
         $data['placements'] = $this->placementInterface->getAllPlacements();
         $data['subjects'] = $this->subjectInterface->getAllSubjects();
+
         return view('admin.artwork.create', $data);
-      
     }
 
-    public function uploadArtistWiseArtwork(Request $request) {
+    public function uploadArtistWiseArtwork(Request $request)
+    {
         $request->validate([
             'user_id' => 'required|numeric|exists:users,id',
             'style_id' => 'required|numeric|exists:styles,id',
@@ -52,7 +68,8 @@ class ArtworkController extends Controller
         }
     }
 
-    public function editArtwork($id){
+    public function editArtwork($id)
+    {
         $data['artwork'] =  $this->artworkInterface->getSingleArtwork(decrypt($id));
         $data['artists'] = $this->artistInterface->getAllArtist();
         $data['styles'] = $this->styleInterface->getAllStyle();
@@ -72,7 +89,7 @@ class ArtworkController extends Controller
             'subject_id' => 'required|numeric|exists:subjects,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif'
         ]);
-        $data = $request->only('user_id', 'style_id', 'placement_id', 'subject_id', 'image','zipcode', 'country');
+        $data = $request->only('user_id', 'style_id', 'placement_id', 'subject_id', 'image', 'zipcode', 'country');
         $update = $this->artworkInterface->updateArtwork($data, decrypt($id));
         if ($update) {
             return back()->with('msg', 'Artwork information updated successfully.');
