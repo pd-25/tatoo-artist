@@ -93,7 +93,7 @@
                                     @enderror
 
                                     <!-- hidden field for customer_id -->
-                                    <input type="text" id="customer_id" name="customer_id" value="">
+                                    <input type="hidden" id="customer_id" name="customer_id" value="">
                                 </div>
 
 
