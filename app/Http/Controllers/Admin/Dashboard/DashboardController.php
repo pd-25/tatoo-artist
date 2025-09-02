@@ -771,7 +771,7 @@ class DashboardController extends Controller
         $user = User::findOrFail($id);
 
         $depositeDetails = DB::table('payments')
-            ->where('user_id', $user->id)
+            ->where('customer_id', $user->id)
             ->where('artist_id', Auth::guard('artists')->id())
             ->get();
 
