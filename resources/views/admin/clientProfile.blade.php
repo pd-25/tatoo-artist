@@ -239,10 +239,14 @@
                                 <tr>
                                     <th>SL</th>
                                     <th>Date</th>
-                                    <th>Amount</th>
+                                    <th>Price</th>
+                                    <th>Paid</th>
+                                    <th>Total Due</th>
                                     <th>Tips</th>
+                                    <th>CC Fees</th>
                                     <th>Payment Method</th>
-                                    <th>Artist Received</th>
+                                    <th>Shop Percentage</th>
+                                    <th>Artist Percentage</th>
                                     <th>Design</th>
                                 </tr>
                             </thead>
@@ -251,21 +255,44 @@
                                 <tr>
                                     <td>#{{ $loop->iteration }}</td>
                                     <td>{{ $payment->date ? \Carbon\Carbon::parse($payment->date)->format('m-d-Y') : 'NA' }}</td>
+                                    <td>${{ number_format($payment->price, 2) }}</td>
                                     <td>${{ number_format($payment->deposit_total, 2) }}</td>
+                                    <td>${{ number_format($payment->total_due, 2) }}</td>
                                     <td>${{ number_format($payment->tips, 2) }}</td>
+                                    <td>${{ number_format($payment->fees, 2) }}</td>
                                     <td style="text-transform: capitalize;">{{ $payment->payment_method ?? 'NA' }}</td>
                                     <td>
-                                        {{ $payment->artist_percentage}}%
+                                        ${{ $payment->shop_percentage}}
+                                    </td>
+                                    <td>
+                                        ${{ $payment->artist_percentage}}
                                     </td>
                                     <td>{{ $payment->design ?? 'NA' }}</td>
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="7" class="text-center text-muted">No payments done yet.</td>
+                                    <td colspan="11" class="text-center text-muted">No payments done yet.</td>
                                 </tr>
                                 @endforelse
 
                             </tbody>
+
+                            <tfoot>
+                                <tr>
+                                    <th colspan="2" style="text-align: right;">Total:</th>
+                                    <th>${{ $depositeDetails->sum('price') }}</th>
+                                    <th>${{ $depositeDetails->sum('deposit_total') }}</th>
+                                    <th>${{ $depositeDetails->sum('total_due') }}</th>
+                                    <th>${{ $depositeDetails->sum('tips') }}</th>
+                                    <th>${{ $depositeDetails->sum('fees') }}</th>
+                                    <th></th>
+                                    <th>${{ $depositeDetails->sum('shop_percentage') }}</th>
+                                    <th>${{ $depositeDetails->sum('artist_percentage') }}</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+
+                            
                         </table>
                     </div>
                 </div>

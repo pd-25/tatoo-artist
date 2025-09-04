@@ -176,6 +176,14 @@
                             </tr>
                             @endif
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3" style="text-align: right;">Total:</th>
+                                <th>${{ $payments->sum('price') }}</th>
+                                <th>${{ $payments->sum('deposit_total') }}</th>
+                                <th colspan="6"></th>
+                            </tr>
+                        </tfoot>
                     </table>
                     {{$payments->links()}}
                 </div>
