@@ -107,12 +107,12 @@
                                         onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Send
                                         Link</button> -->
                                     @elseif($quote->link_send_status == 1)
-                                    <button class="btn btn-sm btn-warning"
+                                    <!-- <button class="btn btn-sm btn-warning"
                                         onclick="AgainSendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Again
-                                        Send Link</button>
+                                        Send Link</button> -->
                                     @else
-                                    <a href="{{ $quote->pdf_path }}" class="btn btn-sm btn-success"
-                                        target="_blank">View Link</a>
+                                    <!-- <a href="{{ $quote->pdf_path }}" class="btn btn-sm btn-success"
+                                        target="_blank">View Link</a> -->
                                     @endif
 
                                     <form method="POST"
