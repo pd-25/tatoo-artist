@@ -145,11 +145,11 @@
                                     @error('tips') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label>Deposit Slip</label>
                                     <input type="file" class="form-control" name="bill_image">
                                     @error('bill_image') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
+                                </div> -->
 
                             </div>
                             <div class="col-md-12">

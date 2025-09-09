@@ -48,7 +48,7 @@
             <div class="card-title pr ">
                 <div class="d-flex justify-content-between">
                     <div>
-                <h4>All Walkin Archives</h4>
+                <h4>All Quote Archives</h4>
                     </div>
                 <div class="d-flex align-items-center">
                 <a href="{{route('admin.getQuote')}}" class="btn btn-primary m-1">Back</a>
@@ -69,10 +69,10 @@
                         <thead style="text-align: center;">
                             <tr>
                                 <th>SN.</th>
-                                
+                                <th>Full Name</th>
                                 <th>User Email</th>
-                                
-                                <th>Artist Name</th>
+                                <th>Phone Number</th>
+                                <th>Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -98,15 +98,16 @@
 
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
-                                            {{-- <td>{{ @$quote->user->name }}</td> --}}
+                                            <td>{{ @$quote->user->name }}</td> 
                                             <td>{{ @$quote->user->email }}</td>
-                                            {{-- <td>{{ @$formattedPhoneNumber }}</td> --}}
-                                            <td>{{ @$quote->artist->name }}</td>
+                                           <td>{{ @$formattedPhoneNumber }}</td>
+                                            <!-- <td>{{ @$quote->artist->name }}</td> -->
+                                             <td>{{ date('m-d-Y',strtotime( $quote->created_at)) }}</td>
                                             <td>
                                                 @if ($quote->link_send_status == 0)
-                                                <button class="btn btn-sm btn-primary"
+                                                <!-- <button class="btn btn-sm btn-primary"
                                                     onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Send
-                                                    Link</button>
+                                                    Link</button> -->
                                             @elseif($quote->link_send_status == 1)
                                                 <button class="btn btn-sm btn-warning"
                                                     onclick="AgainSendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Again
