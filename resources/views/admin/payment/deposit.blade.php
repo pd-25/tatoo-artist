@@ -105,7 +105,7 @@
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Pay Type</th>
                                 <th class="text-center">CC Amount</th>
-                                <th class="text-center">View Deposit Image</th>
+                                <th class="text-center">View Deposit Invoice</th>
                                 <th class="text-center">Action</th>
                                 <th>View/Print</th>
                             </tr>
@@ -143,11 +143,12 @@
                                 </td>
 
                                 <td style="text-align: center;">
-                                    @if(!empty($payment->bill_image))
+                                    <!-- @if(!empty($payment->bill_image))
                                     <a href="{{ asset($payment->bill_image) }}" class="btn btn-sm btn-success" target="_blank">View Link</a>
                                     @else
                                     <button class="btn btn-sm btn-danger" readonly>No image!</button>
-                                    @endif
+                                    @endif -->
+                                    <a href="{{ route('admin.paymentview', encrypt($payment->id)) }}" target="_blank" class="btn btn-sm btn-success">View Invoice</a>
                                 </td>
                                 <td style="text-align: center; display:flex; gap:3px; justify-content: center;">
                                     <a href="{{ route('admin.showInstallments', $payment->id) }}">

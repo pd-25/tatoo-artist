@@ -133,6 +133,7 @@ Route::get('/get-accept-payment', [PaymentController::class, 'getAcceptPayment']
 Route::get('/add-payment', [PaymentController::class, 'AddpaymentForm'])->name('admin.AddpaymentForm');
 Route::post('/add-payment-post', [PaymentController::class, 'AddpaymentPost'])->name('admin.AddpaymentPost');
 Route::get('/print-payment-slip/{id}', [PaymentController::class, 'paymentview'])->name('admin.paymentview');
+Route::post('/customers/{id}/aftercare-mail', [PaymentController::class, 'sendAfterCareMail'])->name('send.aftercare.mail');
 
 
 

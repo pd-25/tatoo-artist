@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin\Payment;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AfterCareInstruction;
+use App\Mail\PaymentInvoiceMail;
 use App\Models\ArtistData;
 use Illuminate\Http\Request;
 use App\Models\Placement;
@@ -11,6 +13,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -507,6 +510,16 @@ class PaymentController extends Controller
 
         $payment->save();
 
+        // send to email of invoice to the customer
+        $customer = User::where('id', $request->customer_id)->first();
+        $artist = User::where('id', $request->artist_id)->first();
+        $data = [
+            'customer' => $customer,
+            'artist'   => $artist,
+            'payment'  => $payment,
+        ];
+        Mail::to($customer->email)->send(new PaymentInvoiceMail($data));
+
         return redirect()->route('admin.deposit-slips')->with('message', 'Payment added successfully.');
     }
     public function editpaymentForm(Request $request, $id)
@@ -633,7 +646,26 @@ class PaymentController extends Controller
         return view('admin.payment.print', compact('payments', 'placements', 'artists'));
     }
 
+    public function sendAfterCareMail(Request $request, $id)
+    {
+        $payments = PaymentModel::where('id', decrypt($id))->firstOrFail();
 
+        // Get customer from users table
+        $customer = \App\Models\User::find($payments->customer_id);
+
+        if (!$customer || empty($customer->email)) {
+            return back()->with('error', 'Customer email not found.');
+        }
+
+        // Pass customer into the Mailable
+        Mail::to($customer->email)->send(new \App\Mail\AfterCareInstruction($customer));
+
+        return back()->with('success', 'After care instructions sent successfully!');
+    }
+
+
+
+    
 
     public function showInstallments($id)
     {
