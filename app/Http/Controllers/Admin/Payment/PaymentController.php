@@ -513,10 +513,17 @@ class PaymentController extends Controller
         // send to email of invoice to the customer
         $customer = User::where('id', $request->customer_id)->first();
         $artist = User::where('id', $request->artist_id)->first();
+        // Fetch placement data if placement is an ID
+        $placement = null;
+        if (!empty($payment->placement)) {
+            $placement = Placement::find($payment->placement);
+        }
+
         $data = [
             'customer' => $customer,
             'artist'   => $artist,
             'payment'  => $payment,
+            'placement' => $placement,
         ];
         Mail::to($customer->email)->send(new PaymentInvoiceMail($data));
 
@@ -665,7 +672,7 @@ class PaymentController extends Controller
 
 
 
-    
+
 
     public function showInstallments($id)
     {
@@ -676,79 +683,98 @@ class PaymentController extends Controller
         return view('admin.payment.instalment', compact('payment', 'installments', 'placement'));
     }
 
-    public function addDepositInstallment(Request $request)
-    {
-        $request->validate([
-            'payment_id' => 'required|exists:payments,id',
-            'amount'     => 'required|numeric|min:0.01',
-            'method'     => 'required|string',
-            'reimbursed' => 'nullable|integer'
-        ]);
+public function addDepositInstallment(Request $request)
+{
+    $request->validate([
+        'payment_id' => 'required|exists:payments,id',
+        'amount'     => 'required|numeric|min:0.01',
+        'method'     => 'required|string',
+        'reimbursed' => 'nullable|integer'
+    ]);
 
-        $payment = PaymentModel::findOrFail($request->payment_id);
+    $payment = PaymentModel::findOrFail($request->payment_id);
 
-        // Get existing log or start new
-        $log = $payment->deposit_log ? json_decode($payment->deposit_log, true) : [];
+    // Get existing log or start new
+    $log = $payment->deposit_log ? json_decode($payment->deposit_log, true) : [];
 
-        // Add new installment entry
-        $log[] = [
-            'date'       => now()->toDateTimeString(),
-            'amount'     => $request->amount,
-            'method'     => $request->method,
-            'reimbursed' => $request->reimbursed ?? 0,
-        ];
+    // Add new installment entry
+    $log[] = [
+        'date'       => now()->toDateTimeString(),
+        'amount'     => $request->amount,
+        'method'     => $request->method,
+        'reimbursed' => $request->reimbursed ?? 0,
+    ];
 
-        // Update deposit total
-        $payment->deposit_total += $request->amount;
-        $payment->deposit_log = json_encode($log);
+    // Update deposit total
+    $payment->deposit_total += $request->amount;
+    $payment->deposit_log = json_encode($log);
 
-        // Recalculate total due
-        $price = $payment->price ?? 0;
-        $deposit_total = $payment->deposit_total;
-        $payment->total_due = $price - $deposit_total;
+    // Recalculate total due
+    $price = $payment->price ?? 0;
+    $deposit_total = $payment->deposit_total;
+    $payment->total_due = $price - $deposit_total;
 
-        // Update percentages
-        $artistData = ArtistData::where('artist_id', $payment->artist_id)->first();
-        $shopPercentageValue = $artistData ? (float)$artistData->shop_percentage : 0;
-        $artistPercentageValue = 100 - $shopPercentageValue;
+    // Update percentages
+    $artistData = ArtistData::where('artist_id', $payment->artist_id)->first();
+    $shopPercentageValue = $artistData ? (float)$artistData->shop_percentage : 0;
+    $artistPercentageValue = 100 - $shopPercentageValue;
 
-        $payment->shop_percentage = round($deposit_total * $shopPercentageValue / 100, 2);
-        $payment->artist_percentage = round($deposit_total * $artistPercentageValue / 100, 2);
+    $payment->shop_percentage = round($deposit_total * $shopPercentageValue / 100, 2);
+    $payment->artist_percentage = round($deposit_total * $artistPercentageValue / 100, 2);
 
-        // Recalculate fees based on reimbursed == 0 logs
-        $totalValidDeposit = collect($log)
-            ->filter(fn($entry) => ($entry['reimbursed'] ?? 0) == 0)
-            ->sum('amount');
+    // Recalculate fees based on reimbursed == 0 logs
+    $totalValidDeposit = collect($log)
+        ->filter(fn($entry) => ($entry['reimbursed'] ?? 0) == 0)
+        ->sum('amount');
 
-        $fees = 0;
-        if ($artistData && $totalValidDeposit > 0) {
-            switch ((int)$artistData->cc_fees) {
-                case 1:
-                    $fees = 0;
-                    break;
-                case 2:
-                    $fees = round(
-                        $totalValidDeposit * ($artistData->cc_fees_percentage / 100) * ($artistData->shop_percentage / 100),
-                        2
-                    );
-                    break;
-                case 3:
-                    $fees = round(
-                        $totalValidDeposit * ($artistData->cc_fees_percentage / 100),
-                        2
-                    );
-                    break;
-                default:
-                    $fees = 0;
-            }
+    $fees = 0;
+    if ($artistData && $totalValidDeposit > 0) {
+        switch ((int)$artistData->cc_fees) {
+            case 1:
+                $fees = 0;
+                break;
+            case 2:
+                $fees = round(
+                    $totalValidDeposit * ($artistData->cc_fees_percentage / 100) * ($artistData->shop_percentage / 100),
+                    2
+                );
+                break;
+            case 3:
+                $fees = round(
+                    $totalValidDeposit * ($artistData->cc_fees_percentage / 100),
+                    2
+                );
+                break;
+            default:
+                $fees = 0;
         }
-
-        $payment->fees = $fees;
-
-        $payment->save();
-
-        return redirect()->back()->with('message', 'Installment deposit added and totals updated successfully.');
     }
+
+    $payment->fees = $fees;
+    $payment->save();
+
+    // Fetch customer, artist, and placement
+    $customer = User::where('id', $payment->customer_id)->first();
+    $artist   = User::where('id', $payment->artist_id)->first();
+    $placement = !empty($payment->placement) ? Placement::find($payment->placement) : null;
+
+    // Prepare data for email
+    $data = [
+        'customer'  => $customer,
+        'artist'    => $artist,
+        'payment'   => $payment,
+        'placement' => $placement,
+        'log'       => $log // so email can show full deposit history if needed
+    ];
+
+    // Send email
+    if ($customer && $customer->email) {
+        Mail::to($customer->email)->send(new PaymentInvoiceMail($data));
+    }
+
+    return redirect()->back()->with('message', 'Installment deposit added, totals updated, and email sent successfully.');
+}
+
     public function updateReimbursed(Request $request, PaymentModel $payment)
     {
         $request->validate([

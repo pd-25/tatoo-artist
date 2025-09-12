@@ -29,10 +29,14 @@ class PaymentInvoiceMail extends Mailable
         // Generate PDF from a separate blade view
         $pdf = FacadePdf::loadView('admin.email.payment-invoice-pdf', ['data' => $this->data]);
 
-        return $this->subject('Payment Invoice')
+        return $this->subject('Payment Receipt')
             ->view('admin.email.payment-invoice-mail')
             ->with(['data' => $this->data])
             ->attachData($pdf->output(), 'invoice.pdf', [
+                'mime' => 'application/pdf',
+            ])
+            ->attach(public_path('aftercare.pdf'), [
+                'as' => 'aftercare.pdf',
                 'mime' => 'application/pdf',
             ]);
     }

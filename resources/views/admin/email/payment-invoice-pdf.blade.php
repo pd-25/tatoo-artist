@@ -120,13 +120,13 @@
         <h4 class="section-title">Payment Details</h4>
         <table>
             <tr><th>Design</th><td>{{ $data['payment']->design ?? 'N/A' }}</td></tr>
-            <tr><th>Placement</th><td>{{ $data['payment']->placement ?? 'N/A' }}</td></tr>
+            <tr><th>Placement</th><td>{{ $data['placement'] ? $data['placement']->title : 'N/A' }}</td></tr>
             <tr><th>Price</th><td>${{ number_format($data['payment']->price, 2) }}</td></tr>
             <tr><th>Deposit</th><td>${{ number_format($data['payment']->deposit_total, 2) }}</td></tr>
             <tr><th>Tips</th><td>${{ number_format($data['payment']->tips, 2) }}</td></tr>
             <tr><th>Fees</th><td>${{ number_format($data['payment']->fees, 2) }}</td></tr>
             <tr><th>Total Due</th><td><strong>${{ number_format($data['payment']->total_due, 2) }}</strong></td></tr>
-            <tr><th>Date</th><td>{{ $data['payment']->date }}</td></tr>
+            <tr><th>Date</th><td>{{ \Carbon\Carbon::parse($data['payment']->date)->format('m-d-Y') }}</td></tr>
         </table>
 
         <h4 class="section-title">Payment History</h4>
@@ -145,7 +145,7 @@
                     @foreach ($logs as $index => $log)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ \Carbon\Carbon::parse($log['date'])->format('d M Y, h:i A') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($log['date'])->format('m-d-Y') }}</td>
                             <td>{{ ucwords($log['method']) }}</td>
                             <td>${{ number_format($log['amount'], 2) }}</td>
                         </tr>
