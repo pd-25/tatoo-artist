@@ -17,35 +17,44 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <!-- Flatpickr JS -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <style>
-
-.display-none {
+        .display-none {
             display: none;
         }
 
         #signaturePad {
-        height: 200px; /* Fixed height for both views */
-        border: 1px solid #000; /* Optional: Add a border for visibility */
-        display: block; /* Ensures the canvas is displayed as a block element */
-        margin: 0 auto; /* Center the canvas */
-    }
-
-    /* Desktop view styles */
-    @media (min-width: 768px) { /* Adjust breakpoint as needed */
-        #signaturePad {
-            width: 400px; /* Fixed width for desktop view */
-            padding: 0px;
-            margin: 0;
+            height: 200px;
+            /* Fixed height for both views */
+            border: 1px solid #000;
+            /* Optional: Add a border for visibility */
+            display: block;
+            /* Ensures the canvas is displayed as a block element */
+            margin: 0 auto;
+            /* Center the canvas */
         }
-    }
 
-    /* Mobile view styles */
-    @media (max-width: 767px) { /* Adjust breakpoint as needed */
-        #signaturePad {
-            width: 100%; /* Auto width for mobile view to take full container width */
+        /* Desktop view styles */
+        @media (min-width: 768px) {
+
+            /* Adjust breakpoint as needed */
+            #signaturePad {
+                width: 400px;
+                /* Fixed width for desktop view */
+                padding: 0px;
+                margin: 0;
+            }
         }
-    }
+
+        /* Mobile view styles */
+        @media (max-width: 767px) {
+
+            /* Adjust breakpoint as needed */
+            #signaturePad {
+                width: 100%;
+                /* Auto width for mobile view to take full container width */
+            }
+        }
     </style>
 </head>
 
@@ -157,7 +166,7 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="general_good_health" value="0"  />
+                                    <input type="radio" name="general_good_health" value="0" />
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -168,7 +177,7 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_under_any_medical_treatment" value="1"  />
+                                    <input type="radio" name="you_under_any_medical_treatment" value="1" />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
@@ -185,13 +194,13 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_currently_taking_any_drugs" value="1"  />
+                                    <input type="radio" name="you_currently_taking_any_drugs" value="1" />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_currently_taking_any_drugs" value="0" checked/>
+                                    <input type="radio" name="you_currently_taking_any_drugs" value="0" checked />
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -202,13 +211,13 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_have_a_history_of_medication" value="1"  />
+                                    <input type="radio" name="you_have_a_history_of_medication" value="1" />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_have_a_history_of_medication" value="0" checked/>
+                                    <input type="radio" name="you_have_a_history_of_medication" value="0" checked />
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -219,13 +228,13 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_have_a_history_of_fainting" value="1"  />
+                                    <input type="radio" name="you_have_a_history_of_fainting" value="1" />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="you_have_a_history_of_fainting" value="0" checked/>
+                                    <input type="radio" name="you_have_a_history_of_fainting" value="0" checked />
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -236,7 +245,7 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="are_you_allergic_to_latex" value="1"  />
+                                    <input type="radio" name="are_you_allergic_to_latex" value="1" />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
@@ -256,13 +265,13 @@
 
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="have_any_wounds_healed_slowly" value="1"  />
+                                    <input type="radio" name="have_any_wounds_healed_slowly" value="1" />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="have_any_wounds_healed_slowly" value="0" checked/>
+                                    <input type="radio" name="have_any_wounds_healed_slowly" value="0" checked />
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -274,14 +283,13 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="are_you_allergic_to_any_know_materials" value="1"
-                                         />
+                                    <input type="radio" name="are_you_allergic_to_any_know_materials" value="1" />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="are_you_allergic_to_any_know_materials" value="0" checked/>
+                                    <input type="radio" name="are_you_allergic_to_any_know_materials" value="0" checked />
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -293,14 +301,13 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="any_risk_factors_from_work_or_lifestyle" value="1"
-                                         />
+                                    <input type="radio" name="any_risk_factors_from_work_or_lifestyle" value="1" />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="any_risk_factors_from_work_or_lifestyle" value="0" checked/>
+                                    <input type="radio" name="any_risk_factors_from_work_or_lifestyle" value="0" checked />
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -311,13 +318,13 @@
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="are_you_pregnant_or_nursing" value="1"  />
+                                    <input type="radio" name="are_you_pregnant_or_nursing" value="1" />
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
                             <div class="col-md-1">
                                 <label class="radio-container">
-                                    <input type="radio" name="are_you_pregnant_or_nursing" value="0" checked/>
+                                    <input type="radio" name="are_you_pregnant_or_nursing" value="0" checked />
                                     <span class="checkmark2"></span>
                                 </label>
                             </div>
@@ -506,23 +513,23 @@
                                         aria-describedby="basic-addon3" required />
                                 </div>
                             </div>
-                            
+
                             <!-- jQuery, Moment.js, and Bootstrap Datetimepicker JS -->
                             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                             <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
                             <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
                             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
-                            
+
                             <script>
-                               document.addEventListener("DOMContentLoaded", function() {
-        flatpickr(".flatpickr", {
-            dateFormat: "m-d-Y", // Customize the date format
-            allowInput: true, // Allow manual input
-            defaultDate: "today", // Set default date to today
-        });
-    });
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    flatpickr(".flatpickr", {
+                                        dateFormat: "m-d-Y", // Customize the date format
+                                        allowInput: true, // Allow manual input
+                                        defaultDate: "today", // Set default date to today
+                                    });
+                                });
                             </script>
-                            
+
                         </div>
                         <div class="row">
                             <div class="col-md-12">
@@ -572,48 +579,60 @@
                                             <input type="radio" id="digitalSignature" name="signatureOption" value="digital" onchange="toggleSignatureOptions(this)" checked>
                                             <label for="digitalSignature">Digital Signature</label>
                                         </div>
-                                    <div >
-                                        <input type="radio" id="uploadFile" name="signatureOption" value="file" onchange="toggleSignatureOptions(this)" >
-                                        <label for="uploadFile">Upload File</label>
-                                    </div>
-                                    
+                                        <div>
+                                            <input type="radio" id="uploadFile" name="signatureOption" value="file" onchange="toggleSignatureOptions(this)">
+                                            <label for="uploadFile">Upload File</label>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
-                            
-                            
+
+
                             <!-- File Upload Input -->
                             <div id="file-input-div" class="mb-3" style="display: none;">
                                 <label for="formFileSm" class="form-label">Upload Signature</label>
-                                <input  class="form-control form-control-sm" name="signature" id="formFileSm" type="file" accept="image/*" onchange="readURL(this, 'sign');" />
+                                <input class="form-control form-control-sm" name="signature" id="formFileSm" type="file" accept="image/*" onchange="readURL(this, 'sign');" />
                                 <img id="sign" src="" class="display-none imgx" alt="your image" style="display: none; max-width: 100%; height: auto;" />
                             </div>
-                            
+
                             <!-- Digital Signature Canvas -->
-                            <div id="digital-signature-div" class="form-group" >
+                            <div id="digital-signature-div" class="form-group">
                                 <label for="digital_signature">Digital Signature (Draw Here)</label>
                                 <canvas id="signaturePad" class="border ffffdee"></canvas>
-                                <input  type="hidden" id="digital_signature" name="digital_signature">
+                                <input type="hidden" id="digital_signature" name="digital_signature">
                                 <button type="button" class="btn btn-secondary mt-2" id="clearSignature">Clear Signature</button>
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="formFileSm" class="form-label">Driving Licence Front</label>
-                                    <input required class="form-control form-control-sm" name="driving_licence_front"
-                                        id="formFileSm" type="file" accept="image/*"
+                                    <label for="dl-front-input" class="form-label">Driving Licence Front</label>
+                                    <input required
+                                        class="form-control form-control-sm"
+                                        name="driving_licence_front"
+                                        id="dl-front-input"
+                                        type="file"
+                                        accept="image/*"
+                                        capture="environment"
                                         onchange="readURL(this,'dl-front');" />
                                     <img id="dl-front" src="" class="display-none imgx" alt="your image" />
                                 </div>
                             </div>
+
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="formFileSm" class="form-label">Driving Licence Back</label>
-                                    <input required class="form-control form-control-sm" name="driving_licence_back"
-                                        id="formFileSm" type="file" accept="image/*"
+                                    <label for="dl-back-input" class="form-label">Driving Licence Back</label>
+                                    <input required
+                                        class="form-control form-control-sm"
+                                        name="driving_licence_back"
+                                        id="dl-back-input"
+                                        type="file"
+                                        accept="image/*"
+                                        capture="environment"
                                         onchange="readURL(this,'dl-back');" />
                                     <img id="dl-back" src="" class="display-none imgx" alt="your image" />
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -632,10 +651,12 @@
     </form>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#phone').mask('+000 000-0000', {
                 'translation': {
-                    0: { pattern: /[0-9]/ }
+                    0: {
+                        pattern: /[0-9]/
+                    }
                 }
             });
         });
@@ -645,11 +666,10 @@
 </html>
 
 <script>
-
     function readURL(input, id) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = function(e) {
                 $("#" + id).attr("src", e.target.result);
                 $("#" + id).show();
             };
@@ -666,12 +686,12 @@
     // Helper function to get the correct position
     function getPosition(e) {
         const rect = canvas.getBoundingClientRect();
-        if (e.touches) {  // Touch events
+        if (e.touches) { // Touch events
             return {
                 x: e.touches[0].clientX - rect.left,
                 y: e.touches[0].clientY - rect.top
             };
-        } else {  // Mouse events
+        } else { // Mouse events
             return {
                 x: e.offsetX,
                 y: e.offsetY
@@ -681,7 +701,7 @@
 
     // Start drawing
     function startDrawing(e) {
-        e.preventDefault();  // Prevent scrolling on touch devices
+        e.preventDefault(); // Prevent scrolling on touch devices
         drawing = true;
         const pos = getPosition(e);
         ctx.moveTo(pos.x, pos.y);
@@ -727,7 +747,7 @@
     }
 
     // Handle form submission for digital signature or file upload
-    document.getElementById('tattooForm').addEventListener('submit', function (e) {
+    document.getElementById('tattooForm').addEventListener('submit', function(e) {
         const signatureFileInput = document.getElementById('formFileSm').files[0];
         const digitalSignatureInput = document.getElementById('digital_signature').value;
 
@@ -769,40 +789,36 @@
     // });
     // Toggle between signature file upload and digital signature drawing
 
- // Toggle between signature file upload and digital signature drawing
-function toggleSignatureOptions(select) {
-    const fileInputDiv = document.getElementById('file-input-div');
-    const digitalSignatureDiv = document.getElementById('digital-signature-div');
-    const fileInput = document.getElementById('formFileSm');  // File input field ID
-    const digitalSignatureInput = document.getElementById('digital_signature');  // Hidden input for digital signature
+    // Toggle between signature file upload and digital signature drawing
+    function toggleSignatureOptions(select) {
+        const fileInputDiv = document.getElementById('file-input-div');
+        const digitalSignatureDiv = document.getElementById('digital-signature-div');
+        const fileInput = document.getElementById('formFileSm'); // File input field ID
+        const digitalSignatureInput = document.getElementById('digital_signature'); // Hidden input for digital signature
 
-    if (select.value === 'file') {
-        // Show file input and hide digital signature drawing area
-        fileInputDiv.style.display = 'block';
-        digitalSignatureDiv.style.display = 'none';
+        if (select.value === 'file') {
+            // Show file input and hide digital signature drawing area
+            fileInputDiv.style.display = 'block';
+            digitalSignatureDiv.style.display = 'none';
 
-        // Make file input required and remove the requirement from digital signature
-        fileInput.setAttribute('required', 'required');
-        digitalSignatureInput.removeAttribute('required');
-    } else if (select.value === 'digital') {
-        // Show digital signature drawing area and hide file input
-        fileInputDiv.style.display = 'none';
-        digitalSignatureDiv.style.display = 'block';
+            // Make file input required and remove the requirement from digital signature
+            fileInput.setAttribute('required', 'required');
+            digitalSignatureInput.removeAttribute('required');
+        } else if (select.value === 'digital') {
+            // Show digital signature drawing area and hide file input
+            fileInputDiv.style.display = 'none';
+            digitalSignatureDiv.style.display = 'block';
 
-        // Make digital signature required and remove the requirement from file input
-        digitalSignatureInput.setAttribute('required', 'required');
-        fileInput.removeAttribute('required');
+            // Make digital signature required and remove the requirement from file input
+            digitalSignatureInput.setAttribute('required', 'required');
+            fileInput.removeAttribute('required');
+        }
     }
-}
 
-// Set initial state on page load
-document.addEventListener('DOMContentLoaded', function () {
-    // Find the checked radio button (by default 'digital' is checked)
-    const defaultOption = document.querySelector('input[name="signatureOption"]:checked');
-    toggleSignatureOptions(defaultOption); // Call toggle with the default selected option
-});
-
-
+    // Set initial state on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Find the checked radio button (by default 'digital' is checked)
+        const defaultOption = document.querySelector('input[name="signatureOption"]:checked');
+        toggleSignatureOptions(defaultOption); // Call toggle with the default selected option
+    });
 </script>
-
-
