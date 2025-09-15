@@ -24,7 +24,7 @@
                         </p>
                         
                         <p><strong>Joining Date:</strong> {{ $subscription->user->created_at->format('m/d/Y') }}</p>
-                        <p><strong>Joining By:</strong> {{ $sales->name }}</p>
+                        <p><strong>Joining By:</strong> {{ $sales->name ?? 'N/A' }}</p>
                         <p><strong>Subscription Date:</strong> {{ $subscription->subscription_date?->format('m/d/Y') ?? 'Use For Trial' }}</p>
                     </div>
                     <div class="col-md-6">
