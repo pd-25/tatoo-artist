@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>New Subscription Details</title>
     <style>
@@ -9,25 +10,30 @@
             color: #333;
             margin: 20px;
         }
+
         h2 {
             color: #0080e0;
             border-bottom: 2px solid #0080e0;
             padding-bottom: 5px;
             margin-bottom: 15px;
         }
+
         p {
             margin: 10px 0;
         }
+
         strong {
             color: #555;
         }
+
         .section {
             margin-bottom: 20px;
         }
     </style>
 </head>
+
 <body>
-    
+
     <div class="section">
         <h2>Profile Details</h2>
         <p><strong>Artist Name:</strong> {{ $userdata->name  ?? 'N/A'  }}</p>
@@ -46,7 +52,9 @@
     <div class="section">
         <h2>Subscription Details</h2>
         <p><strong>Signup Date:</strong> {{ $userdata->created_at->format('m/d/Y') }}</p>
-        <p><strong>Subscription Date:</strong> {{ \Carbon\Carbon::parse($subscriptionData['subscription_date'])->format('m/d/Y') }}</p>
+        <p><strong>Subscription Date:</strong>
+            {{ isset($subscriptionData['subscription_date']) ? \Carbon\Carbon::parse($subscriptionData['subscription_date'])->format('m/d/Y') : 'N/A' }}
+        </p>
         <p><strong>Subscription Level:</strong> {{ $subscriptionData['subscription_plan'] }}</p>
         <p><strong>Status:</strong> {{ $subscriptionData['status'] }}</p>
         <p><strong>Zelle Email:</strong> {{ $subscriptionData['zell_email'] ?? 'N/A' }}</p>
@@ -58,4 +66,5 @@
     </div>
 
 </body>
+
 </html>
