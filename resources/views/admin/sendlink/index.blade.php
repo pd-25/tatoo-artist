@@ -18,44 +18,67 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <style>
-        .display-none {
-            display: none;
-        }
+<style>
+    .custom-file-btn {
+    display: none; /* Hidden by default */
+}
 
-        #signaturePad {
-            height: 200px;
-            /* Fixed height for both views */
-            border: 1px solid #000;
-            /* Optional: Add a border for visibility */
-            display: block;
-            /* Ensures the canvas is displayed as a block element */
-            margin: 0 auto;
-            /* Center the canvas */
-        }
+.display-none {
+    display: none;
+}
 
-        /* Desktop view styles */
-        @media (min-width: 768px) {
+#signaturePad {
+    height: 200px;
+    border: 1px solid #000;
+    display: block;
+    margin: 0 auto;
+}
 
-            /* Adjust breakpoint as needed */
-            #signaturePad {
-                width: 400px;
-                /* Fixed width for desktop view */
-                padding: 0px;
-                margin: 0;
-            }
-        }
+/* Desktop view (>=768px): Show default file input, hide custom button */
+@media (min-width: 768px) {
+    #signaturePad {
+        width: 400px;
+        padding: 0;
+        margin: 0;
+    }
 
-        /* Mobile view styles */
-        @media (max-width: 767px) {
+    .form-control.form-control-sm {
+        display: block; /* Default file input visible */
+    }
 
-            /* Adjust breakpoint as needed */
-            #signaturePad {
-                width: 100%;
-                /* Auto width for mobile view to take full container width */
-            }
-        }
-    </style>
+    .custom-file-btn {
+        display: none; /* Hide custom Take Picture button on desktop */
+    }
+}
+
+/* Mobile view (<768px): Hide default file input, show custom button */
+@media (max-width: 767px) {
+    #signaturePad {
+        width: 100%;
+    }
+
+    .form-control.form-control-sm {
+        display: none; /* Hide default input */
+    }
+
+    .custom-file-btn {
+        display: inline-block;
+        background: #007bff;
+        color: #fff;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        text-align: center;
+        margin-top: 5px;
+    }
+
+    .custom-file-btn i {
+        margin-right: 5px;
+    }
+}
+
+</style>
 </head>
 
 <body>
@@ -603,33 +626,38 @@
                                 <input type="hidden" id="digital_signature" name="digital_signature">
                                 <button type="button" class="btn btn-secondary mt-2" id="clearSignature">Clear Signature</button>
                             </div>
+
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="dl-front-input" class="form-label">Driving Licence Front</label>
-                                    <input required
-                                        class="form-control form-control-sm"
-                                        name="driving_licence_front"
-                                        id="dl-front-input"
-                                        type="file"
-                                        accept="image/*"
-                                        capture="environment"
-                                        onchange="readURL(this,'dl-front');" />
-                                    <img id="dl-front" src="" class="display-none imgx" alt="your image" />
+
+                                    <!-- Default input (Desktop) -->
+                                    <input required class="form-control form-control-sm" name="driving_licence_front" id="dl-front-input"
+                                        type="file" accept="image/*" capture="environment"
+                                        onchange="showFileName(this, 'front-file-name');" />
+
+                                    <!-- Custom button (Mobile) -->
+                                    <label for="dl-front-input" class="custom-file-btn">
+                                        <i class="fas fa-camera"></i> Take Picture
+                                    </label>
+                                    <div id="front-file-name" class="file-name"></div>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="dl-back-input" class="form-label">Driving Licence Back</label>
-                                    <input required
-                                        class="form-control form-control-sm"
-                                        name="driving_licence_back"
-                                        id="dl-back-input"
-                                        type="file"
-                                        accept="image/*"
-                                        capture="environment"
-                                        onchange="readURL(this,'dl-back');" />
-                                    <img id="dl-back" src="" class="display-none imgx" alt="your image" />
+
+                                    <!-- Default input (Desktop) -->
+                                    <input required class="form-control form-control-sm" name="driving_licence_back" id="dl-back-input"
+                                        type="file" accept="image/*" capture="environment"
+                                        onchange="showFileName(this, 'back-file-name');" />
+
+                                    <!-- Custom button (Mobile) -->
+                                    <label for="dl-back-input" class="custom-file-btn">
+                                        <i class="fas fa-camera"></i> Take Picture
+                                    </label>
+                                    <div id="back-file-name" class="file-name"></div>
                                 </div>
                             </div>
 
@@ -821,4 +849,17 @@
         const defaultOption = document.querySelector('input[name="signatureOption"]:checked');
         toggleSignatureOptions(defaultOption); // Call toggle with the default selected option
     });
+</script>
+
+
+<script>
+    function showFileName(input, id) {
+        const fileNameDiv = document.getElementById(id);
+        if (input.files && input.files.length > 0) {
+            fileNameDiv.textContent = input.files[0].name;
+            fileNameDiv.style.color = "green";
+        } else {
+            fileNameDiv.textContent = "";
+        }
+    }
 </script>
