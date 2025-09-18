@@ -37,7 +37,7 @@
                 </p>
 
                 <p style="text-align:center; margin:30px 0;">
-                    <a href="{{ $booking_link }}" style="background:#28a745; color:#fff; text-decoration:none; padding:12px 20px; border-radius:5px; font-size:16px;">
+                    <a href="https://tattoome.net/cymus2/" style="background:#28a745; color:#fff; text-decoration:none; padding:12px 20px; border-radius:5px; font-size:16px;">
                         Book Appointment
                     </a>
                 </p>
