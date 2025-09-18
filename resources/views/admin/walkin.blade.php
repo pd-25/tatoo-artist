@@ -146,8 +146,8 @@
                                 <tr>
                                     <th class="text-center"><input type="checkbox" id="selectAll"></th>
                                     <th class="text-center">SN.</th>
-                                    <th class="text-center">User Email</th>
-                                    <th class="text-center">User Name</th>
+                                    <th class="text-center">Customer Email</th>
+                                    <th class="text-center">Customer Name</th>
                                     <!-- <th class="text-center">Artist Name</th> -->
                                     <th class="text-center">Date</th>
                                     <th class="">Actions</th>

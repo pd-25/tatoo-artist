@@ -114,9 +114,15 @@
                             <tr>
                                 <th class="text-center"><input type="checkbox" id="selectAll"></th>
                                 <th class="text-center">SN.</th>
+                        <!-- changed titles 091725
                                 <th class="text-center">User Name</th>
                                 <th class="text-center">User Email</th>
                                 <th class="text-center">User Contact</th>
+                                -->
+                                <th class="text-center">Customer Name</th>
+                                <th class="text-center">Customer Email</th>
+                                <th class="text-center">Customer Phone</th>
+
                                 <th class="text-center">Artist Name</th>
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Actions</th>
@@ -172,6 +178,7 @@
                                         </button>
                                         <br>
                                         @if ($quote->link_send_status == 0)
+                                    <!-- changed 091725
                                         <button class="btn btn-sm btn-primary"
                                             onclick="AgainSendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Send Consent
                                             Link</button>
@@ -181,6 +188,7 @@
                                             Send Consent
                                             Link</button>
                                         @else
+                                         -->
                                         <a href="{{ $quote->pdf_path }}" class="btn btn-sm btn-success"
                                             target="_blank">View Link</a>
                                         @endif

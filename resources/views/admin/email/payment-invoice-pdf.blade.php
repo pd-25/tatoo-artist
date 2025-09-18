@@ -95,7 +95,7 @@
 <body>
     <div class="invoice-container">
         <div class="invoice-header">
-            <h2>Invoice</h2>
+            <h2>Receipt</h2>
             <p>Thank you for choosing our tattoo services</p>
         </div>
 

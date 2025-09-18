@@ -56,7 +56,7 @@
                         <thead>
                             <tr>
                                 <th>SN.</th>
-                                <th>Full name</th>
+                                <th>Customer Name</th>
                                 <!-- <th>Username</th> -->
                                 <th>Phone</th>
                                 <th>Email</th>
@@ -88,8 +88,16 @@
                                 </td> -->
 
                                 <td>
+                                      <!--  Adding phone formatting 091725 -->
+
+                                    <!--  
+                                    
                                     {{ $customer->phone }}
-                                </td>
+                                    -->
+                                     <span style="color: black;">
+                                        {{ preg_replace('/(\d{3})(\d{3})(\d{4})/', '($1) $2-$3', $customer->phone) }}
+                                    </span>                                
+                                    </td>
 
                                 <td>
                                     {{ $customer->email }}
