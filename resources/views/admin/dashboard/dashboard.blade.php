@@ -476,7 +476,7 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                                     @elseif($havesubscription == 300)
                                     <div class="stat-digit">Elite Plan</div>
                                     @else
-                                    <div class="stat-digit">No Plane</div>
+                                    <div class="stat-digit">No Plan</div>
                                     @endif
 
 
