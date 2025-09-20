@@ -983,6 +983,7 @@ class DashboardController extends Controller
             'extra_request'  => $quote->extra_request ?? null,
             'provide_price'  => $quote->provide_price,
             'artist_name' => optional($quote->artist)->name,
+            'artist_user_name' => optional($quote->artist)->username,
             'booking_link'   => url('/booking')
         ], function ($message) use ($quote) {
             $message->to($quote->user->email)
