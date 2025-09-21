@@ -213,8 +213,8 @@
                                     <!-- <button class="btn btn-sm btn-primary"
                                         onclick="Sendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Send Link</button> -->
                                     @elseif($quote->link_send_status == 0)
-                                    <button class="btn btn-sm btn-warning"
-                                        onclick="AgainSendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Again Send Link</button>
+                                    <button class="btn btn-sm btn-primary"
+                                        onclick="AgainSendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Send Link</button>
                                     @else
                                     <a href="{{ $quote->pdf_path }}" class="btn btn-sm btn-success" target="_blank">View Link</a>
                                     @endif
