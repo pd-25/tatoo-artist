@@ -718,7 +718,7 @@ class DashboardController extends Controller
             $quotesQuery->whereDate('created_at', '<=', $endDate);
         }
 
-        $data['quotes'] = $quotesQuery->paginate(10);
+        $data['quotes'] = $quotesQuery->orderBy('updated_at', 'DESC')->paginate(10);
 
         // Fetch customers based on role
         $customerQuery = User::select('users.*', 'creator.name as creator_name')
@@ -927,7 +927,7 @@ class DashboardController extends Controller
             $quotesQuery->whereDate('created_at', '<=', $endDate);
         }
 
-        $data['quotes'] = $quotesQuery->paginate(10);
+        $data['quotes'] = $quotesQuery->orderBy('updated_at', 'DESC')->paginate(10);
 
         // Fetch customers based on role
         $customerQuery = User::select('users.*', 'creator.name as creator_name')
