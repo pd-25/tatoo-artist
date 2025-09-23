@@ -235,7 +235,7 @@ class ArtistController extends Controller
     public function createCus($data)
     {
         $data['password'] = Hash::make($data["email"]);
-        $data['type'] = 'customer';
+        $data['type'] = 'user';
         $data['walkin'] = '1';
         if (Auth::guard('admins')->check()) {
             $data['created_by'] = 0;
@@ -318,18 +318,18 @@ class ArtistController extends Controller
             'address' => 'nullable|string',
             'cc_fees_percentage' => 'nullable|numeric',
             'blood_borne' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            
+
         ]);
         $data = $request->only('name', 'username', 'email', 'phone', 'address', 'password', 'zipcode', 'profile_image', 'banner_image', "latitude", "longitude", "address2", "country", "state", "city");
         $timeData = $request->only('sunday_from', 'sunday_to', 'monday_from', 'monday_to', 'tuesday_from', 'tuesday_to', 'wednesday_from', 'wednesday_to', 'thrusday_from', 'thrusday_to', 'friday_from', 'friday_to', 'saterday_from', 'saterday_to');
 
         $artistData = $request->only(
             'hourly_rate',
-            'specialty',
-            'specialty2',
-            'specialty3',
-            'specialty4',
-            'specialty5',
+            "specialty",
+            "specialty2",
+            "specialty3",
+            "specialty4",
+            "specialty5",
             "years_in_trade",
             "walk_in_welcome",
             "certified_professionals",
@@ -365,14 +365,6 @@ class ArtistController extends Controller
 
         );
 
-        if ($request->hasFile('blood_borne')) {
-            $file = $request->file('blood_borne');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/blood_borne'), $fileName); // Save directly in public/uploads/blood_borne
-            $artistData['blood_borne'] = $fileName;
-        }
-
-
 
 
         $store = $this->artistInterface->storeArtistData($data, $timeData, $artistData);
@@ -382,6 +374,7 @@ class ArtistController extends Controller
             return back()->with('msg', 'Some error occur.');
         }
     }
+
 
     /**
      * Display the specified resource.

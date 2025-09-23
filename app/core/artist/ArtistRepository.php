@@ -13,8 +13,8 @@ class ArtistRepository implements ArtistInterface
 {
     public function getAllArtist($re = null)
     {
-       
-        if(Auth::guard('admins')->check()){
+
+        if (Auth::guard('admins')->check()) {
             $searchCustomer = trim($re->search_customer);
             $artistQuery =  User::whereNotIn('id', [1])->where('type', 'artist')->orderBy('id', 'DESC');
             if (!empty($searchCustomer)) {
@@ -25,11 +25,10 @@ class ArtistRepository implements ArtistInterface
                 });
             }
             return $artistQuery->get();
-        }else{
+        } else {
             // return User::whereNotIn('id', [1])->where('type', 'artist')->where('created_by', Auth::guard('sales')->id())->orderBy('id', 'DESC')->get();
             return User::whereNotIn('id', [1])->where('type', 'artist')->orderBy('id', 'DESC')->get();
         }
-        
     }
     public function getAllArtistss($re = null)
     {
@@ -53,10 +52,18 @@ class ArtistRepository implements ArtistInterface
         }
     }
 
-    public function storeArtistData(array $data, $timeData,$artistData)
+    public function storeArtistData(array $data, $timeData, $artistData)
     {
         //dd($artistData);
-
+        // blood borne file
+        if (!empty($artistData['blood_borne']) && $artistData['blood_borne'] instanceof \Illuminate\Http\UploadedFile) {
+            $fileName = time() . '_' . $artistData['blood_borne']->getClientOriginalName();
+            $artistData['blood_borne']->move(public_path('uploads/blood_borne'), $fileName);
+            $artistData['blood_borne'] = $fileName;
+        } else {
+            $artistData['blood_borne'] = null;
+        }
+        
         if (isset($data['profile_image']) && $data['profile_image'] != null) {
             $content_db = time() . rand(0000, 9999) . "." . $data['profile_image']->getClientOriginalExtension();
             $data['profile_image']->storeAs("public/ProfileImage", $content_db);
@@ -69,10 +76,10 @@ class ArtistRepository implements ArtistInterface
             $data['banner_image'] = $content_ban;
         }
         $data['password'] = Hash::make($data['password']);
-        
-        if(Auth::guard('admins')->check()){
+
+        if (Auth::guard('admins')->check()) {
             $data['created_by'] = 0;
-        }else{
+        } else {
             $data['created_by'] = Auth::guard('sales')->id();
         }
         // dd($data);
@@ -90,7 +97,7 @@ class ArtistRepository implements ArtistInterface
 
         $timeData['tuesday_from'] = isset($timeData['tuesday_from']) ? $timeData['tuesday_from'] : "09:00";
         $timeData['tuesday_to'] = isset($timeData['tuesday_to']) ? $timeData['tuesday_to'] : "17:00";
-        
+
         $timeData['wednesday_from'] = isset($timeData['wednesday_from']) ? $timeData['wednesday_from'] : "09:00";
         $timeData['wednesday_to'] = isset($timeData['wednesday_to']) ? $timeData['wednesday_to'] : "17:00";
 
@@ -102,12 +109,15 @@ class ArtistRepository implements ArtistInterface
 
         $timeData['saterday_from'] = isset($timeData['saterday_from']) ? $timeData['saterday_from'] : "09:00";
         $timeData['saterday_to'] = isset($timeData['saterday_to']) ? $timeData['saterday_to'] : "17:00";
-        
+
+
+
+
         //Create artist data record in artist_data table
         if (isset($artistData['shop_logo']) && $artistData['shop_logo'] != null) {
             $content_logo = time() . rand(0000, 9999) . "." . $artistData['shop_logo']->getClientOriginalExtension();
             $artistData['shop_logo']->storeAs("public/ShopImage", $content_logo);
-        }else{
+        } else {
             $content_logo = null;
         }
 
@@ -115,6 +125,11 @@ class ArtistRepository implements ArtistInterface
             "artist_id" => $user->id,
             "hourly_rate" => $artistData["hourly_rate"],
             "specialty" => $artistData["specialty"],
+            "specialty2" => $artistData["specialty2"],
+            "specialty3" => $artistData["specialty3"],
+            "specialty4" => $artistData["specialty4"],
+            "specialty5" => $artistData["specialty5"],
+
             "years_in_trade" => $artistData["years_in_trade"],
             "walk_in_welcome" => $artistData["walk_in_welcome"],
             "certified_professionals" => $artistData["certified_professionals"],
@@ -138,17 +153,18 @@ class ArtistRepository implements ArtistInterface
             "google_map_api" => $artistData["google_map_api"],
             "yelp_api" => $artistData["yelp_api"],
             "shop_percentage" => $artistData["shop_percentage"],
+            "blood_borne" => $artistData["blood_borne"],
             "shop_email" => $artistData["shop_email"],
             "shop_logo" => $content_logo,
             "shop_name" => $artistData["shop_name"],
             "shop_address" => $artistData["shop_address"],
             "wont_do" => implode(',', $artistData["wont_do"]),
             "unique_offerings" => isset($artistData["unique_offerings"]) && is_array($artistData["unique_offerings"])
-            ? implode(',', $artistData["unique_offerings"])
-            : null,
+                ? implode(',', $artistData["unique_offerings"])
+                : null,
             "cc_fees" => $artistData["cc_fees"],
             "cc_fees_percentage" => $artistData["cc_fees_percentage"],
-           
+
         ];
 
         ArtistData::create($artistData);
@@ -171,79 +187,78 @@ class ArtistRepository implements ArtistInterface
         // dd($data,$artistData);
         $find =  User::where('id', $id)->first();
         if ($find) {
-          
-                $check_if_time =  TimeTable::where('user_id', $id)->first();
-                if($check_if_time) {
-                if(isset($close['tuesday_close']) && $close['tuesday_close'] == "on"){
-                    $timeData['tuesday_from'] ="00:00";
-                    $timeData['tuesday_to'] ="00:00";
+
+            $check_if_time =  TimeTable::where('user_id', $id)->first();
+            if ($check_if_time) {
+                if (isset($close['tuesday_close']) && $close['tuesday_close'] == "on") {
+                    $timeData['tuesday_from'] = "00:00";
+                    $timeData['tuesday_to'] = "00:00";
                 }
 
-                if(isset($close['friday_close']) && $close['friday_close'] == "on"){
-                    $timeData['friday_from'] ="00:00";
-                    $timeData['friday_to'] ="00:00";
+                if (isset($close['friday_close']) && $close['friday_close'] == "on") {
+                    $timeData['friday_from'] = "00:00";
+                    $timeData['friday_to'] = "00:00";
                 }
-                if(isset($close['saterday_close']) && $close['saterday_close'] == "on"){
-                    $timeData['saterday_from'] ="00:00";
-                    $timeData['saterday_to'] ="00:00";
-                }
-                
-                if(isset($close['sunday_close']) && $close['sunday_close'] == "on"){
-                    $timeData['sunday_from'] ="00:00";
-                    $timeData['sunday_to'] ="00:00";
+                if (isset($close['saterday_close']) && $close['saterday_close'] == "on") {
+                    $timeData['saterday_from'] = "00:00";
+                    $timeData['saterday_to'] = "00:00";
                 }
 
-                if(isset($close['monday_close']) && $close['monday_close'] == "on"){
-                    $timeData['monday_from'] ="00:00";
-                    $timeData['monday_to'] ="00:00";
+                if (isset($close['sunday_close']) && $close['sunday_close'] == "on") {
+                    $timeData['sunday_from'] = "00:00";
+                    $timeData['sunday_to'] = "00:00";
                 }
 
-                if(isset($close['wednesday_close']) && $close['wednesday_close'] == "on"){
-                    $timeData['wednesday_from'] ="00:00";
-                    $timeData['wednesday_to'] ="00:00";
+                if (isset($close['monday_close']) && $close['monday_close'] == "on") {
+                    $timeData['monday_from'] = "00:00";
+                    $timeData['monday_to'] = "00:00";
                 }
-                
-                if(isset($close['thrusday_close']) && $close['thrusday_close'] == "on"){
-                    $timeData['thrusday_from'] ="00:00";
-                    $timeData['thrusday_to'] ="00:00";
+
+                if (isset($close['wednesday_close']) && $close['wednesday_close'] == "on") {
+                    $timeData['wednesday_from'] = "00:00";
+                    $timeData['wednesday_to'] = "00:00";
+                }
+
+                if (isset($close['thrusday_close']) && $close['thrusday_close'] == "on") {
+                    $timeData['thrusday_from'] = "00:00";
+                    $timeData['thrusday_to'] = "00:00";
                 }
 
                 //dd($timeData);
-                
+
                 $check_if_time->update($timeData);
-                }else{
-                $timeData['user_id']= $id;
+            } else {
+                $timeData['user_id'] = $id;
                 TimeTable::create($timeData);
+            }
 
+            $check_if_artist_data =  ArtistData::where('artist_id', $id)->first();
+            if ($check_if_artist_data) {
+
+                //Create artist data record in artist_data table
+                if (isset($artistData['shop_logo']) && $artistData['shop_logo'] != null) {
+                    File::delete(public_path("storage/ShopImage/" . $find->artistData->shop_logo));
+                    $content_logo = time() . rand(0000, 9999) . "." . $artistData['shop_logo']->getClientOriginalExtension();
+                    $artistData['shop_logo']->storeAs("public/ShopImage", $content_logo);
+                    $artistData['shop_logo'] = $content_logo;
+                }
+                if (isset($artistData["language_spoken"])) {
+                    $artistData["language_spoken"] = implode(',', $artistData["language_spoken"]);
                 }
 
-                $check_if_artist_data =  ArtistData::where('artist_id', $id)->first();
-                if($check_if_artist_data) {
-
-                    //Create artist data record in artist_data table
-                    if (isset($artistData['shop_logo']) && $artistData['shop_logo'] != null) {
-                        File::delete(public_path("storage/ShopImage/" . $find->artistData->shop_logo));
-                        $content_logo = time() . rand(0000, 9999) . "." . $artistData['shop_logo']->getClientOriginalExtension();
-                        $artistData['shop_logo']->storeAs("public/ShopImage", $content_logo);
-                        $artistData['shop_logo'] = $content_logo;
-                    }
-                     if(isset($artistData["language_spoken"])){
-                        $artistData["language_spoken"] = implode(',', $artistData["language_spoken"]);
-                     }
-
-                     if(isset($artistData["payment_method"])){
-                        $artistData["payment_method"] = implode(',', $artistData["payment_method"]);
-                     }
-                     if(isset($artistData["wont_do"])){
-                        $artistData["wont_do"] = implode(',', $artistData["wont_do"]);
-                     }
-                     if(isset($artistData["unique_offerings"])){
-                        $artistData["unique_offerings"] = implode(',', $artistData["unique_offerings"]);
-                     }
-                    
-                    
-                    $check_if_artist_data->update($artistData);
+                if (isset($artistData["payment_method"])) {
+                    $artistData["payment_method"] = implode(',', $artistData["payment_method"]);
                 }
+                if (isset($artistData["wont_do"])) {
+                    $artistData["wont_do"] = implode(',', $artistData["wont_do"]);
+                }
+                if (isset($artistData["unique_offerings"])) {
+                    $artistData["unique_offerings"] = implode(',', $artistData["unique_offerings"]);
+                }
+
+
+                $check_if_artist_data->update($artistData);
+            }
 
             if (isset($data['profile_image']) && $data['profile_image'] != null) {
                 File::delete(public_path("storage/ProfileImage/" . $find->profile_image));
@@ -251,6 +266,13 @@ class ArtistRepository implements ArtistInterface
                 $data['profile_image']->storeAs("public/ProfileImage", $content_db);
                 $data['profile_image'] = $content_db;
             }
+            if (isset($artistData['blood_borne']) && $artistData['blood_borne'] instanceof \Illuminate\Http\UploadedFile) {
+                $fileName = time() . '_' . $artistData['blood_borne']->getClientOriginalName();
+                $artistData['blood_borne']->move(public_path('uploads/blood_borne'), $fileName);
+                $artistData['blood_borne'] = $fileName;
+            }
+
+
 
             if (isset($data['banner_image']) && $data['banner_image'] != null) {
                 File::delete(public_path("storage/ProfileImage/" . $find->banner_image));
@@ -260,27 +282,28 @@ class ArtistRepository implements ArtistInterface
             }
             if (isset($data['password']) && $data['password'] != null) {
                 $data['password'] = Hash::make($data['password']);
-            }else{
+            } else {
                 $data['password'] = $find->password;
             }
             return $find->update($data);
-        }else{
+        } else {
             return 'No data';
         }
     }
 
 
-    public function deleteArtist($id){
+    public function deleteArtist($id)
+    {
         $find =  User::where('id', $id)->first();
-        if($find) {
-            foreach($find->artworks as $art){
+        if ($find) {
+            foreach ($find->artworks as $art) {
                 $art->delete();
             }
 
-            foreach($find->bannerImages as $bannerImage){
+            foreach ($find->bannerImages as $bannerImage) {
                 $bannerImage->delete();
             }
-            
+
             return $find->delete();
         }
         return 'not found';

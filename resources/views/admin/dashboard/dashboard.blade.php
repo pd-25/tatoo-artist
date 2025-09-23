@@ -499,6 +499,18 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="stat-widget-one">
+                                <div class="stat-icon dib"><i class="ti-layout-grid2 color-pink border-pink"></i>
+                                </div>
+                                <div class="stat-content dib">
+                                    <div class="stat-text">Total Customers</div>
+                                    <div class="stat-digit">{{ \App\Models\User::where('created_by', Auth::guard('artists')->id())->count() }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="stat-widget-one">
                                 <div class="stat-icon dib"><i class="ti-user color-primary border-primary"></i>
                                 </div>
                                 <div class="stat-content dib">
