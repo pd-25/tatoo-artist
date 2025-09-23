@@ -317,6 +317,8 @@ class ArtistController extends Controller
             'phone' => 'numeric',
             'address' => 'nullable|string',
             'cc_fees_percentage' => 'nullable|numeric',
+            'blood_borne' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            
         ]);
         $data = $request->only('name', 'username', 'email', 'phone', 'address', 'password', 'zipcode', 'profile_image', 'banner_image', "latitude", "longitude", "address2", "country", "state", "city");
         $timeData = $request->only('sunday_from', 'sunday_to', 'monday_from', 'monday_to', 'tuesday_from', 'tuesday_to', 'wednesday_from', 'wednesday_to', 'thrusday_from', 'thrusday_to', 'friday_from', 'friday_to', 'saterday_from', 'saterday_to');
@@ -324,6 +326,10 @@ class ArtistController extends Controller
         $artistData = $request->only(
             'hourly_rate',
             'specialty',
+            'specialty2',
+            'specialty3',
+            'specialty4',
+            'specialty5',
             "years_in_trade",
             "walk_in_welcome",
             "certified_professionals",
@@ -348,6 +354,7 @@ class ArtistController extends Controller
             "yelp_api",
             "shop_logo",
             "shop_percentage",
+            "blood_borne", //file upload
             "shop_email",
             "shop_name",
             "shop_address",
@@ -357,6 +364,16 @@ class ArtistController extends Controller
             "cc_fees_percentage"
 
         );
+
+        if ($request->hasFile('blood_borne')) {
+            $file = $request->file('blood_borne');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/blood_borne'), $fileName); // Save directly in public/uploads/blood_borne
+            $artistData['blood_borne'] = $fileName;
+        }
+
+
+
 
         $store = $this->artistInterface->storeArtistData($data, $timeData, $artistData);
         if ($store) {
@@ -415,12 +432,13 @@ class ArtistController extends Controller
             'address' => 'nullable|string',
             'email' => 'email|unique:users,email,' . decrypt($id),
             'cc_fees_percentage' => 'nullable|numeric',
+            'blood_borne' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
         // Data to be updated
         $data = $request->only('email', 'phone', 'address', 'address2', 'country', 'state', 'city', 'password', 'zipcode', 'latitude', 'longitude', 'profile_image', 'banner_image');
         $timeData = $request->only('sunday_from', 'sunday_to', 'monday_from', 'monday_to', 'tuesday_from', 'tuesday_to', 'wednesday_from', 'wednesday_to', 'thrusday_from', 'thrusday_to', 'friday_from', 'friday_to', 'saterday_from', 'saterday_to');
-        $artistData = $request->only('hourly_rate', 'specialty', 'years_in_trade', 'walk_in_welcome', 'certified_professionals', 'consultation_available', 'language_spoken', 'parking', 'payment_method', 'air_conditioned', 'water_available', 'coffee_available', 'mask_worn', 'vaccinated_staff', 'wheel_chair_accessible', 'bike_parking', 'wifi_available', 'artist_of_the_year', 'insta_handle', 'facebook_handle', 'youtube_handle', 'twitter_handle', 'google_map_api', 'yelp_api', 'shop_logo', 'shop_percentage', 'shop_email', 'shop_name', 'shop_address', 'wont_do', 'unique_offerings', 'cc_fees', 'cc_fees_percentage');
+        $artistData = $request->only('hourly_rate', 'specialty', 'specialty2', 'specialty3', 'specialty4', 'specialty5', 'years_in_trade', 'walk_in_welcome', 'certified_professionals', 'consultation_available', 'language_spoken', 'parking', 'payment_method', 'air_conditioned', 'water_available', 'coffee_available', 'mask_worn', 'vaccinated_staff', 'wheel_chair_accessible', 'bike_parking', 'wifi_available', 'artist_of_the_year', 'insta_handle', 'facebook_handle', 'youtube_handle', 'twitter_handle', 'google_map_api', 'yelp_api', 'shop_logo', 'shop_percentage', 'shop_email', 'shop_name', 'shop_address', 'wont_do', 'unique_offerings', 'cc_fees', 'cc_fees_percentage');
         $close = $request->only('sunday_close', 'monday_close', 'tuesday_close', 'wednesday_close', 'thrusday_close', 'friday_close', 'saterday_close');
 
         try {
@@ -429,6 +447,16 @@ class ArtistController extends Controller
 
             // Check the result and return appropriate message
             if ($update) {
+                // Handle file upload for blood_borne
+                if ($request->hasFile('blood_borne')) {
+                    $file = $request->file('blood_borne');
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $file->move(public_path('uploads/blood_borne'), $fileName);
+                    $artistData['blood_borne'] = $fileName;
+
+                    // Update the artist data with the new blood_borne file path
+                    $this->artistInterface->updateArtist($data, decrypt($id), $timeData, $artistData, $close);
+                }
                 return back()->with('msg', 'Artist information updated successfully.');
             } elseif ($update == 'No data') {
                 return back()->with('msg', 'No artist found.');

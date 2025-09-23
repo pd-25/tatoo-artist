@@ -185,24 +185,98 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Speciality</label><span class="text-danger">*</span>
-                                        <select name="specialty" class="form-control" value="{{ old('specialty') }}">
-                                            <option value="">select style</option>
-                                            @foreach ($styles as $style)
-                                            <option value="{{ $style->id }}"
-                                                {{ @$artistData->specialty == $style->id ? 'selected' : '' }}>
-                                                {{ $style->title }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                        @error('specialty')
-                                        <span class="text-danger" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Speciality 1</label><span class="text-danger">*</span>
+                                                <select name="specialty" class="form-control" value="{{ old('specialty') }}">
+                                                    <option value="">select style</option>
+                                                    @foreach ($styles as $style)
+                                                    <option value="{{ $style->id }}"
+                                                        {{ @$artistData->specialty == $style->id ? 'selected' : '' }}>
+                                                        {{ $style->title }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('specialty')
+                                                <span class="text-danger" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Specialty 2</label>
+                                                <select name="specialty2" class="form-control">
+                                                    <option value="">Select style</option>
+                                                    @foreach ($styles as $style)
+                                                    <option value="{{ $style->id }}" {{ @$artistData->specialty2 == $style->id ? 'selected' : '' }}>
+                                                        {{ $style->title }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('specialty2')
+                                                <span class="text-danger" role="alert"><strong>{{ $message }}</strong></span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Specialty 3</label>
+                                                <select name="specialty3" class="form-control">
+                                                    <option value="">Select style</option>
+                                                    @foreach ($styles as $style)
+                                                    <option value="{{ $style->id }}" {{ @$artistData->specialty3 == $style->id ? 'selected' : '' }}>
+                                                        {{ $style->title }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('specialty3')
+                                                <span class="text-danger" role="alert"><strong>{{ $message }}</strong></span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Specialty 4</label>
+                                                <select name="specialty4" class="form-control">
+                                                    <option value="">Select style</option>
+                                                    @foreach ($styles as $style)
+                                                    <option value="{{ $style->id }}" {{ @$artistData->specialty4 == $style->id ? 'selected' : '' }}>
+                                                        {{ $style->title }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('specialty4')
+                                                <span class="text-danger" role="alert"><strong>{{ $message }}</strong></span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Specialty 5</label>
+                                                <select name="specialty5" class="form-control">
+                                                    <option value="">Select style</option>
+                                                    @foreach ($styles as $style)
+                                                    <option value="{{ $style->id }}" {{ @$artistData->specialty5 == $style->id ? 'selected' : '' }}>
+                                                        {{ $style->title }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('specialty5')
+                                                <span class="text-danger" role="alert"><strong>{{ $message }}</strong></span>
+                                                @enderror
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+
+
 
                             </div>
 
@@ -1030,6 +1104,26 @@
                             placeholder="Shop Percentage" name="shop_percentage"
                             value="{{ @$artistData->shop_percentage }}">
                         @error('shop_percentage')
+                        <span class="text-danger" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Bloodborne Pathogen Cirtification</label>
+                        <input type="file" class="form-control" id="blood_borne" name="blood_borne">
+                        <img src="{{ $artist->artistData->blood_borne 
+    ? asset('uploads/blood_borne/' . $artist->artistData->blood_borne) 
+    : asset('noimg.png') }}"
+                            alt="Bloodborne Certification" width="150"> <br>
+
+
+
+
+                        @error('blood_borne')
                         <span class="text-danger" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
