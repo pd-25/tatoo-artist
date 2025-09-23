@@ -235,7 +235,7 @@ class ArtistController extends Controller
     public function createCus($data)
     {
         $data['password'] = Hash::make($data["email"]);
-        $data['type'] = 'user';
+        $data['type'] = 'customer';
         $data['walkin'] = '1';
         if (Auth::guard('admins')->check()) {
             $data['created_by'] = 0;
