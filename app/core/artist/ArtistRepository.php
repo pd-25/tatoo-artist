@@ -63,7 +63,7 @@ class ArtistRepository implements ArtistInterface
         } else {
             $artistData['blood_borne'] = null;
         }
-        
+
         if (isset($data['profile_image']) && $data['profile_image'] != null) {
             $content_db = time() . rand(0000, 9999) . "." . $data['profile_image']->getClientOriginalExtension();
             $data['profile_image']->storeAs("public/ProfileImage", $content_db);
@@ -158,10 +158,14 @@ class ArtistRepository implements ArtistInterface
             "shop_logo" => $content_logo,
             "shop_name" => $artistData["shop_name"],
             "shop_address" => $artistData["shop_address"],
-            "wont_do" => implode(',', $artistData["wont_do"]),
+            "wont_do" => isset($artistData["wont_do"]) && is_array($artistData["wont_do"])
+                ? implode(',', $artistData["wont_do"])
+                : null,
+
             "unique_offerings" => isset($artistData["unique_offerings"]) && is_array($artistData["unique_offerings"])
                 ? implode(',', $artistData["unique_offerings"])
                 : null,
+
             "cc_fees" => $artistData["cc_fees"],
             "cc_fees_percentage" => $artistData["cc_fees_percentage"],
 

@@ -15,7 +15,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h2 class="text-center">Expenses Report</h2>
+        <h2 class="text-center">Expense Report</h2>
         
         <table class="table table-bordered mt-4">
             <thead>
@@ -25,7 +25,7 @@
                     <th>Transaction Date</th>
                     <th>Amount</th>
                     <th>Payment Method</th>
-                    <th>Expenses</th>
+                    <th>Expense</th>
                     <th>Artist</th>
                 </tr>
             </thead>

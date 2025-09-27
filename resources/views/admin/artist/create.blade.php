@@ -377,7 +377,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Won't Do</label><span class="text-danger">*</span>
+                                    <label>Won't Do</label>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="wont_do[]" value="Offensive or Hate Symbols" id="OffensiveHateSymbols">
                                         <label class="form-check-label" for="OffensiveHateSymbols">
@@ -551,7 +551,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Unique Offerings</label><span class="text-danger">*</span>
+                                    <label>Unique Offerings</label>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="unique_offerings[]" value="Vegan Ink" id="Vegan Ink" checked>
                                         <label class="form-check-label" for="Vegan Ink">
@@ -900,7 +900,7 @@
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Bloodborne Pathogen Cirtification</label>
+                        <label>Bloodborne Pathogen Certification</label>
                         <input type="file" class="form-control" id="blood_borne" name="blood_borne">
                         @error('blood_borne')
                         <span class="text-danger" role="alert">

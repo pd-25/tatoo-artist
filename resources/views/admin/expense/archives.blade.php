@@ -8,7 +8,7 @@
                 <div class="card-title pr">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h4>All Expenses Archives</h4>
+                            <h4>All Expense Archives</h4>
                         </div>
                         <div class="d-flex align-items-center">
                             {{-- <a href="{{ route('admin.AddexpensesForm') }}" class="btn btn-success">Add Expenses</a> --}}
@@ -23,7 +23,7 @@
                 </div>
                 
                 <div class="card-body">
-                    {{-- <form action="{{ route('admin.getExpenses') }}" method="GET" class="row g-3 d-flex justify-content-center">
+                     <form action="{{ route('admin.getExpenses') }}" method="GET" class="row g-3 d-flex justify-content-center">
                         <div class="col-md-3">
                             <label for="start_date"><b>Start Date:</b></label>
                             <div class="input-group date datepicker">
@@ -67,7 +67,7 @@
                             <button type="submit" class="btn btn-primary w-100 m-1">Filter</button>
                             <a href="{{ route('admin.printExpenses', request()->query()) }}" class="m-1 btn btn-secondary no-print w-100">Print</a>
                         </div>
-                    </form> --}}
+                    </form> 
                     
                     
                     
@@ -84,7 +84,7 @@
                                     {{-- <th>Date</th> --}}
                                     <th>Payment Method</th>
                                     <th>Amount</th>
-                                    <th>Expenses</th>
+                                    <th>Expense</th>
                                     <th>Transaction Date</th>
                                     <th>Action</th>
                                 </tr>
@@ -113,8 +113,8 @@
                                             </td>
                                             <td style="display: flex; gap:3px; justify-content:flex-end">
 
-                                                <a href="{{ route('admin.editexpensesForm', encrypt($expenses->id)) }}"><i
-                                                        class="ti-pencil btn btn-sm btn-primary"></i></a>
+                                                <!-- <a href="{{ route('admin.editexpensesForm', encrypt($expenses->id)) }}"><i
+                                                        class="ti-pencil btn btn-sm btn-primary"></i></a> -->
                                                 <form method="POST"
                                                     action="{{ route('admin.deleteexpensesForm', encrypt($expenses->id)) }}"
                                                     class="action-icon">

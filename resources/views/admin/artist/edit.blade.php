@@ -437,7 +437,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Won't Do</label><span class="text-danger">*</span>
+                                        <label>Won't Do</label>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" name="wont_do[]" value="Offensive or Hate Symbols" id="OffensiveHateSymbols"
                                                 {{ in_array('Offensive or Hate Symbols', @$wontDo) ? 'checked' : '' }}>
@@ -641,7 +641,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Unique Offerings</label><span class="text-danger">*</span>
+                                        <label>Unique Offerings</label>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" name="unique_offerings[]" value="Burns" id="Burns"
                                                 {{ in_array('Burns', @$uniqueOfferings) ? 'checked' : '' }}>
@@ -1113,7 +1113,7 @@
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Bloodborne Pathogen Cirtification</label>
+                        <label>Bloodborne Pathogen Certification</label>
                         <input type="file" class="form-control" id="blood_borne" name="blood_borne">
                         <img src="{{ $artist->artistData->blood_borne 
     ? asset('uploads/blood_borne/' . $artist->artistData->blood_borne) 
