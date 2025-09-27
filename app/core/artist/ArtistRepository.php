@@ -253,12 +253,20 @@ class ArtistRepository implements ArtistInterface
                 if (isset($artistData["payment_method"])) {
                     $artistData["payment_method"] = implode(',', $artistData["payment_method"]);
                 }
-                if (isset($artistData["wont_do"])) {
+                // For wont_do
+                if (isset($artistData["wont_do"]) && is_array($artistData["wont_do"])) {
                     $artistData["wont_do"] = implode(',', $artistData["wont_do"]);
+                } else {
+                    $artistData["wont_do"] = null;
                 }
-                if (isset($artistData["unique_offerings"])) {
+
+                // For unique_offerings
+                if (isset($artistData["unique_offerings"]) && is_array($artistData["unique_offerings"])) {
                     $artistData["unique_offerings"] = implode(',', $artistData["unique_offerings"]);
+                } else {
+                    $artistData["unique_offerings"] = null;
                 }
+
 
 
                 $check_if_artist_data->update($artistData);

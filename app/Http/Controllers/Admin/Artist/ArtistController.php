@@ -404,8 +404,14 @@ class ArtistController extends Controller
         $data['languageSpoken'] = explode(',', @$data['artistData']->language_spoken);
         $data['PaymentMethod'] = explode(',', @$data['artistData']->payment_method);
         $data['styles'] = Style::orderBy('id', 'asc')->get();
-        $data['wontDo'] = explode(',', @$data['artistData']->wont_do);
-        $data['uniqueOfferings'] = explode(',', @$data['artistData']->unique_offerings);
+        $data['wontDo'] = !empty($data['artistData']->wont_do)
+            ? explode(',', $data['artistData']->wont_do)
+            : [];
+
+        $data['uniqueOfferings'] = !empty($data['artistData']->unique_offerings)
+            ? explode(',', $data['artistData']->unique_offerings)
+            : [];
+
         // dd($data);
         if ($data['artist'] == 'Not Found') {
             return back()->with('msg', 'No artist found!');
