@@ -23,7 +23,7 @@
                 </div>
                 
                 <div class="card-body">
-                     <form action="{{ route('admin.getExpenses') }}" method="GET" class="row g-3 d-flex justify-content-center">
+                     <form action="{{ route('expenses.getExpensesArchive') }}" method="GET" class="row g-3 d-flex justify-content-center">
                         <div class="col-md-3">
                             <label for="start_date"><b>Start Date:</b></label>
                             <div class="input-group date datepicker">

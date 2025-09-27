@@ -81,6 +81,35 @@ public function getExpenses(Request $request)
     return view('admin.expense.index', compact('expense'));
 }
 
+public function getExpensesInArchive(Request $request)
+{
+    $query = ExpenseModel::with('user');
+
+    // Check if start_date and end_date are provided in the request
+    if ($request->filled('start_date') && $request->filled('end_date')) {
+        $startDate = $this->formatDate($request->start_date);
+        $endDate = $this->formatDate($request->end_date);
+    
+        // Filter by transaction_date based on the start and end date
+        $query->whereBetween('transaction_date', [$startDate, $endDate]);
+    }
+    
+    // Filter by expense_items if not 'all'
+    if ($request->filled('expense_items') && $request->expense_items != 'all') {
+        $query->where('expense_items', $request->expense_items);
+    }
+
+    // If user is an artist, filter only their expenses
+    if (Auth::guard('artists')->check()) {
+        $query->where('user_id', Auth::guard('artists')->user()->id);
+    }
+
+    // Fetch paginated expenses
+    $expense = $query->where('isarchive',0)->orderBy('id','desc')->paginate(10); // Change 10 to the number of records per page
+
+    return view('admin.expense.archives', compact('expense'));
+}
+
 public function expansesArchiveMove(Request $request)
 {
     $ids = $request->input('ids', []);
