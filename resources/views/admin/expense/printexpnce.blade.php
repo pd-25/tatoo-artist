@@ -25,7 +25,7 @@
                     <th>Transaction Date</th>
                     <th>Amount</th>
                     <th>Payment Method</th>
-                    <th>Expense</th>
+                    <!-- <th>Expense</th> -->
                     <th>Artist</th>
                 </tr>
             </thead>
@@ -40,7 +40,7 @@
                         <td>{{ date('m-d-Y', strtotime($expense->transaction_date)) }}</td>
                         <td>$ {{ $expense->amount }}</td>
                         <td>{{ $expense->payment_method }}</td>
-                        <td>{{ $expense->expense_items }}</td>
+                        <!-- <td>{{ $expense->expense_items }}</td> -->
                         <td>{{ $expense->user->name }}</td>
                     </tr>
                     @php

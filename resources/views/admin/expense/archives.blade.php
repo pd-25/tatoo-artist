@@ -65,6 +65,7 @@
                         <!-- Filter and Print Buttons -->
                         <div class="col-md-3 d-flex align-items-end mb-2 justify-content-center ">
                             <button type="submit" class="btn btn-primary w-100 m-1">Filter</button>
+                            <input type="hidden" name="is_archive" value="1">
                             <a href="{{ route('admin.printExpenses', request()->query()) }}" class="m-1 btn btn-secondary no-print w-100">Print</a>
                         </div>
                     </form> 
