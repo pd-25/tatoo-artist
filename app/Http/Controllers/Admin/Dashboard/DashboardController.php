@@ -1020,16 +1020,16 @@ class DashboardController extends Controller
 
             if (Auth::guard('artists')->check()) {
                 $data['quotes'] = Quote::where('artist_id', auth()->guard('artists')->id())->with('user', 'artist')->where('isarchive', 1)
-                    ->where('quote_type', 0)->paginate('10');
+                    ->where('quote_type', 0)->orderBy('created_at', 'desc')->paginate('10');
             } elseif (Auth::guard('admins')->check()) {
                 $data['quotes'] = Quote::with('user', 'artist')->where('isarchive', 1)
-                    ->where('quote_type', 0)->paginate('10');
+                    ->where('quote_type', 0)->orderBy('created_at', 'desc')->paginate('10');
             } else {
                 $salespersonId = Auth::guard('sales')->id();
                 $artists = User::where('created_by', $salespersonId)->get();
 
                 $data['quotes'] = Quote::with('user', 'artist')->whereIn('artist_id', $artists->pluck('id'))->where('isarchive', 1)
-                    ->where('quote_type', 0)->paginate('10');
+                    ->where('quote_type', 0)->orderBy('created_at', 'desc')->paginate('10');
             }
 
             //get customer id
