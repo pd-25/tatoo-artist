@@ -28,7 +28,7 @@
     <link href="{{ asset('admin-asset/css/lib/bootstrap.min.css') }}" rel="stylesheet">
 
     <link href="{{ asset('admin-asset/css/style.css') }}" rel="stylesheet">
-    
+
 </head>
 
 <body>
@@ -41,102 +41,111 @@
                         <a href="#"><span>{{ Auth::guard('admins')->check() ? "Admin Panel" :  (Auth::guard('artists')->check() ? "Artists Panel" : "Sales Panel") }}</span></a>
                     </div>
 
-                    @if (Auth::guard('admins')->check() || Auth::guard('sales')->check()) 
-                        <li><a href="{{ route('admin.dashboard') }}"><i class="ti-desktop"></i>Dashboard </a></li>
-                        
+                    @if (Auth::guard('admins')->check() || Auth::guard('sales')->check())
+                    <li><a href="{{ route('admin.dashboard') }}" style="display: flex; align-items: center; gap: 8px">
+                            <img src="{{asset('./admin-asset/icons/dashboard.png')}}" width="20" alt="" style=" filter: invert(1);">
+                            <span>Dashboard</span> </a>
+                    </li>
+
                     @elseif (Auth::guard('artists')->check())
-                        <li><a href="{{ route('artists.dashboard') }}"><i class="ti-desktop"></i>Dashboard </a></li> 
-                       
-                        @else
-                        <li><a href="{{ route('admin.dashboard') }}"><i class="ti-desktop"></i>Dashboard </a></li> 
+                    <li><a href="{{ route('artists.dashboard') }}" style="display: flex; align-items: center; gap: 8px"><img src="{{asset('./admin-asset/icons/dashboard.png')}}" width="20" alt="" style=" filter: invert(1);">
+                            <span>Dashboard</span> </a></li>
 
-                    @endif       
-                    
-                    <li><a href="{{ route('admin.customers') }}"><i class="ti-desktop"></i>Customers </a></li>
-
-                   
-                    @if (Auth::guard('artists')->check())
-                    
-
-                    
-                        <li><a href="{{ route('artists.profile') }}"><i class="ti-user"></i>Profile </a></li>
-                        {{-- <li><a href="{{ url('/user/artist-profile#profileHours') }}"><i class="ti-time"></i>Hours </a></li> --}}
                     @else
-                       
-                           
+                    <li><a href="{{ route('admin.dashboard') }}" style="display: flex; align-items: center; gap: 8px"><img src="{{asset('./admin-asset/icons/dashboard.png')}}" width="20" alt="" style=" filter: invert(1);">
+                            <span>Dashboard</span> </a></li>
 
-                        <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Artist Management <span
-                                    class="sidebar-collapse-icon ti-angle-down"></span></a>
-                            <ul>
-                                <li><a href="{{ route('artists.create') }}">Add Artist</a></li>
+                    @endif
 
-                                <li><a href="{{ route('artists.index') }}">All Artists</a>
-                                </li>
-                            </ul>
-                        </li>
-                        
-                        @if (Auth::guard('admins')->check())
-                            <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Sales Management <span
+                    <li><a href="{{ route('admin.customers') }}" style="display: flex; align-items: center; gap: 8px"><img src="{{asset('./admin-asset/icons/customers.png')}}" width="20" alt="" style=" filter: invert(1);">
+                            <span>Customers</span> </a></li>
+
+
+                    @if (Auth::guard('artists')->check())
+
+
+
+                    <li><a href="{{ route('artists.profile') }}"><i class="ti-user"></i>Profile </a></li>
+                    {{-- <li><a href="{{ url('/user/artist-profile#profileHours') }}"><i class="ti-time"></i>Hours </a></li> --}}
+                    @else
+
+
+
+                    <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Artist Management <span
                                 class="sidebar-collapse-icon ti-angle-down"></span></a>
-                                <ul>
-                                    <li><a href="{{ route('sales.create') }}">Add Sales Person</a></li>
+                        <ul>
+                            <li><a href="{{ route('artists.create') }}">Add Artist</a></li>
 
-                                    <li><a href="{{ route('sales.index') }}">All Sales Person</a>
-                                    </li>
-                                </ul>
+                            <li><a href="{{ route('artists.index') }}">All Artists</a>
                             </li>
-                        @endif    
+                        </ul>
+                    </li>
+
+                    @if (Auth::guard('admins')->check())
+                    <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Sales Management <span
+                                class="sidebar-collapse-icon ti-angle-down"></span></a>
+                        <ul>
+                            <li><a href="{{ route('sales.create') }}">Add Sales Person</a></li>
+
+                            <li><a href="{{ route('sales.index') }}">All Sales Person</a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endif
                     @endif
 
                     @if (Auth::guard('artists')->check())
-                        {{-- <li><a href="{{ route('artists.getForm') }}"><i class="ti-upload"></i> Artwork</a></li> --}}
-                        <li><a href="{{ route('artists.getArtistWiseArtwork') }}"><i class="ti-image"></i> Modify Art</a>
-                    @else
-                        <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Artwork Management <span
-                        class="sidebar-collapse-icon ti-angle-down"></span></a>
-                            <ul>
-                                <li><a href="{{ route('artworks.create') }}">Add Artwork</a></li>
+                    {{-- <li><a href="{{ route('artists.getForm') }}"><i class="ti-upload"></i> Artwork</a></li> --}}
+                    <li><a href="{{ route('artists.getArtistWiseArtwork') }}"><i class="ti-image"></i> Modify Art</a>
+                        @else
+                    <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Artwork Management <span
+                                class="sidebar-collapse-icon ti-angle-down"></span></a>
+                        <ul>
+                            <li><a href="{{ route('artworks.create') }}">Add Artwork</a></li>
 
-                                <li><a href="{{ route('artworks.index') }}">All Artworks</a>
-                                <li><a href="{{ route('admin.allComment') }}">All Comments</a>
-                                </li>
-                            </ul> 
-                        </li>       
+                            <li><a href="{{ route('artworks.index') }}">All Artworks</a>
+                            <li><a href="{{ route('admin.allComment') }}">All Comments</a>
+                            </li>
+                        </ul>
+                    </li>
                     @endif
-                  
+
                     @if (Auth::guard('artists')->check())
-                        <li><a href="{{ route('artists.getArtistWiseBanner') }}"><i class="ti-layout-slider"></i> Carousel </a></li>
-                        <li><a href="{{ route('admin.allComment') }}"><i class="ti-comment"></i> Comments</a></li>
-                        {{-- <li><a href="{{ route('artists.bgetForm') }}"><i class="ti-upload"></i> Carousel</a></li> --}}
+                    <li><a href="{{ route('artists.getArtistWiseBanner') }}"><i class="ti-layout-slider"></i> Carousel </a></li>
+                    <li><a href="{{ route('admin.allComment') }}"><i class="ti-comment"></i> Comments</a></li>
+                    {{-- <li><a href="{{ route('artists.bgetForm') }}"><i class="ti-upload"></i> Carousel</a></li> --}}
                     @else
-                            <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Carousel Management <span
-                        class="sidebar-collapse-icon ti-angle-down"></span></a>
-                            <ul>
-                                <li><a href="{{ route('banners.create') }}">Add Carousel</a></li>
+                    <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Carousel Management <span
+                                class="sidebar-collapse-icon ti-angle-down"></span></a>
+                        <ul>
+                            <li><a href="{{ route('banners.create') }}">Add Carousel</a></li>
 
-                                <li><a href="{{ route('banners.index') }}">All Carousel</a>
-                                </li>
-                            </ul>
-                        </li>         
+                            <li><a href="{{ route('banners.index') }}">All Carousel</a>
+                            </li>
+                        </ul>
+                    </li>
                     @endif
-                     
-                    
+
+
                     @if (Auth::guard('artists')->check() || Auth::guard('admins')->check() || Auth::guard('sales')->check())
-                    <li><a href="{{ route('artists.getWalkIn') }}"><i class="ti-desktop"></i>Walk In </a></li>
-                    
-                    <li><a href="{{ route('admin.getQuote') }}"><i class="ti-envelope"></i>Quote Form</a></li>
-                     
+                    <li><a href="{{ route('artists.getWalkIn') }}" style="display: flex; align-items: center; gap: 8px"><img src="{{asset('./admin-asset/icons/walkin.png')}}" width="15" alt="" style=" filter: invert(1);">
+                            <span>Walk In</span>  </a></li>
+
+                    <li><a href="{{ route('admin.getQuote') }}" style="display: flex; align-items: center; gap: 8px"><img src="{{asset('./admin-asset/icons/quote.png')}}" width="20" alt="" style=" filter: invert(1);">
+                            <span>Quote Form</span> </a></li>
+
                     <li><a href="{{ route('admin.getAppointment') }}"><i class="ti-calendar"></i>Appointment </a></li>
-                    <li><a href="{{ route('admin.deposit-slips') }}"><i class="ti-calendar"></i>Deposit Slips </a></li>
-                    
+                    <li><a href="{{ route('admin.deposit-slips') }}" style="display: flex; align-items: center; gap: 8px"><img src="{{asset('./admin-asset/icons/deposit.png')}}" width="23" alt="">
+                            <span>Deposit Slips</span> </a></li>
+
                     {{-- <li><a href="{{ route('admin.getAcceptPayment') }}"><i class="ti-credit-card"></i>Accept Payment</a></li> --}}
                     <li><a href="{{ route('admin.getExpenses') }}"><i class="ti-money"></i>Manage Expenses</a></li>
-                   
+
                     @endif
                     {{-- @if (Auth::guard('artists')->check())
                     <li><a href="{{ url('/user/artist-profile#companyLogo') }}"><i class="ti-image"></i> Comapany Logo </a></li>
- 
-                     @endif --}}
+
+                    @endif --}}
                     {{-- <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Order Management <span
                                 class="sidebar-collapse-icon ti-angle-down"></span></a>
                         <ul>
@@ -148,27 +157,28 @@
                         </ul>
                     </li> --}}
 
-                    <li><a href="{{route('admin.subscriptions')}}"><i class="ti-calendar"></i> Subscription</a></li>
+                    <li><a href="{{route('admin.subscriptions')}}" style="display: flex; align-items: center; gap: 8px"><img src="{{asset('./admin-asset/icons/subsc.png')}}" width="20" alt="" style=" filter: invert(1);">
+                            <span>Subscription</span> </a></li>
 
 
                     <li>
                         @if(session()->has('sales_id'))
-                           
-                            <a href="{{ route('admin.revert.revertImpersonateforsales') }}">
-                                <i class="ti-close"></i> Back To Sales Panel
-                            </a>
+
+                        <a href="{{ route('admin.revert.revertImpersonateforsales') }}">
+                            <i class="ti-close"></i> Back To Sales Panel
+                        </a>
                         @elseif(session()->has('admin_id'))
                         <a href="{{ route('admin.revert.impersonate') }}">
                             <i class="ti-close"></i> Back To Admin Panel
                         </a>
                         @else
-                            <a href="{{ Auth::guard('admins')->check() ? route('admin.logout') : route('artist.logout') }}">
-                                <i class="ti-close"></i> Logout
-                            </a>
+                        <a href="{{ Auth::guard('admins')->check() ? route('admin.logout') : route('artist.logout') }}">
+                            <i class="ti-close"></i> Logout
+                        </a>
                         @endif
-                    
-                      </li>
-                    
+
+                    </li>
+
                 </ul>
             </div>
         </div>
@@ -201,15 +211,15 @@
 
                                             <li>
                                                 @if(session()->has('admin_id'))
-                                                    <a href="{{ route('admin.revert.impersonate') }}">
-                                                        <i class="ti-close"></i> Back To Admin
-                                                    </a>
-                                                @else 
-                                                    <a href="{{ Auth::guard('admins')->check() ? route('admin.logout') : ( Auth::guard('sales')->check() ? route('sales.logout') : route('artist.logout') ) }}">
-                                                        <i class="ti-power-off"></i>
-                                                        <span>Logout</span>
-                                                    </a>
-                                                @endif    
+                                                <a href="{{ route('admin.revert.impersonate') }}">
+                                                    <i class="ti-close"></i> Back To Admin
+                                                </a>
+                                                @else
+                                                <a href="{{ Auth::guard('admins')->check() ? route('admin.logout') : ( Auth::guard('sales')->check() ? route('sales.logout') : route('artist.logout') ) }}">
+                                                    <i class="ti-power-off"></i>
+                                                    <span>Logout</span>
+                                                </a>
+                                                @endif
                                             </li>
                                         </ul>
                                     </div>
