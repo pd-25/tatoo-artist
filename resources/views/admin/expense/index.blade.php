@@ -109,6 +109,7 @@
                                             </td>
                                             <td>{{ ucfirst($expenses->expense_items) }}</td>
                                             <td>
+                                                
                                                 {{  date('m-d-Y',strtotime($expenses->transaction_date)) }}
                                             </td>
                                             <td style="display: flex; gap:3px; justify-content:flex-end">
