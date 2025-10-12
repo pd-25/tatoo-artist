@@ -3,6 +3,8 @@
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
+
 /*
 |--------------------------------------------------------------------------
 | Console Routes
@@ -19,4 +21,14 @@ use Illuminate\Support\Facades\Artisan;
 // })->purpose('Display an inspiring quote');
 
 
-Schedule::command('app:subscription-cron')->daily();
+Artisan::command('app:subscription-cron', function () {
+    // Your logic here
+    // Example:
+    Log::info('Subscription cron ran successfully at ' . now());
+
+    // You can run Eloquent, services, etc.
+    // Example: \App\Models\User::where('active', 1)->update(['checked' => true]);
+
+    $this->info('Subscription cron executed successfully!');
+})->purpose('Runs the daily subscription renewal process');
+
