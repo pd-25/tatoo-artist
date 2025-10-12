@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('app:subscription-cron')->everySecond()->before(function () {
+        $schedule->command('app:subscription-cron')->daily()->before(function () {
             Log::info('Subscription cron job started at ' . now());
         })
             ->after(function () {
