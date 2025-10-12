@@ -304,13 +304,37 @@ class SubscriptionController extends Controller
 
         // Return a response based on the results
         if ($successCount > 0 && $failCount === 0) {
-            return "All expenses created successfully!";
+            // return "All expenses created successfully!";
+            return response()->json([
+                'status' => 'success',
+                'message' => 'All expenses created successfully!',
+                'success_count' => $successCount,
+                'fail_count' => $failCount
+            ]);
         } elseif ($successCount > 0 && $failCount > 0) {
-            return "Expenses created successfully for $successCount subscriptions, but $failCount failed.";
+            // return "Expenses created successfully for $successCount subscriptions, but $failCount failed.";
+            return response()->json([
+                'status' => 'partial_success',
+                'message' => "Expenses created successfully for $successCount subscriptions, but $failCount failed.",
+                'success_count' => $successCount,
+                'fail_count' => $failCount
+            ]);
         } elseif ($successCount === 0 && $failCount > 0) {
-            return "Expense creation failed for all subscriptions.";
+            // return "Expense creation failed for all subscriptions.";
+            return response()->json([
+                'status' => 'failure',
+                'message' => 'Expense creation failed for all subscriptions.',
+                'success_count' => $successCount,
+                'fail_count' => $failCount
+            ]);
         } else {
-            return "No subscriptions found for processing.";
+            // return "No subscriptions found for processing.";
+            return response()->json([
+                'status' => 'empty',
+                'message' => 'No subscriptions found for processing.',
+                'success_count' => $successCount,
+                'fail_count' => $failCount
+            ]);
         }
     }
 }
