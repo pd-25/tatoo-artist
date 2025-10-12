@@ -26,6 +26,7 @@ class SubscriptionCron extends Command
      */
     public function handle()
     {
+        $this->info("Running");
         $url = route('subscriptioncron');
     
         $ch = curl_init();
