@@ -113,7 +113,7 @@ class ExpensesController extends Controller
         }
 
         // Fetch paginated expenses
-        $expense = $query->where('isarchive', 0)->orderBy('id', 'desc')->paginate(10); // Change 10 to the number of records per page
+        $expense = $query->where('isarchive', 0)->orderBy('created_at')->paginate(10); // Change 10 to the number of records per page
 
         return view('admin.expense.index', compact('expense'));
     }
@@ -184,7 +184,7 @@ class ExpensesController extends Controller
         }
 
         // Fetch paginated expenses
-        $expense = $query->where('isarchive', 1)->orderBy('id', 'desc')->paginate(10); // Change 10 to the number of records per page
+        $expense = $query->where('isarchive', 1)->orderBy('created_at')->paginate(10); // Change 10 to the number of records per page
 
         return view('admin.expense.archives', compact('expense'));
     }
