@@ -6,7 +6,7 @@
         <div class="col-lg-10">
             <div class="card">
                 <div class="card-title pr">
-                    <h4>All Carousel Images</h4>
+                    <h4>All Banner Images</h4>
                     @if (Session::has('msg'))
                         <p class="alert alert-info">{{ Session::get('msg') }}</p>
                     @endif
@@ -42,7 +42,7 @@
                                 <tr>
                                     <th>SN.</th>
                                     <th>Artist name</th>
-                                    <th>Carousel image</th>
+                                    <th>Banner image</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
