@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
 {
     $schedule->command('app:subscription-cron')
-        ->dailyAt('14:43') // Runs every day at 12 AM
+        ->dailyAt('14:46') // Runs every day at 12 AM
         ->before(function () {
             Log::info('Subscription cron job started at ' . now());
         })
