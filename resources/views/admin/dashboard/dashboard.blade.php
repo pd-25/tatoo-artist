@@ -170,7 +170,7 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                         <div class="stat-icon dib"><i class="ti-layout-grid2 color-pink border-pink"></i>
                         </div>
                         <div class="stat-content dib">
-                            <div class="stat-text">Total Users</div>
+                            <div class="stat-text">Total Customers</div>
                             <div class="stat-digit">{{ $totalUsers }}</div>
                         </div>
                     </div>
