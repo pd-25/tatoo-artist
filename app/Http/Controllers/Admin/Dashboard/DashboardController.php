@@ -43,6 +43,14 @@ class DashboardController extends Controller
         //Total user count
         $totalUsers = User::where('type', 'customer')->count();
 
+        $totalCustomersWithCreatedBy = User::where('type', 'customer')
+            ->whereNotNull('created_by')
+            ->where('created_by', '!=', 0)
+            ->count();
+
+        $totalUsersSubstractedByTotalCustomersWithCreatedBy = $totalUsers - $totalCustomersWithCreatedBy; 
+
+
         // Count the total number of artists
         $totalArtists = $this->artistInterface->getAllArtistss($request)->count();
 
@@ -538,6 +546,8 @@ class DashboardController extends Controller
                     'totalUsers',
                     'totalArtists',
                     'totalArtists',
+                    'totalCustomersWithCreatedBy',
+                    'totalUsersSubstractedByTotalCustomersWithCreatedBy',
                     'totalSubscriber',
                     'totalSalesPerson',
                     'totalArtist1',
@@ -569,6 +579,8 @@ class DashboardController extends Controller
                 compact(
                     'totalUsers',
                     'totalArtists',
+                    'totalCustomersWithCreatedBy',
+                    'totalUsersSubstractedByTotalCustomersWithCreatedBy',
                     'totalSalesPerson',
                     'totalArtist1',
                     'totalArtist2',
