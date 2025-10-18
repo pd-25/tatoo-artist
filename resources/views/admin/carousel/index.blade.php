@@ -58,9 +58,9 @@
                                             </td>
 
                                             <td>
-                                                @if (!empty($banner->banner_image) && File::exists(public_path('storage/BannerImage/' . $banner->banner_image)))
+                                                @if (!empty($banner->carousel) && File::exists(public_path('storage/Carousel/' . $banner->carousel)))
                                                     <img style="height: 82px; width: 82px;"
-                                                        src="{{ asset('storage/BannerImage/' . $banner->banner_image) }}"
+                                                        src="{{ asset('storage/Carousel/' . $banner->carousel) }}"
                                                         alt="">
                                                 @else
                                                     <img style="height: 82px; width: 82px;" src="{{ asset('noimg.png') }}"

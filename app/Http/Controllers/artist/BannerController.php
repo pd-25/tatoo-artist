@@ -19,11 +19,11 @@ class BannerController extends Controller
     public function getArtistWiseBanner(Request $request)
     {
         $data['banners'] = $this->bannerInterface->getAllBanners($request);
-        return view('admin.carousel.index', $data);
+        return view('admin.banner.index', $data);
     }
 
     public function getForm(){
-        return view('admin.carousel.create');
+        return view('admin.banner.create');
     }
 
     public function uploadArtistWiseBanner(Request $request){
@@ -52,7 +52,7 @@ class BannerController extends Controller
         }
      
         // Return the view with the banner data
-        return view('admin.carousel.edit', $data);
+        return view('admin.banner.edit', $data);
     }
     
     public function updateArtistWiseBanner(Request $request, $id)
