@@ -5,6 +5,7 @@ namespace App\core\carousel;
 use App\Models\Carousel;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
@@ -42,9 +43,11 @@ class CarouselRepository implements CarouselInterface
     public function getArtistBanners()
     {
         $salespersonId = Auth::guard('sales')->id();
-
         $artists = User::where('created_by', $salespersonId)->pluck('id');
-        return Carousel::whereIn('user_id', $artists)->with('artist')->paginate(5);
+
+        return Carousel::whereIn('user_id', $artists)
+            ->with('artist')
+            ->paginate(5);
     }
 
     /**
@@ -53,27 +56,31 @@ class CarouselRepository implements CarouselInterface
     public function storeBannerImage($data)
     {
         if (!empty($data['carousel'])) {
-            $imageFile = $data['carousel'];
-
-            if ($imageFile->isValid()) {
-                $manager = new ImageManager(new Driver());
-                $image = $manager->read($imageFile->getRealPath())->resize(370, 246);
-
-                $filename = time() . rand(1000, 9999) . '.' . $imageFile->getClientOriginalExtension();
-                $directory = public_path('storage/Carousel');
-
-                if (!is_dir($directory)) {
-                    mkdir($directory, 0777, true);
-                }
-
-                $path = $directory . '/' . $filename;
-                $image->save($path, 60);
-
-                $data['carousel'] = $filename;
-            }
+            $data['carousel'] = $this->processImage($data['carousel']);
         }
 
         return Carousel::create($data);
+    }
+
+    /**
+     * Update a carousel banner
+     */
+    public function updateBannerImage($id, $data)
+    {
+        $banner = Carousel::find($id);
+        if (!$banner) return false;
+
+        if (!empty($data['carousel'])) {
+            // Delete old image
+            if ($banner->carousel && Storage::disk('public')->exists('Carousel/' . $banner->carousel)) {
+                Storage::disk('public')->delete('Carousel/' . $banner->carousel);
+            }
+            // Store new image
+            $data['carousel'] = $this->processImage($data['carousel']);
+        }
+
+        $banner->update($data);
+        return true;
     }
 
     /**
@@ -82,24 +89,18 @@ class CarouselRepository implements CarouselInterface
     public function deleteBannerImage($id)
     {
         $banner = Carousel::find($id);
-
-        if (!$banner) {
-            return false;
-        }
+        if (!$banner) return false;
 
         // Delete stored image
-        if (!empty($banner->carousel)) {
-            $imagePath = public_path('storage/Carousel/' . $banner->carousel);
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
-            }
+        if ($banner->carousel && Storage::disk('public')->exists('Carousel/' . $banner->carousel)) {
+            Storage::disk('public')->delete('Carousel/' . $banner->carousel);
         }
 
         return $banner->delete();
     }
 
     /**
-     * Optional helper (not in interface, but used by controller)
+     * Get banner by ID
      */
     public function getBannerById($id)
     {
@@ -107,46 +108,19 @@ class CarouselRepository implements CarouselInterface
     }
 
     /**
-     * Optional helper for updates (used by controller)
+     * Handle image resizing and storage
      */
-    public function updateBannerImage($id, $data)
+    private function processImage($imageFile)
     {
-        $banner = Carousel::find($id);
+        $manager = new ImageManager(new Driver());
+        $image = $manager->make($imageFile)->resize(370, 246);
 
-        if (!$banner) {
-            return false;
-        }
+        $filename = time() . rand(1000, 9999) . '.' . $imageFile->getClientOriginalExtension();
 
-        if (!empty($data['carousel'])) {
-            $imageFile = $data['carousel'];
+        // Store in storage/app/public/Carousel
+        $path = 'Carousel/' . $filename;
+        Storage::disk('public')->put($path, (string) $image->encode('jpg', 60));
 
-            if ($imageFile->isValid()) {
-                $manager = new ImageManager(new Driver());
-                $image = $manager->read($imageFile->getRealPath())->resize(370, 246);
-
-                $filename = time() . rand(1000, 9999) . '.' . $imageFile->getClientOriginalExtension();
-                $directory = public_path('storage/Carousel');
-
-                if (!is_dir($directory)) {
-                    mkdir($directory, 0777, true);
-                }
-
-                $path = $directory . '/' . $filename;
-                $image->save($path, 60);
-
-                // Delete old image
-                if (!empty($banner->carousel)) {
-                    $oldImagePath = public_path('storage/Carousel/' . $banner->carousel);
-                    if (file_exists($oldImagePath)) {
-                        unlink($oldImagePath);
-                    }
-                }
-
-                $data['carousel'] = $filename;
-            }
-        }
-
-        $banner->update($data);
-        return true;
+        return $filename;
     }
 }
