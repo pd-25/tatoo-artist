@@ -45,7 +45,7 @@ class CarouselController extends Controller
 
     public function destroy($id)
     {
-        return $this->deleteArtistWiseBanner($id);
+        return $this->destroyBanner($id);
     }
 
     public function getArtistWiseBanner(Request $request)
