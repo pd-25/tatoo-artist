@@ -6,8 +6,6 @@ use App\Models\Carousel;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
 
 class CarouselRepository implements CarouselInterface
 {
@@ -29,8 +27,8 @@ class CarouselRepository implements CarouselInterface
         if ($searchCustomer !== '') {
             $query->whereHas('artist', function ($q) use ($searchCustomer) {
                 $q->where('username', 'like', "%{$searchCustomer}%")
-                    ->orWhere('name', 'like', "%{$searchCustomer}%")
-                    ->orWhere('email', 'like', "%{$searchCustomer}%");
+                  ->orWhere('name', 'like', "%{$searchCustomer}%")
+                  ->orWhere('email', 'like', "%{$searchCustomer}%");
             });
         }
 
@@ -56,7 +54,7 @@ class CarouselRepository implements CarouselInterface
     public function storeBannerImage($data)
     {
         if (!empty($data['carousel'])) {
-            $data['carousel'] = $this->processImage($data['carousel']);
+            $data['carousel'] = $this->storeImage($data['carousel']);
         }
 
         return Carousel::create($data);
@@ -75,8 +73,9 @@ class CarouselRepository implements CarouselInterface
             if ($banner->carousel && Storage::disk('public')->exists('Carousel/' . $banner->carousel)) {
                 Storage::disk('public')->delete('Carousel/' . $banner->carousel);
             }
+
             // Store new image
-            $data['carousel'] = $this->processImage($data['carousel']);
+            $data['carousel'] = $this->storeImage($data['carousel']);
         }
 
         $banner->update($data);
@@ -91,7 +90,6 @@ class CarouselRepository implements CarouselInterface
         $banner = Carousel::find($id);
         if (!$banner) return false;
 
-        // Delete stored image
         if ($banner->carousel && Storage::disk('public')->exists('Carousel/' . $banner->carousel)) {
             Storage::disk('public')->delete('Carousel/' . $banner->carousel);
         }
@@ -108,19 +106,12 @@ class CarouselRepository implements CarouselInterface
     }
 
     /**
-     * Handle image resizing and storage
+     * Store uploaded image without resizing
      */
-    private function processImage($imageFile)
+    private function storeImage($imageFile)
     {
-        $manager = new ImageManager(new Driver());
-        $image = $manager->make($imageFile)->resize(370, 246);
-
         $filename = time() . rand(1000, 9999) . '.' . $imageFile->getClientOriginalExtension();
-
-        // Store in storage/app/public/Carousel
-        $path = 'Carousel/' . $filename;
-        Storage::disk('public')->put($path, (string) $image->encode('jpg', 60));
-
+        $path = $imageFile->storeAs('public/Carousel', $filename); // stores in storage/app/public/Carousel
         return $filename;
     }
 }
