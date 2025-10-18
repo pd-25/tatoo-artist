@@ -33,6 +33,21 @@ class CarouselController extends Controller
     }
     
 
+    // public function edit($id)
+    // {
+    //     return $this->editArtistWiseBanner($id);
+    // }
+
+    // public function update(Request $request, $id)
+    // {
+    //     return $this->updateArtistWiseBanner($request, $id);
+    // }
+
+    public function destroy($id)
+    {
+        return $this->deleteArtistWiseBanner($id);
+    }
+
     public function getArtistWiseBanner(Request $request)
     {
         $data['banners'] = $this->bannerInterface->getAllBanners($request);
