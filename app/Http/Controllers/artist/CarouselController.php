@@ -37,19 +37,10 @@ class CarouselController extends Controller
         return $this->editArtistWiseBanner($id);
     }
 
-    public function update(Request $request, $id)
-    {
-        return $this->updateArtistWiseBanner($request, $id);
-    }
-
-    public function destroy($id)
-    {
-        return $this->deleteArtistWiseBanner($id);
-    }
 
     public function getArtistWiseBanner(Request $request)
     {
-        $data['banners'] = $this->bannerInterface->getAllBanners($request);
+        $data['carrousels'] = $this->bannerInterface->getAllBanners($request);
         return view('admin.carousel.index', $data);
     }
 
@@ -84,9 +75,9 @@ class CarouselController extends Controller
     public function editArtistWiseBanner($id)
     {
         // Fetch the banner data by ID
-        $data['banner'] = $this->bannerInterface->getBannerById(decrypt($id));;
+        $data['carousel'] = $this->bannerInterface->getBannerById(decrypt($id));;
         $data['artists'] = $this->artistInterface->getAllArtistss();
-        if (!$data['banner']) {
+        if (!$data['carousel']) {
             return redirect()->route('artists.getArtistWiseCarousel')->with('msg', 'Carousel not found.');
         }
 
