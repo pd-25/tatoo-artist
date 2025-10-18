@@ -1,11 +1,11 @@
 @extends('admin.layout.main')
-@section('title', env('APP_NAME') . ' | BannerImage-create')
+@section('title', env('APP_NAME') . ' | Carousel-create')
 @section('content')
     <div class="row justify-content-center">
         <div class="col-lg-11">
             <div class="card">
                 <div class="card-title">
-                    <h4>Edit Banner Image</h4>
+                    <h4>Edit Carousel Image</h4>
                     @if (Session::has('msg'))
                         <p class="alert alert-info">{{ Session::get('msg') }}</p>
                     @endif
@@ -13,9 +13,9 @@
                 <div class="card-body">
                     <div class="basic-form">
                         @if (Auth::guard('artists')->check())
-                            <form action="{{ route('artists.updateArtistWiseBanner', $banner->id) }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('artists.updateArtistWiseCarousel', $banner->id) }}" method="POST" enctype="multipart/form-data">
                         @else
-                            <form action="{{ route('artists.updateArtistWiseBanner', $banner->id) }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('artists.updateArtistWiseCarousel', $banner->id) }}" method="POST" enctype="multipart/form-data">
                         @endif
                         @csrf
 
@@ -53,18 +53,18 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Attach the Banner Image Here</label><span class="text-danger">*</span>
-                                    <input type="file" class="form-control" name="banner_image">
-                                    @error('banner_image')
+                                    <label>Attach the Carousel Image Here</label><span class="text-danger">*</span>
+                                    <input type="file" class="form-control" name="carousel">
+                                    @error('carousel')
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
                                     <div class="form-group">
                                         <label>Current image</label>
-                                        @if (!empty($banner->banner_image) && File::exists(public_path('storage/BannerImage/' . $banner->banner_image)))
+                                        @if (!empty($banner->carousel) && File::exists(public_path('storage/Carousel/' . $banner->carousel)))
                                             <img style="height: 82px; width: 82px;"
-                                                src="{{ asset('storage/BannerImage/' . $banner->banner_image) }}" alt="">
+                                                src="{{ asset('storage/Carousel/' . $banner->carousel) }}" alt="">
                                         @else
                                             <img style="height: 82px; width: 82px;" src="{{ asset('noimg.png') }}" alt="">
                                         @endif

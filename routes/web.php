@@ -15,6 +15,7 @@ use App\Http\Controllers\artist\BannerController as ArtistBannerController;
 use App\Http\Controllers\artist\DashboardController as ArtistDashboardController;
 use App\Http\Controllers\Admin\Payment\PaymentController;
 use App\Http\Controllers\Admin\Expenses\ExpensesController;
+use App\Http\Controllers\artist\CarouselController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -88,27 +89,26 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminCheck'], function () {
     Route::delete('/delete-comment/{id}', [ArtworkController::class, 'deleteComment'])->name('comment.delete');
 
     Route::resource('banners', BannerController::class);
+    Route::resource('carousels', CarouselController::class);
 
     Route::get('/impersonate/{salesExeID}', [DashboardController::class, 'impersonate'])->name('admin.impersonate');
     Route::get('/revert-impersonate', [DashboardController::class, 'revertImpersonate'])->name('admin.revert.impersonate');
 
     Route::get('/impersonateartist/{salesExeID}', [DashboardController::class, 'impersonateartist'])->name('admin.impersonateartist');
     Route::get('/revert-impersonatesales', [DashboardController::class, 'revertImpersonateforsales'])->name('admin.revert.revertImpersonateforsales');
-
-
 });
 
 Route::post('/quotes', [DashboardController::class, 'storeQuote'])->name('admin.storeQuote');
 Route::get('/get-quote', [DashboardController::class, 'getQuote'])->name('admin.getQuote');
 Route::post('/provide-price/{id}', [DashboardController::class, 'providePrice'])->name('admin.providePrice');
 
-Route::post('/appoinment-move-archive',[DashboardController::class,'appointmentArchiveMove'])->name('appoinment.moveToArchives');
+Route::post('/appoinment-move-archive', [DashboardController::class, 'appointmentArchiveMove'])->name('appoinment.moveToArchives');
 Route::get('/get-appointment/archives', [DashboardController::class, 'getAppointmentArchives'])->name('appoinment.getArchives');
 Route::get('/get-appointment', [DashboardController::class, 'getAppointment'])->name('admin.getAppointment');
 
 
 
-Route::post('/deposit-move-archive',[PaymentController::class,'depositArchiveMove'])->name('deposit.moveToArchives');
+Route::post('/deposit-move-archive', [PaymentController::class, 'depositArchiveMove'])->name('deposit.moveToArchives');
 Route::get('/get-deposit-slips/archives', [PaymentController::class, 'getDepositSlipsArchives'])->name('deposit.getArchives');
 Route::get('/get-deposit-slips', [PaymentController::class, 'getDepositSlips'])->name('admin.deposit-slips');
 Route::get('/get-filter-deposit', [PaymentController::class, 'getFilteredDeposits'])->name('admin.filterDeposite');
@@ -141,7 +141,7 @@ Route::get('/edit-payment/{id}', [PaymentController::class, 'editpaymentForm'])-
 Route::post('/edit-payment-post/{id}', [PaymentController::class, 'editpaymentPost'])->name('admin.editpaymentPost');
 Route::delete('/payment-delete/{id}', [PaymentController::class, 'deletepaymentForm'])->name('admin.deletepaymentForm');
 
-Route::post('/expanses-move-archive',[ExpensesController::class,'expansesArchiveMove'])->name('expenses.moveToArchives');
+Route::post('/expanses-move-archive', [ExpensesController::class, 'expansesArchiveMove'])->name('expenses.moveToArchives');
 Route::get('/get-expenses/archives', [ExpensesController::class, 'getExpensesArchive'])->name('expenses.getExpensesArchive');
 Route::get('/get-expenses', [ExpensesController::class, 'getExpenses'])->name('admin.getExpenses');
 Route::get('/add-expenses', [ExpensesController::class, 'AddexpensesForm'])->name('admin.AddexpensesForm');
@@ -165,14 +165,14 @@ Route::get('/user/view/{id}', [DashboardController::class, 'viewUserDetails'])->
 Route::post('/user/view/{id}', [DashboardController::class, 'editUserNoteField'])->name('artist.user-note.update');
 Route::get('/user/medical/{id}', [DashboardController::class, 'getMedicalForm'])->name('artists.view-user-medical-details');
 Route::get('/walkin-archive', [DashboardController::class, 'getWalkinArchives'])->name('artists.getWalkInArchive');
-Route::post('/quote-arcihve-move',[DashboardController::class,'qouteArchiveMove'])->name('quote.moveToArchives');
+Route::post('/quote-arcihve-move', [DashboardController::class, 'qouteArchiveMove'])->name('quote.moveToArchives');
 Route::get('/quote-archive', [DashboardController::class, 'getQuoteArchives'])->name('admin.quoteArchive');
 
 
 Route::post('userlogin', [AuthController::class, 'userlogin'])->name('userlogin');
 // 'middleware' => 'artistCheck'
 // 'middleware' => 'artistCheck'
-Route::group(['prefix' => 'user','middleware' => 'ArtistBlockChack'], function () {
+Route::group(['prefix' => 'user', 'middleware' => 'ArtistBlockChack'], function () {
     Route::get('/artist-dashboard', [ArtistDashboardController::class, 'index'])->name('artists.dashboard');
     Route::get('/artist-profile', [ArtistDashboardController::class, 'profile'])->name('artists.profile');
     Route::put('/artist-profile/{id}', [ArtistController::class, 'update'])->name('artists.profileUpdate');
@@ -184,18 +184,26 @@ Route::group(['prefix' => 'user','middleware' => 'ArtistBlockChack'], function (
     Route::put('/artwork-edit/{id}', [ArtistArtworkController::class, 'updateArtwork'])->name('artist.updateArtwork');
     Route::delete('/artwork-delete/{id}', [ArtistArtworkController::class, 'destroyArtwork'])->name('artist.destroyArtwork');
 
-    Route::get('/carousel-get', [ArtistBannerController::class, 'getArtistWiseBanner'])->name('artists.getArtistWiseBanner');
-    Route::get('/editcarousel-carousel/{id}', [ArtistBannerController::class, 'editArtistWiseBanner'])->name('artists.getArtistWiseBanneredit');
-    Route::post('/artist/carousel/update/{id}', [ArtistBannerController::class, 'updateArtistWiseBanner'])->name('artists.updateArtistWiseBanner');
-    Route::get('/carousel-upload', [ArtistBannerController::class, 'getForm'])->name('artists.bgetForm');
-    Route::post('/carousel-upload', [ArtistBannerController::class, 'uploadArtistWiseBanner'])->name('artists.uploadArtistWiseBanner');
-    Route::delete('/carousel-delete/{id}', [ArtistBannerController::class, 'destroyBanner'])->name('artists.destroyBanner');
+    // Banner Routes
+    Route::get('/banner-get', [ArtistBannerController::class, 'getArtistWiseBanner'])->name('artists.getArtistWiseBanner');
+    Route::get('/editbanner-banner/{id}', [ArtistBannerController::class, 'editArtistWiseBanner'])->name('artists.getArtistWiseBanneredit');
+    Route::post('/artist/banner/update/{id}', [ArtistBannerController::class, 'updateArtistWiseBanner'])->name('artists.updateArtistWiseBanner');
+    Route::get('/banner-upload', [ArtistBannerController::class, 'getForm'])->name('artists.bgetForm');
+    Route::post('/banner-upload', [ArtistBannerController::class, 'uploadArtistWiseBanner'])->name('artists.uploadArtistWiseBanner');
+    Route::delete('/banner-delete/{id}', [ArtistBannerController::class, 'destroyBanner'])->name('artists.destroyBanner');
 
 
+    // Carousel Routes
+    Route::get('/carousel-get', [CarouselController::class, 'getArtistWiseBanner'])->name('artists.getArtistWiseCarousel');
+    Route::get('/editcarousel-carousel/{id}', [CarouselController::class, 'editArtistWiseBanner'])->name('artists.getArtistWiseCarouseledit');
+    Route::post('/artist/carousel/update/{id}', [CarouselController::class, 'updateArtistWiseBanner'])->name('artists.updateArtistWiseCarousel');
+    Route::get('/carousel-upload', [CarouselController::class, 'getForm'])->name('artists.cgetForm');
+    Route::post('/carousel-upload', [CarouselController::class, 'uploadArtistWiseBanner'])->name('artists.uploadArtistWiseCarousel');
+    Route::delete('/carousel-delete/{id}', [CarouselController::class, 'destroyBanner'])->name('artists.destroyCarousel');
 });
 
 Route::group(['prefix' => 'user'], function () {
-    
+
     Route::get('/add-customer', [ArtistController::class, 'addCustomer'])->name('admin.addCustomer');
     Route::post('/store-customer', [ArtistController::class, 'storeCustomer'])->name('admin.storeCustomer');
     Route::get('/customers', [ArtistController::class, 'customers'])->name('admin.customers');
@@ -209,10 +217,10 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('/admin/subscriptions/create', [SubscriptionController::class, 'create'])->name('admin.subscriptions.create');
     Route::post('/subscriptions', [SubscriptionController::class, 'store'])->name('subscriptions.store');
     // Route to display the subscription edit form
-Route::get('/admin/subscriptions/{id}/edit', [SubscriptionController::class, 'edit'])->name('subscriptions.edit');
+    Route::get('/admin/subscriptions/{id}/edit', [SubscriptionController::class, 'edit'])->name('subscriptions.edit');
 
-// Route to handle the subscription update form submission
-Route::put('/admin/subscriptions/{id}', [SubscriptionController::class, 'update'])->name('subscriptions.update');
+    // Route to handle the subscription update form submission
+    Route::put('/admin/subscriptions/{id}', [SubscriptionController::class, 'update'])->name('subscriptions.update');
 });
 
 //---------------------------CUSTOMER ROUTES--------------------------//
@@ -234,12 +242,10 @@ Route::post('tatto/ref-image', [TattoQuoteController::class, 'storeReferenceImag
 
 
 Route::get('artistblock', function () {
-    if(Auth::guard('artists')->user()->account_hold == 1) {
+    if (Auth::guard('artists')->user()->account_hold == 1) {
         return view('block');
     }
     return redirect()->route('artists.dashboard');
-  
 })->name('artistblock');
 
-route::get('/subscriptioncron',[SubscriptionController::class,'cronCreateExpance'])->name('subscriptioncron');
-
+route::get('/subscriptioncron', [SubscriptionController::class, 'cronCreateExpance'])->name('subscriptioncron');

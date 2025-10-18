@@ -126,6 +126,22 @@
                     </li>
                     @endif
 
+                    @if (Auth::guard('artists')->check())
+                    <li><a href="{{ route('artists.getArtistWiseCarousel') }}"><i class="ti-layout-slider"></i> Carousel </a></li>
+                    <li><a href="{{ route('admin.allComment') }}"><i class="ti-comment"></i> Comments</a></li>
+                    {{-- <li><a href="{{ route('artists.cgetForm') }}"><i class="ti-upload"></i> Carousel</a></li> --}}
+                    @else
+                    <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Carousel Management <span
+                                class="sidebar-collapse-icon ti-angle-down"></span></a>
+                        <ul>
+                            <li><a href="{{ route('carousels.create') }}">Add Carousel</a></li>
+
+                            <li><a href="{{ route('carousels.index') }}">All Carousel</a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endif
+
 
                     @if (Auth::guard('artists')->check() || Auth::guard('admins')->check() || Auth::guard('sales')->check())
                     <li><a href="{{ route('artists.getWalkIn') }}" style="display: flex; align-items: center; gap: 8px"><img src="{{asset('./admin-asset/icons/walkin.png')}}" width="15" alt="" style=" filter: invert(1);">

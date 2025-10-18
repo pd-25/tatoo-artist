@@ -22,7 +22,27 @@ class User extends Authenticatable
         'email',
         'password',
         'walkin',
-        'username','phone','address', 'address2', 'country','state','city','zipcode','latitude','longitude','profile_image','banner_image', 'type', 'created_by', 'coverted_date', 'note', 'account_hold', 'sex', 'dob', 'lead_source', 'other_lead_source'
+        'username',
+        'phone',
+        'address',
+        'address2',
+        'country',
+        'state',
+        'city',
+        'zipcode',
+        'latitude',
+        'longitude',
+        'profile_image',
+        'banner_image',
+        'type',
+        'created_by',
+        'coverted_date',
+        'note',
+        'account_hold',
+        'sex',
+        'dob',
+        'lead_source',
+        'other_lead_source'
     ];
 
     /**
@@ -46,16 +66,19 @@ class User extends Authenticatable
     ];
 
 
-    public function artworks() {
-        return  $this->hasMany(Artwork::class, 'user_id', 'id'); 
+    public function artworks()
+    {
+        return  $this->hasMany(Artwork::class, 'user_id', 'id');
     }
 
-    public function timeData() {
-        return  $this->hasOne(TimeTable::class, 'user_id', 'id'); 
+    public function timeData()
+    {
+        return  $this->hasOne(TimeTable::class, 'user_id', 'id');
     }
 
-    public function artistData() {
-        return  $this->hasOne(ArtistData::class, 'artist_id', 'id'); 
+    public function artistData()
+    {
+        return  $this->hasOne(ArtistData::class, 'artist_id', 'id');
     }
 
     public function createdBy()
@@ -63,15 +86,21 @@ class User extends Authenticatable
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function bannerImages() {
-        return  $this->hasMany(BannerImage::class, 'user_id', 'id'); 
+    public function bannerImages()
+    {
+        return  $this->hasMany(BannerImage::class, 'user_id', 'id');
+    }
+
+    public function carousel()
+    {
+        return  $this->hasMany(carousel::class, 'user_id', 'id');
     }
 
     public function quotesMade()
     {
         return $this->hasMany(Quote::class, 'user_id');
     }
-    
+
     public function quotesReceived()
     {
         return $this->hasMany(Quote::class, 'artist_id');
