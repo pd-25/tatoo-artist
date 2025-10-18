@@ -5,6 +5,7 @@ namespace App\core\carousel;
 use App\Models\Carousel;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use \Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
 
 class CarouselRepository implements CarouselInterface
@@ -55,7 +56,7 @@ class CarouselRepository implements CarouselInterface
     {
         $imageFile = $data['carousel'];
 
-        $manager = new \Intervention\Image\ImageManager(['driver' => 'gd']);
+        $manager = new ImageManager('gd');
         $image = $manager->make($imageFile)->resize(370, 246);
 
         $filename = time() . rand(1000, 9999) . '.' . $imageFile->getClientOriginalExtension();
