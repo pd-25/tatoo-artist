@@ -9,7 +9,7 @@ class Carousel extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['carousel_image', 'user_id', 'description', 'from_date','to_date'];
+    protected $fillable = ['carousel', 'user_id', 'description', 'from_date','to_date'];
 
     public function artist()
     {
