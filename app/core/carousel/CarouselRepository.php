@@ -27,8 +27,8 @@ class CarouselRepository implements CarouselInterface
         if ($searchCustomer !== '') {
             $query->whereHas('artist', function ($q) use ($searchCustomer) {
                 $q->where('username', 'like', "%{$searchCustomer}%")
-                  ->orWhere('name', 'like', "%{$searchCustomer}%")
-                  ->orWhere('email', 'like', "%{$searchCustomer}%");
+                    ->orWhere('name', 'like', "%{$searchCustomer}%")
+                    ->orWhere('email', 'like', "%{$searchCustomer}%");
             });
         }
 
@@ -53,12 +53,27 @@ class CarouselRepository implements CarouselInterface
      */
     public function storeBannerImage($data)
     {
-        if (!empty($data['carousel'])) {
-            $data['carousel'] = $this->storeImage($data['carousel']);
-        }
+        $imageFile = $data['carousel'];
 
-        return Carousel::create($data);
+        $manager = new \Intervention\Image\ImageManager(['driver' => 'gd']);
+        $image = $manager->make($imageFile)->resize(370, 246);
+
+        $filename = time() . rand(1000, 9999) . '.' . $imageFile->getClientOriginalExtension();
+
+        // Save in storage/app/public/Carousel
+        $path = 'Carousel/' . $filename;
+        Storage::disk('public')->put($path, (string) $image->encode('jpg', 80));
+
+        // Store record in DB
+        return \App\Models\Carousel::create([
+            'user_id' => $data['user_id'],
+            'carousel' => $filename,
+            'description' => $data['description'] ?? null,
+            'from_date' => $data['from_date'] ?? null,
+            'to_date' => $data['to_date'] ?? null,
+        ]);
     }
+
 
     /**
      * Update a carousel banner

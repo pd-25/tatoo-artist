@@ -29,9 +29,10 @@ class CarouselController extends Controller
 
     public function store(Request $request)
     {
+        $dd = $request->all();
         return $this->uploadArtistWiseBanner($request);
     }
-    
+
 
     // public function edit($id)
     // {
@@ -69,19 +70,28 @@ class CarouselController extends Controller
     {
         $request->validate([
             'user_id' => 'required|numeric|exists:users,id',
-            'carousel' => 'required|image|mimes:jpeg,png,jpg,gif',
-            'description' => 'nullable',
-            'from_date' => 'date',
-            'to_date' => 'date'
+            'carousel' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'description' => 'nullable|string',
+            'from_date' => 'nullable|date',
+            'to_date' => 'nullable|date',
         ]);
-        $data = $request->only('user_id', 'carousel', 'description', 'from_date', 'to_date');
+
+        // Collect form data
+        $data = $request->only('user_id', 'description', 'from_date', 'to_date');
+
+        // Attach the file object properly
+        $data['carousel'] = $request->file('carousel');
+
         $store = $this->bannerInterface->storeBannerImage($data);
+
         if ($store) {
-            return redirect()->route('artists.getArtistWiseCarousel')->with('msg', 'New carousel image uploded successfully.');
+            return redirect()->route('artists.getArtistWiseCarousel')
+                ->with('msg', 'New carousel image uploaded successfully.');
         } else {
-            return back()->with('msg', 'Some error occured.');
+            return back()->with('msg', 'Some error occurred.');
         }
     }
+
     public function editArtistWiseBanner($id)
     {
         // Fetch the banner data by ID

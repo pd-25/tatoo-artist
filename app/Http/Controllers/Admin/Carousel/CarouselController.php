@@ -53,7 +53,9 @@ class CarouselController extends Controller
             'to_date' => 'date'
         ]);
         $data = $request->only('user_id', 'carousel', 'description', 'from_date', 'to_date');
+        
         $store = $this->bannerInterface->storeBannerImage($data);
+
         if ($store) {
             return redirect()->route('carousels.index')->with('msg', 'New carousel image uploded successfully.');
         } else {
