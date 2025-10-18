@@ -5,7 +5,8 @@ namespace App\core\carousel;
 use App\Models\Carousel;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use \Intervention\Image\ImageManager;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\Storage;
 
 class CarouselRepository implements CarouselInterface
@@ -53,26 +54,63 @@ class CarouselRepository implements CarouselInterface
      * Store a new carousel banner
      */
     public function storeBannerImage($data)
+//     {
+//         $imageFile = $data['carousel'];
+
+//         $manager = new ImageManager('gd');
+//         $image = $manager->make($imageFile)->resize(370, 246);
+
+//         $filename = time() . rand(1000, 9999) . '.' . $imageFile->getClientOriginalExtension();
+
+//         // Save in storage/app/public/Carousel
+//         $path = 'Carousel/' . $filename;
+//         Storage::disk('public')->put($path, (string) $image->encode('jpg', 80));
+// dd($filename);
+//         // Store record in DB
+//         return \App\Models\Carousel::create([
+//             'user_id' => $data['user_id'],
+//             'carousel' => $filename,
+//             'description' => $data['description'] ?? null,
+//             'from_date' => $data['from_date'] ?? null,
+//             'to_date' => $data['to_date'] ?? null,
+//         ]);
+//     }
+
     {
-        $imageFile = $data['carousel'];
+        if (isset($data['carousel']) && $data['carousel'] != null) {
+            $imageFile = $data['carousel'];
 
-        $manager = new ImageManager('gd');
-        $image = $manager->make($imageFile)->resize(370, 246);
+            if ($imageFile->isValid()) {
+                // Create image manager with GD driver
+                $manager = new ImageManager(new Driver());
 
-        $filename = time() . rand(1000, 9999) . '.' . $imageFile->getClientOriginalExtension();
 
-        // Save in storage/app/public/Carousel
-        $path = 'Carousel/' . $filename;
-        Storage::disk('public')->put($path, (string) $image->encode('jpg', 80));
+                // Read image
+                $image = $manager->read($imageFile->getRealPath());
 
-        // Store record in DB
-        return \App\Models\Carousel::create([
-            'user_id' => $data['user_id'],
-            'carousel' => $filename,
-            'description' => $data['description'] ?? null,
-            'from_date' => $data['from_date'] ?? null,
-            'to_date' => $data['to_date'] ?? null,
-        ]);
+                // Unique filename
+                $filename = time() . rand(1000, 9999) . "." . $imageFile->getClientOriginalExtension();
+
+                // Resize while keeping aspect ratio
+                $image = $image->resize(370, 246);
+
+                // Ensure directory exists
+                $directory = public_path('storage/Carousel');
+                if (!file_exists($directory)) {
+                    mkdir($directory, 0777, true);
+                }
+
+                // Save image (compressed at 60% quality)
+                $path = $directory . '/' . $filename;
+                $image->save($path, 60);
+
+                // Store filename in $data
+                $data['carousel'] = $filename;
+            }
+        }
+
+        // Save to DB
+        return Carousel::create($data);
     }
 
 

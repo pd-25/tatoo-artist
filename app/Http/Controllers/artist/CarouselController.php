@@ -81,7 +81,7 @@ class CarouselController extends Controller
 
         // Attach the file object properly
         $data['carousel'] = $request->file('carousel');
-
+        // dd($data);
         $store = $this->bannerInterface->storeBannerImage($data);
 
         if ($store) {
