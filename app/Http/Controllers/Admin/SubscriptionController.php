@@ -14,7 +14,16 @@ class SubscriptionController extends Controller
 {
     public function index()
     {
-        $plans = json_decode(file_get_contents(storage_path('app/subscriptionplans.json')), true);
+        $path = storage_path('app/subscriptionplans.json');
+
+        // Check if file exists, if not create it
+        if (!file_exists($path)) {
+            file_put_contents($path, json_encode([]));
+        }
+
+        // Read plans
+        $plans = json_decode(file_get_contents($path), true);
+
         if (!auth()->guard('artists')->check()) {
             // If the user is not authenticated, show the subscription plans
             return view('admin.subscriptions.index', compact('plans'));
@@ -229,7 +238,7 @@ class SubscriptionController extends Controller
         }
 
         list($price, $name) = explode('|', $request->subscription_plan);
-        
+
 
         // Update subscription
         $subscription->update([
