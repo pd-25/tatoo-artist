@@ -1,63 +1,53 @@
 @extends('admin.layout.main')
-@section('title', env('APP_NAME').' | Artist-index'  )
+@section('title', 'Subscription Plans')
 @section('content')
-    <div class="row justify-content-center">
+<div class="container my-5">
 
-        <div class="container my-5">
-            
-            <h1 class="text-center mb-4">Subscription Plans</h1>
-            @if (session('error'))
-    <div class="alert alert-danger  fade show" role="alert">
-        {{ session('error') }}
-        
+    <h1 class="text-center mb-4">Subscription Plans</h1>
+
+    @if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    @if(session('error'))
+    <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+     @if (Auth::guard('admins')->check())
+    <div class="mb-3 text-end">
+        <a href="{{ route('adminsubscriptions.create') }}" class="btn btn-primary">Add New Plan</a>
     </div>
-@endif
-            <div class="row justify-content-center g-4">
-                <!-- Starter Plan -->
-                <div class="col-md-4">
-                    <div class="card text-center shadow">
-                        <div class="card-header bg-primary text-white">
-                            <h4 class="card-title">Starter Plan</h4>
-                        </div>
-                        <div class="card-body">
-                            <h2 class="card-price">$50</h2>
-                            <p class="card-text">Perfect for individuals just starting out.</p>
-                            <a href="{{ route('admin.subscriptions.create', ['plan' => 'Starter Plan - $50']) }}" class="btn btn-primary">Subscribe Now</a>
-                        </div>
-                    </div>
+    @endif
+
+    <div class="row justify-content-center g-4">
+        @php $colors = ['primary', 'success', 'danger']; @endphp
+
+        @foreach ($plans as $subscription)
+        @php $color = $colors[$loop->index % count($colors)]; @endphp
+        <div class="col-md-4">
+            <div class="card text-center shadow">
+                <div class="card-header bg-{{ $color }} text-white">
+                    <h4 class="card-title">{{ $subscription['name'] }}</h4>
                 </div>
-        
-                <!-- Professional Plan -->
-                <div class="col-md-4">
-                    <div class="card text-center shadow">
-                        <div class="card-header bg-success text-white">
-                            <h4 class="card-title">Professional Plan</h4>
-                        </div>
-                        <div class="card-body">
-                            <h2 class="card-price">$100</h2>
-                            <p class="card-text">Ideal for professionals looking to grow.</p>
-                            <a href="{{ route('admin.subscriptions.create', ['plan' => 'Professional Plan - $100']) }}" class="btn btn-success">Subscribe Now</a>
-                        </div>
-                    </div>
-                </div>
-        
-                <!-- Elite Plan -->
-                <div class="col-md-4">
-                    <div class="card text-center shadow">
-                        <div class="card-header bg-danger text-white">
-                            <h4 class="card-title">Elite Plan</h4>
-                        </div>
-                        <div class="card-body">
-                            <h2 class="card-price">$300</h2>
-                            <p class="card-text">For elite users who want the best features.</p>
-                            <a href="{{ route('admin.subscriptions.create', ['plan' => 'Elite Plan - $300']) }}" class="btn btn-danger">Subscribe Now</a>
-                        </div>
-                    </div>
+                <div class="card-body">
+                    <h2 class="card-price">${{ $subscription['price'] }}</h2>
+                    <p class="card-text">{{ $subscription['description'] }}</p>
+
+                    @if (Auth::guard('admins')->check())
+                    <a href="{{ route('adminsubscriptions.edit', $subscription['id']) }}" class="btn btn-warning">Edit</a>
+
+                    <form action="{{ route('adminsubscriptions.destroy', $subscription['id']) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                    @else
+                    <a href="{{ route('admin.subscriptions.create', ['plan' => $subscription['price']]) }}" class="btn btn-{{ $color }}">Subscribe Now</a>
+                    @endif
                 </div>
             </div>
         </div>
-        
-        
+        @endforeach
     </div>
-    
+</div>
 @endsection

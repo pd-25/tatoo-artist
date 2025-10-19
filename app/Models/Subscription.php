@@ -24,6 +24,7 @@ class Subscription extends Model
     protected $fillable = [
         'user_id',
         'subscription_plan',
+        'plan_name',
         'status',
         'payment_option',
         'zell_email',

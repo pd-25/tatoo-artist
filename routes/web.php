@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminSubscriptionController;
 use App\Http\Controllers\Admin\Artist\ArtistController;
 use App\Http\Controllers\Admin\Sales\SalesController;
 use App\Http\Controllers\Customers\CustomersController;
@@ -96,6 +97,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'adminCheck'], function () {
 
     Route::get('/impersonateartist/{salesExeID}', [DashboardController::class, 'impersonateartist'])->name('admin.impersonateartist');
     Route::get('/revert-impersonatesales', [DashboardController::class, 'revertImpersonateforsales'])->name('admin.revert.revertImpersonateforsales');
+
+    // 
+    Route::resource('adminsubscriptions', AdminSubscriptionController::class);
 });
 
 Route::post('/quotes', [DashboardController::class, 'storeQuote'])->name('admin.storeQuote');

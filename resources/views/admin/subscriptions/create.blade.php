@@ -4,8 +4,8 @@
 
 @section('content')
 <div class="row justify-content-center">
-  
-        <div class="col-lg-11">
+
+    <div class="col-lg-11">
         <div class="card">
             <div class="card-title text-center">
                 <h4>Create Subscription</h4>
@@ -13,19 +13,31 @@
             <div class="card-body">
                 <form action="{{ route('subscriptions.store') }}" method="POST">
                     @csrf
-                    
-                        <input type="hidden" id="user_id" name="user_id" class="form-control" placeholder="Enter User ID" value="{{ $userId}}" required>
-                    
+
+                    <input type="hidden" id="user_id" name="user_id" class="form-control" placeholder="Enter User ID" value="{{ $userId}}" required>
+
 
                     <div class="form-group mb-3">
                         <label for="subscription_plan">Subscription Plan</label>
                         <select id="subscription_plan" name="subscription_plan" class="form-control" required>
                             <option value="">Select Status</option>
-                            <option value="50" @selected($subscriptionPlan == 'Starter Plan - $50')>Starter Plan - $50</option>
-                            <option value="100" @selected($subscriptionPlan == 'Professional Plan - $100')>Professional Plan - $100</option>
-                            <option value="300" @selected($subscriptionPlan == 'Elite Plan - $300')>Elite Plan - $300</option>
+                            @foreach ($plans as $index => $plan)
+                            <div class="border p-3 mb-3">
+                                <option value="{{ $plan['price'] }}|{{ $plan['name'] }}" @selected((string) $subscriptionPlan==(string) $plan['price'])>
+                                    {{ $plan['name'] }} - {{ $plan['price'] }}
+                                </option>
+                                
+                            
+
+                                <!-- <input type="text" name="plans[{{ $index }}][name]" value="{{ $plan['name'] }}" placeholder="Plan Name" class="form-control mb-2"> -->
+                                <!-- <input type="number" name="plans[{{ $index }}][price]" value="{{ $plan['price'] }}" placeholder="Price" class="form-control"> -->
+                            </div>
+                            @endforeach
+                            <!-- <option value="50" @selected($subscriptionPlan=='Starter Plan - $50' )>Starter Plan - $50</option>
+                            <option value="100" @selected($subscriptionPlan=='Professional Plan - $100' )>Professional Plan - $100</option>
+                            <option value="300" @selected($subscriptionPlan=='Elite Plan - $300' )>Elite Plan - $300</option> -->
                         </select>
-                        
+
                     </div>
                     <div class="form-group mb-3">
                         <div id="password-section">
@@ -36,7 +48,7 @@
                                     <input type="password" id="password" class="form-control" placeholder="Password">
                                 </div>
                                 <div onclick="unlockDateField()" class="btn-primary" style="width: 10%; text-align: center; padding: 10px; border-radius: 5px; margin-left: 10px;">
-                                  Unlock
+                                    Unlock
                                 </div>
 
                             </div>
@@ -74,7 +86,7 @@
                     </script>
 
                     <script>
-                        $(function () {
+                        $(function() {
                             $('#datetimepicker1').datetimepicker();
                         });
 
@@ -127,18 +139,18 @@
 
                         <div class="form-group mb-3">
                             <label for="ach_type">ACH Type</label>
-                            <select id="ach_type" name="ach_type" class="form-control" >
+                            <select id="ach_type" name="ach_type" class="form-control">
                                 <option value="">Select Status</option>
                                 <option value="Checking">Checking</option>
-                                <option value="Savings" >Savings</option>
+                                <option value="Savings">Savings</option>
                             </select>
-                           
+
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="ach_routing_number">ACH Routing Number</label>
                             <input type="text" id="ach_routing_number" name="ach_routing_number" class="form-control" placeholder="Enter Routing Number" maxlength="9"
-                            oninput="validateLengthRouting(this)">
+                                oninput="validateLengthRouting(this)">
                         </div>
 
                         <div class="form-group mb-3">
@@ -153,18 +165,18 @@
                 </form>
             </div>
         </div>
-       
+
     </div>
 </div>
 
 <script>
     // Dynamically show/hide payment fields
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const paymentOption = document.getElementById('payment_option');
         const zelleFields = document.getElementById('zelle_fields');
         const achFields = document.getElementById('ach_fields');
 
-        paymentOption.addEventListener('change', function () {
+        paymentOption.addEventListener('change', function() {
             const value = paymentOption.value;
 
             // Show/hide fields based on selected payment option
@@ -183,9 +195,9 @@
     document.addEventListener('DOMContentLoaded', () => {
         // Select the input by class or ID
         const phoneInput = document.querySelector('#zell_phone');
-        
+
         if (phoneInput) {
-            phoneInput.addEventListener('input', function () {
+            phoneInput.addEventListener('input', function() {
                 formatPhone(this);
             });
         }
@@ -221,13 +233,14 @@
             input.setCustomValidity("");
         }
     }
+
     function validateLengthRouting(input) {
-    const value = input.value;
-    if (value.length !== 9) {
-        input.setCustomValidity("Routing number must be exactly 9 digits.");
-    } else {
-        input.setCustomValidity(""); // Clears any previous error message
-    }
+        const value = input.value;
+        if (value.length !== 9) {
+            input.setCustomValidity("Routing number must be exactly 9 digits.");
+        } else {
+            input.setCustomValidity(""); // Clears any previous error message
+        }
 
     }
 </script>

@@ -22,9 +22,14 @@
                         <label for="subscription_plan">Subscription Plan</label>
                         <select id="subscription_plan" name="subscription_plan" class="form-control" required>
                             <option value="">Select Status</option>
-                            <option value="50" @selected($subscription->subscription_plan == '50')>Starter Plan - $50</option>
+                            @foreach ($plans as $plan)
+                                <option value="{{ $plan['price'] }}|{{ $plan['name'] }}" @selected($subscription->subscription_plan == $plan['price'])>
+                                    {{ $plan['name'] }} - ${{ $plan['price'] }}
+                                </option>
+                            @endforeach
+                            <!-- <option value="50" @selected($subscription->subscription_plan == '50')>Starter Plan - $50</option>
                             <option value="100" @selected($subscription->subscription_plan == '100')>Professional Plan - $100</option>
-                            <option value="300" @selected($subscription->subscription_plan == '300')>Elite Plan - $300</option>
+                            <option value="300" @selected($subscription->subscription_plan == '300')>Elite Plan - $300</option> -->
                         </select>
                     </div>
 

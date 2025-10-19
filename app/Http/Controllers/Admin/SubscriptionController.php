@@ -14,9 +14,10 @@ class SubscriptionController extends Controller
 {
     public function index()
     {
+        $plans = json_decode(file_get_contents(storage_path('app/subscriptionplans.json')), true);
         if (!auth()->guard('artists')->check()) {
             // If the user is not authenticated, show the subscription plans
-            return view('admin.subscriptions.index');
+            return view('admin.subscriptions.index', compact('plans'));
         }
 
         $userId = auth()->guard('artists')->user(); // Get the logged-in user ID
@@ -27,11 +28,13 @@ class SubscriptionController extends Controller
                 ->first();
 
             // If a subscription exists, show the subscription details
-            return view('admin.subscriptions.details', compact('subscription', 'sales'));
+            return view('admin.subscriptions.details', compact('subscription', 'sales', 'plans'));
         }
 
         // If no subscription exists, show subscription plans
-        return view('admin.subscriptions.index');
+
+
+        return view('admin.subscriptions.index', compact('plans'));
     }
 
 
@@ -45,9 +48,10 @@ class SubscriptionController extends Controller
         $userId = auth()->guard('artists')->user()->id;
 
         $subscriptionPlan = $request->query('plan', '');
+        $plans = json_decode(file_get_contents(storage_path('app/subscriptionplans.json')), true);
 
         // Pass the subscription plan to the view
-        return view('admin.subscriptions.create', compact('subscriptionPlan', 'userId'));
+        return view('admin.subscriptions.create', compact('subscriptionPlan', 'userId', 'plans'));
     }
     public function store(Request $request)
     {
@@ -69,7 +73,8 @@ class SubscriptionController extends Controller
         // Validate the incoming data
         $validated =  $request->validate([
             'user_id' => 'required|integer|exists:users,id',
-            'subscription_plan' => 'required|string|max:255',
+            'subscription_plan' => 'string|max:255',
+            'plan_name' => 'string|max:255',
             'status' => 'required|string',
             'payment_option' => 'nullable|string|max:255',
             'zell_email' => 'nullable|email|max:255',
@@ -80,6 +85,13 @@ class SubscriptionController extends Controller
             'ach_account_number' => 'nullable|string|max:255',
             'subscription_date' => 'nullable|date',
         ]);
+
+        // Split price|name
+        list($price, $name) = explode('|', $validated['subscription_plan']);
+
+        // Reassign to proper fields
+        $validated['subscription_plan'] = $price;
+        $validated['plan_name'] = $name;
 
         // Create the subscription
         $subscription = Subscription::create($validated);
@@ -170,6 +182,7 @@ class SubscriptionController extends Controller
 
     public function edit($id)
     {
+        $plans = json_decode(file_get_contents(storage_path('app/subscriptionplans.json')), true);
         $artist = auth()->guard('artists')->user();
         if (!$artist) {
             return redirect()->back()->with('error', 'You are not registered as an artist.');
@@ -178,7 +191,7 @@ class SubscriptionController extends Controller
         $subscription = Subscription::findOrFail($id);
         $userId = $artist->id;
 
-        return view('admin.subscriptions.edit', compact('subscription', 'userId'));
+        return view('admin.subscriptions.edit', compact('subscription', 'userId', 'plans'));
     }
 
     public function update(Request $request, $id)
@@ -193,7 +206,8 @@ class SubscriptionController extends Controller
         // Base validation
         $request->validate([
             'user_id' => 'required|integer|exists:users,id',
-            'subscription_plan' => 'required|string|max:255',
+            'subscription_plan' => 'string|max:255',
+            'plan_name' => 'string|max:255',
             'status' => 'required|string',
             'payment_option' => 'nullable|string|max:255',
             'subscription_date' => 'nullable|date',
@@ -214,10 +228,14 @@ class SubscriptionController extends Controller
             ]);
         }
 
+        list($price, $name) = explode('|', $request->subscription_plan);
+        
+
         // Update subscription
         $subscription->update([
             'user_id' => $request->user_id,
-            'subscription_plan' => $request->subscription_plan,
+            'subscription_plan' => $price,
+            'plan_name' => $name,
             'status' => $request->status,
             'payment_option' => $request->payment_option,
             'zell_email' => $request->zell_email,
@@ -228,6 +246,8 @@ class SubscriptionController extends Controller
             'ach_account_number' => $request->ach_account_number,
             'subscription_date' => $request->subscription_date,
         ]);
+
+
 
         // Prepare data for email
         $userdata = $artist; // Pass full Artist/User model
