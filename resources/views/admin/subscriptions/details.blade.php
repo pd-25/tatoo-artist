@@ -32,7 +32,7 @@
 
 
                     <p><strong>Plan:</strong>
-                        <span class="badge bg-warning text-dark">{{$subscription->plan_name }} - {{ $subscription->subscription_plan }}</span>
+                        <span class="badge bg-warning text-dark">{{$subscription->plan_name }} - ${{ $subscription->subscription_plan }}</span>
 
                     </p>
                     <p><strong>Status:</strong> <span class="badge bg-{{ $subscription->status == 'active' ? 'success' : 'danger' }}">{{ ucfirst($subscription->status) }}</span></p>
