@@ -61,16 +61,12 @@
                             <span>Customers</span> </a></li>
 
 
+
+
                     @if (Auth::guard('artists')->check())
-
-
-
-                    <li><a href="{{ route('artists.profile') }}"><i class="ti-user"></i>Profile </a></li>
+                    <!-- <li><a href="{{ route('artists.profile') }}"><i class="ti-user"></i>Profile </a></li> -->
                     {{-- <li><a href="{{ url('/user/artist-profile#profileHours') }}"><i class="ti-time"></i>Hours </a></li> --}}
                     @else
-
-
-
                     <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Artist Management <span
                                 class="sidebar-collapse-icon ti-angle-down"></span></a>
                         <ul>
@@ -95,6 +91,51 @@
                     @endif
 
                     @if (Auth::guard('artists')->check())
+                    <li>
+                        <a class="sidebar-sub-toggle">
+                            <i class="ti-user"></i> Profile
+                            <span class="sidebar-collapse-icon ti-angle-down"></span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="{{ route('artists.profile') }}" style="display: flex; align-items: center; gap: 8px">
+                                    <i class="ti-user"></i> My Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('artists.getArtistWiseBanner') }}" style="display: flex; align-items: center; gap: 8px">
+                                    <i class="ti-layers"></i> Banner
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('artists.getArtistWiseCarousel') }}" style="display: flex; align-items: center; gap: 8px">
+                                    <i class="ti-layout-slider"></i> Carousel
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.allComment') }}" style="display: flex; align-items: center; gap: 8px">
+                                    <i class="ti-comment"></i> Comments
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ route('admin.allComment') }}" style="display: flex; align-items: center; gap: 8px">
+                                    <i class="ti-share"></i> Referrals
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{route('admin.subscriptions')}}" style="display: flex; align-items: center; gap: 8px">
+                                    <img src="{{asset('./admin-asset/icons/subsc.png')}}" width="20" alt="" style=" filter: invert(1);">
+                                    <span>&nbsp;&nbsp;Subscription</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endif
+
+
+                    @if (Auth::guard('artists')->check())
                     {{-- <li><a href="{{ route('artists.getForm') }}"><i class="ti-upload"></i> Artwork</a></li> --}}
                     <li><a href="{{ route('artists.getArtistWiseArtwork') }}"><i class="ti-image"></i> Modify Art</a>
                         @else
@@ -111,8 +152,8 @@
                     @endif
 
                     @if (Auth::guard('artists')->check())
-                    <li><a href="{{ route('artists.getArtistWiseBanner') }}"><i class="ti-layout-slider"></i> Banner </a></li>
-                    <li><a href="{{ route('admin.allComment') }}"><i class="ti-comment"></i> Comments</a></li>
+                    <!-- <li><a href="{{ route('artists.getArtistWiseBanner') }}"><i class="ti-layout-slider"></i> Banner </a></li> -->
+                    <!-- <li><a href="{{ route('admin.allComment') }}"><i class="ti-comment"></i> Comments</a></li> -->
                     {{-- <li><a href="{{ route('artists.bgetForm') }}"><i class="ti-upload"></i> Banner</a></li> --}}
                     @else
                     <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Banner Management <span
@@ -127,8 +168,8 @@
                     @endif
 
                     @if (Auth::guard('artists')->check())
-                    <li><a href="{{ route('artists.getArtistWiseCarousel') }}"><i class="ti-layout-slider"></i> Carousel </a></li>
-                    <li><a href="{{ route('admin.allComment') }}"><i class="ti-comment"></i> Comments</a></li>
+                    <!-- <li><a href="{{ route('artists.getArtistWiseCarousel') }}"><i class="ti-layout-slider"></i> Carousel </a></li> -->
+                    <!-- <li><a href="{{ route('admin.allComment') }}"><i class="ti-comment"></i> Comments</a></li> -->
                     {{-- <li><a href="{{ route('artists.cgetForm') }}"><i class="ti-upload"></i> Carousel</a></li> --}}
                     @else
                     <li><a class="sidebar-sub-toggle"><i class="ti-bar-chart-alt"></i> Carousel Management <span
@@ -145,7 +186,7 @@
 
                     @if (Auth::guard('artists')->check() || Auth::guard('admins')->check() || Auth::guard('sales')->check())
                     <li><a href="{{ route('artists.getWalkIn') }}" style="display: flex; align-items: center; gap: 8px"><img src="{{asset('./admin-asset/icons/walkin.png')}}" width="15" alt="" style=" filter: invert(1);">
-                            <span>Walk In</span>  </a></li>
+                            <span>Walk In</span> </a></li>
 
                     <li><a href="{{ route('admin.getQuote') }}" style="display: flex; align-items: center; gap: 8px"><img src="{{asset('./admin-asset/icons/quote.png')}}" width="20" alt="" style=" filter: invert(1);">
                             <span>Quote Form</span> </a></li>
@@ -173,8 +214,10 @@
                         </ul>
                     </li> --}}
 
+                    @if (Auth::guard('admins')->check())
                     <li><a href="{{route('admin.subscriptions')}}" style="display: flex; align-items: center; gap: 8px"><img src="{{asset('./admin-asset/icons/subsc.png')}}" width="20" alt="" style=" filter: invert(1);">
                             <span>Subscription</span> </a></li>
+                    @endif
 
 
                     <li>
