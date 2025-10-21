@@ -56,26 +56,62 @@
                     </div>
 
                     <script>
-                        function unlockDateField() {
-                            const passwordInput = document.getElementById('password').value;
-                            const correctPassword = '12345';
-                            const errorMessage = document.getElementById('error-message');
-                            const formContainer = document.getElementById('form-container');
+function unlockDateField() {
+    const passwordInput = document.getElementById('password').value;
+    const correctPassword = '12345';
+    const errorMessage = document.getElementById('error-message');
+    const formContainer = document.getElementById('form-container');
 
-                            if (passwordInput === correctPassword) {
-                                errorMessage.style.display = 'none';
-                                formContainer.innerHTML = `
-                                    <div class="datepicker">
-                                        <label for="date">Select Subscription Date</label>
-                                        <input type="date" name="subscription_date" class="form-control" id="date" value="{{ old('subscription_date', $subscription->subscription_date) }}">
-                                    </div>
-                                `;
-                                document.getElementById('password-section').style.display = 'none';
-                            } else {
-                                errorMessage.style.display = 'block';
-                            }
-                        }
-                    </script>
+    if (passwordInput === correctPassword) {
+        errorMessage.style.display = 'none';
+
+        // Format existing subscription date to mm-dd-yyyy
+        const existingDate = "{{ old('subscription_date', $subscription->subscription_date ? \Carbon\Carbon::parse($subscription->subscription_date)->format('m-d-Y') : '') }}";
+
+        formContainer.innerHTML = `
+            <div class="datepicker">
+                <label for="date">Select Subscription Date</label>
+                <input type="text" name="subscription_date" class="form-control" id="date" placeholder="mm-dd-yyyy" value="${existingDate}">
+            </div>
+        `;
+
+        document.getElementById('password-section').style.display = 'none';
+
+        const dateInput = document.getElementById('date');
+
+        // Show native date picker on focus
+        dateInput.addEventListener('focus', function () {
+            let val = this.value;
+            this.type = 'date';
+            this.value = '';
+
+            if (val) {
+                const parts = val.split('-'); // mm-dd-yyyy
+                this.value = `${parts[2]}-${parts[0]}-${parts[1]}`; // yyyy-mm-dd
+            }
+        });
+
+        // Revert to mm-dd-yyyy on blur
+        dateInput.addEventListener('blur', function () {
+            if (this.value) {
+                const date = new Date(this.value);
+                const mm = String(date.getMonth() + 1).padStart(2, '0');
+                const dd = String(date.getDate()).padStart(2, '0');
+                const yyyy = date.getFullYear();
+                this.type = 'text';
+                this.value = `${mm}-${dd}-${yyyy}`;
+            } else {
+                this.type = 'text';
+                this.value = '';
+            }
+        });
+
+    } else {
+        errorMessage.style.display = 'block';
+    }
+}
+</script>
+
 
                     <!-- Status -->
                     <div class="form-group mb-3">

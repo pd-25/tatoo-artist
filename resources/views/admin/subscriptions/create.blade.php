@@ -26,8 +26,8 @@
                                 <option value="{{ $plan['price'] }}|{{ $plan['name'] }}" @selected((string) $subscriptionPlan==(string) $plan['price'])>
                                     {{ $plan['name'] }} - {{ $plan['price'] }}
                                 </option>
-
-
+                                
+                            
 
                                 <!-- <input type="text" name="plans[{{ $index }}][name]" value="{{ $plan['name'] }}" placeholder="Plan Name" class="form-control mb-2"> -->
                                 <!-- <input type="number" name="plans[{{ $index }}][price]" value="{{ $plan['price'] }}" placeholder="Price" class="form-control"> -->
@@ -68,46 +68,33 @@
 
                             if (passwordInput === correctPassword) {
                                 errorMessage.style.display = 'none';
-
-                                // Add date field dynamically
-                                formContainer.innerHTML = `
-  <div class="datepicker">
-      <label for="date">Select Subscription Date</label>
-      <input type="text" name="subscription_date" class="form-control" id="date" placeholder="mm-dd-yyyy" autocomplete="off">
-  </div>
+// Add date field dynamically
+formContainer.innerHTML = `
+    <div class="datepicker">
+        <label for="date">Select Subscription Date</label>
+        <input type="text" name="subscription_date" class="form-control" id="date" placeholder="mm-dd-yyyy">
+    </div>
 `;
 
-                                const dateInput = document.getElementById('date');
+// Add event listeners after inserting the input
+const dateInput = document.getElementById('date');
 
-                                dateInput.addEventListener('focus', function() {
-                                    // Store formatted date before switching type
-                                    let existingDate = this.value;
+dateInput.addEventListener('focus', function () {
+    this.type = 'date';
+});
 
-                                    this.type = 'date';
-                                    this.value = ''; // clear value to avoid browser's dd-mm-yyyy ghost text
-
-                                    // If user already picked a date before, show it inside picker
-                                    if (existingDate) {
-                                        const parts = existingDate.split('-'); // mm-dd-yyyy
-                                        const formatted = `${parts[2]}-${parts[0]}-${parts[1]}`; // yyyy-mm-dd
-                                        this.value = formatted;
-                                    }
-                                });
-
-                                dateInput.addEventListener('blur', function() {
-                                    if (this.value) {
-                                        const date = new Date(this.value);
-                                        const mm = String(date.getMonth() + 1).padStart(2, '0');
-                                        const dd = String(date.getDate()).padStart(2, '0');
-                                        const yyyy = date.getFullYear();
-                                        this.type = 'text';
-                                        this.value = `${mm}-${dd}-${yyyy}`;
-                                    } else {
-                                        this.type = 'text';
-                                        this.value = '';
-                                    }
-                                });
-
+dateInput.addEventListener('blur', function () {
+    if (this.value) {
+        const date = new Date(this.value);
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const yyyy = date.getFullYear();
+        this.type = 'text';
+        this.value = `${mm}-${dd}-${yyyy}`;
+    } else {
+        this.type = 'text';
+    }
+});
 
                                 // Optionally, clear the password input and hide the password section
                                 document.getElementById('password-section').style.display = 'none';

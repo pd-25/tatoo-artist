@@ -92,8 +92,17 @@ class SubscriptionController extends Controller
             'ach_type' => 'nullable|string|max:255',
             'ach_routing_number' => 'nullable|string|max:255',
             'ach_account_number' => 'nullable|string|max:255',
-            'subscription_date' => 'nullable|date',
+            'subscription_date' => 'nullable|string', // temporarily string
         ]);
+
+        // Convert mm-dd-yyyy to Y-m-d
+        if (!empty($validated['subscription_date'])) {
+            $parts = explode('-', $validated['subscription_date']); // mm-dd-yyyy
+            if (count($parts) === 3) {
+                $validated['subscription_date'] = $parts[2] . '-' . $parts[0] . '-' . $parts[1]; // yyyy-mm-dd
+            }
+        }
+
 
         // Split price|name
         list($price, $name) = explode('|', $validated['subscription_plan']);
@@ -219,7 +228,7 @@ class SubscriptionController extends Controller
             'plan_name' => 'string|max:255',
             'status' => 'required|string',
             'payment_option' => 'nullable|string|max:255',
-            'subscription_date' => 'nullable|date',
+            'subscription_date' => 'nullable|string', // temporarily string
         ]);
 
         // Conditional validation
@@ -239,6 +248,13 @@ class SubscriptionController extends Controller
 
         list($price, $name) = explode('|', $request->subscription_plan);
 
+        $subscriptionDate = $request->subscription_date;
+        if (!empty($subscriptionDate)) {
+            $parts = explode('-', $subscriptionDate); // mm-dd-yyyy
+            if (count($parts) === 3) {
+                $subscriptionDate = $parts[2] . '-' . $parts[0] . '-' . $parts[1]; // yyyy-mm-dd
+            }
+        }
 
         // Update subscription
         $subscription->update([
@@ -253,7 +269,7 @@ class SubscriptionController extends Controller
             'ach_type' => $request->ach_type,
             'ach_routing_number' => $request->ach_routing_number,
             'ach_account_number' => $request->ach_account_number,
-            'subscription_date' => $request->subscription_date,
+            'subscription_date' => $subscriptionDate,
         ]);
 
 
