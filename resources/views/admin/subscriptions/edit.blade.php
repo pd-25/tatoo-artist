@@ -65,11 +65,47 @@
                             if (passwordInput === correctPassword) {
                                 errorMessage.style.display = 'none';
                                 formContainer.innerHTML = `
-                                    <div class="datepicker">
-                                        <label for="date">Select Subscription Date</label>
-                                        <input type="date" name="subscription_date" class="form-control" id="date" value="{{ old('subscription_date', $subscription->subscription_date) }}">
-                                    </div>
-                                `;
+    <div class="datepicker">
+        <label for="date">Select Subscription Date</label>
+        <input 
+            type="text" 
+            name="subscription_date" 
+            class="form-control" 
+            id="date" 
+            placeholder="mm-dd-yyyy" 
+            value="{{ old('subscription_date', $subscription->subscription_date ? \Carbon\Carbon::parse($subscription->subscription_date)->format('m-d-Y') : '') }}"
+        >
+    </div>
+`;
+
+const dateInput = document.getElementById('date');
+
+dateInput.addEventListener('focus', function () {
+    let existingDate = this.value;
+    this.type = 'date';
+    this.value = '';
+
+    // Convert mm-dd-yyyy → yyyy-mm-dd for date picker
+    if (existingDate) {
+        const parts = existingDate.split('-');
+        this.value = `${parts[2]}-${parts[0]}-${parts[1]}`;
+    }
+});
+
+dateInput.addEventListener('blur', function () {
+    if (this.value) {
+        const date = new Date(this.value);
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const yyyy = date.getFullYear();
+        this.type = 'text';
+        this.value = `${mm}-${dd}-${yyyy}`;
+    } else {
+        this.type = 'text';
+        this.value = '';
+    }
+});
+
                                 document.getElementById('password-section').style.display = 'none';
                             } else {
                                 errorMessage.style.display = 'block';
