@@ -9,6 +9,8 @@ use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class SubscriptionController extends Controller
 {
@@ -212,6 +214,90 @@ class SubscriptionController extends Controller
         return view('admin.subscriptions.edit', compact('subscription', 'userId', 'plans'));
     }
 
+    // public function update(Request $request, $id)
+    // {
+    //     $artist = auth()->guard('artists')->user();
+    //     if (!$artist) {
+    //         return redirect()->back()->with('error', 'You are not registered as an artist.');
+    //     }
+
+    //     $subscription = Subscription::findOrFail($id);
+
+    //     // Base validation
+    //     $request->validate([
+    //         'user_id' => 'required|integer|exists:users,id',
+    //         'subscription_plan' => 'string|max:255',
+    //         'plan_name' => 'string|max:255',
+    //         'status' => 'required|string',
+    //         'payment_option' => 'nullable|string|max:255',
+    //         'subscription_date' => 'nullable|string', // temporarily string
+    //     ]);
+
+    //     // Conditional validation
+    //     if ($request->payment_option == 'zelle') {
+    //         $request->validate([
+    //             'zell_email' => 'required|email|max:255',
+    //             'zell_phone' => 'required|string',
+    //         ]);
+    //     } elseif ($request->payment_option == 'ach') {
+    //         $request->validate([
+    //             'ach_bank_name' => 'required|string|max:255',
+    //             'ach_type' => 'required|string|max:255',
+    //             'ach_routing_number' => 'required|digits:9',
+    //             'ach_account_number' => 'required|digits_between:8,18',
+    //         ]);
+    //     }
+
+    //     list($price, $name) = explode('|', $request->subscription_plan);
+
+    //     $subscriptionDate = $request->subscription_date;
+    //     if (!empty($subscriptionDate)) {
+    //         $parts = explode('-', $subscriptionDate); // mm-dd-yyyy
+    //         if (count($parts) === 3) {
+    //             $subscriptionDate = $parts[2] . '-' . $parts[0] . '-' . $parts[1]; // yyyy-mm-dd
+    //         }
+    //     }
+
+    //     // Update subscription
+    //     $subscription->update([
+    //         'user_id' => $request->user_id,
+    //         'subscription_plan' => $price,
+    //         'plan_name' => $name,
+    //         'status' => $request->status,
+    //         'payment_option' => $request->payment_option,
+    //         'zell_email' => $request->zell_email,
+    //         'zell_phone' => $request->zell_phone,
+    //         'ach_bank_name' => $request->ach_bank_name,
+    //         'ach_type' => $request->ach_type,
+    //         'ach_routing_number' => $request->ach_routing_number,
+    //         'ach_account_number' => $request->ach_account_number,
+    //         'subscription_date' => $subscriptionDate,
+    //     ]);
+
+
+
+    //     // Prepare data for email
+    //     $userdata = $artist; // Pass full Artist/User model
+    //     $salesdata = User::find($artist->created_by); // Can be null
+    //     $adminEmail = 'tattoome1@yahoo.com';
+    //     $subscriptionData = $subscription->toArray();
+    //     $mailsubject = 'Artist ' . $subscriptionData['status'];
+
+    //     // Send email to sales representative if exists
+    //     if ($salesdata) {
+    //         Mail::to($salesdata->email)->send(
+    //             new SubscriptionMail($userdata, $subscriptionData, $salesdata, $mailsubject)
+    //         );
+    //     }
+
+    //     // Send email to admin
+    //     Mail::to($adminEmail)->send(
+    //         new SubscriptionMail($userdata, $subscriptionData, $salesdata, $mailsubject)
+    //     );
+
+    //     return redirect()->route('admin.subscriptions')->with('success', 'Subscription updated successfully!');
+    // }
+
     public function update(Request $request, $id)
     {
         $artist = auth()->guard('artists')->user();
@@ -224,11 +310,10 @@ class SubscriptionController extends Controller
         // Base validation
         $request->validate([
             'user_id' => 'required|integer|exists:users,id',
-            'subscription_plan' => 'string|max:255',
-            'plan_name' => 'string|max:255',
+            'subscription_plan' => 'required|string|max:255',
             'status' => 'required|string',
             'payment_option' => 'nullable|string|max:255',
-            'subscription_date' => 'nullable|string', // temporarily string
+            'subscription_date' => 'nullable|string',
         ]);
 
         // Conditional validation
@@ -246,13 +331,30 @@ class SubscriptionController extends Controller
             ]);
         }
 
+        // Parse subscription plan
         list($price, $name) = explode('|', $request->subscription_plan);
 
+        // Handle subscription date parsing
         $subscriptionDate = $request->subscription_date;
         if (!empty($subscriptionDate)) {
-            $parts = explode('-', $subscriptionDate); // mm-dd-yyyy
-            if (count($parts) === 3) {
-                $subscriptionDate = $parts[2] . '-' . $parts[0] . '-' . $parts[1]; // yyyy-mm-dd
+            try {
+                // Check if it contains time (space character) - means it's from database
+                if (strpos($subscriptionDate, ' ') !== false) {
+                    // Already in Y-m-d H:i:s format, just extract date part
+                    $subscriptionDate = Carbon::parse($subscriptionDate)->format('Y-m-d');
+                } elseif (preg_match('/^\d{2}-\d{2}-\d{4}$/', $subscriptionDate)) {
+                    // Format: mm-dd-yyyy (from datepicker)
+                    $subscriptionDate = Carbon::createFromFormat('m-d-Y', $subscriptionDate)->format('Y-m-d');
+                } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $subscriptionDate)) {
+                    // Already in Y-m-d format
+                    $subscriptionDate = Carbon::parse($subscriptionDate)->format('Y-m-d');
+                } else {
+                    // Try to parse automatically
+                    $subscriptionDate = Carbon::parse($subscriptionDate)->format('Y-m-d');
+                }
+            } catch (\Exception $e) {
+                // If parsing fails, keep the original subscription date
+                $subscriptionDate = $subscription->subscription_date;
             }
         }
 
@@ -272,26 +374,34 @@ class SubscriptionController extends Controller
             'subscription_date' => $subscriptionDate,
         ]);
 
-
-
         // Prepare data for email
         $userdata = $artist; // Pass full Artist/User model
         $salesdata = User::find($artist->created_by); // Can be null
         $adminEmail = 'tattoome1@yahoo.com';
-        $subscriptionData = $subscription->toArray();
+        $subscriptionData = $subscription->fresh()->toArray(); // Get fresh data after update
         $mailsubject = 'Artist ' . $subscriptionData['status'];
 
         // Send email to sales representative if exists
-        if ($salesdata) {
-            Mail::to($salesdata->email)->send(
-                new SubscriptionMail($userdata, $subscriptionData, $salesdata, $mailsubject)
-            );
+        if ($salesdata && $salesdata->email) {
+            try {
+                Mail::to($salesdata->email)->send(
+                    new SubscriptionMail($userdata, $subscriptionData, $salesdata, $mailsubject)
+                );
+            } catch (\Exception $e) {
+                // Log error but don't stop the process
+                Log::error('Failed to send email to sales rep: ' . $e->getMessage());
+            }
         }
 
         // Send email to admin
-        Mail::to($adminEmail)->send(
-            new SubscriptionMail($userdata, $subscriptionData, $salesdata, $mailsubject)
-        );
+        try {
+            Mail::to($adminEmail)->send(
+                new SubscriptionMail($userdata, $subscriptionData, $salesdata, $mailsubject)
+            );
+        } catch (\Exception $e) {
+            // Log error but don't stop the process
+            Log::error('Failed to send email to admin: ' . $e->getMessage());
+        }
 
         return redirect()->route('admin.subscriptions')->with('success', 'Subscription updated successfully!');
     }

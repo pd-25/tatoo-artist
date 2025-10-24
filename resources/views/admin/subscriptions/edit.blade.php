@@ -63,38 +63,38 @@
                         <input type="hidden" name="subscription_date" value="{{ old('subscription_date', $subscription->subscription_date) }}" id="subscription_date_hidden">
                     </div>
 
-                 <script>
-function unlockDateField() {
-    const passwordInput = document.getElementById('password').value;
-    const correctPassword = '12345';
-    const errorMessage = document.getElementById('error-message');
-    const formContainer = document.getElementById('form-container');
+                    <script>
+                        function unlockDateField() {
+                            const passwordInput = document.getElementById('password').value;
+                            const correctPassword = '12345';
+                            const errorMessage = document.getElementById('error-message');
+                            const formContainer = document.getElementById('form-container');
 
-    if (passwordInput === correctPassword) {
-        errorMessage.style.display = 'none';
+                            if (passwordInput === correctPassword) {
+                                errorMessage.style.display = 'none';
 
-        const existingDate = "{{ old('subscription_date', $subscription->subscription_date ? \Carbon\Carbon::parse($subscription->subscription_date)->format('m-d-Y') : '') }}";
+                                const existingDate = "{{ old('subscription_date', $subscription->subscription_date ? \Carbon\Carbon::parse($subscription->subscription_date)->format('m-d-Y') : '') }}";
 
-        formContainer.innerHTML = `
+                                formContainer.innerHTML = `
             <div class="datepicker">
                 <label for="date">Select Subscription Date</label>
                 <input type="text" name="subscription_date" class="form-control" id="date" placeholder="mm-dd-yyyy" value="${existingDate}">
             </div>
         `;
 
-        document.getElementById('password-section').style.display = 'none';
+                                document.getElementById('password-section').style.display = 'none';
 
-        // Initialize flatpickr
-        flatpickr("#date", {
-            dateFormat: "m-d-Y",
-            allowInput: false
-        });
+                                // Initialize flatpickr
+                                flatpickr("#date", {
+                                    dateFormat: "m-d-Y",
+                                    allowInput: false
+                                });
 
-    } else {
-        errorMessage.style.display = 'block';
-    }
-}
-</script>
+                            } else {
+                                errorMessage.style.display = 'block';
+                            }
+                        }
+                    </script>
 
                     <!-- Status -->
                     <div class="form-group mb-3">
