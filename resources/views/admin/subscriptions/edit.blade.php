@@ -2,6 +2,14 @@
 
 @section('title', env('APP_NAME') . ' | Edit Subscription')
 
+<head>
+    <!-- Add flatpickr CSS in your <head> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Add flatpickr JS before closing </body> -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
+
 @section('content')
 <div class="row justify-content-center">
     <div class="col-lg-11">
@@ -23,9 +31,9 @@
                         <select id="subscription_plan" name="subscription_plan" class="form-control" required>
                             <option value="">Select Status</option>
                             @foreach ($plans as $plan)
-                                <option value="{{ $plan['price'] }}|{{ $plan['name'] }}" @selected($subscription->subscription_plan == $plan['price'])>
-                                    {{ $plan['name'] }} - ${{ $plan['price'] }}
-                                </option>
+                            <option value="{{ $plan['price'] }}|{{ $plan['name'] }}" @selected($subscription->subscription_plan == $plan['price'])>
+                                {{ $plan['name'] }} - ${{ $plan['price'] }}
+                            </option>
                             @endforeach
                             <!-- <option value="50" @selected($subscription->subscription_plan == '50')>Starter Plan - $50</option>
                             <option value="100" @selected($subscription->subscription_plan == '100')>Professional Plan - $100</option>
@@ -55,7 +63,7 @@
                         <input type="hidden" name="subscription_date" value="{{ old('subscription_date', $subscription->subscription_date) }}" id="subscription_date_hidden">
                     </div>
 
-                    <script>
+                 <script>
 function unlockDateField() {
     const passwordInput = document.getElementById('password').value;
     const correctPassword = '12345';
@@ -65,7 +73,6 @@ function unlockDateField() {
     if (passwordInput === correctPassword) {
         errorMessage.style.display = 'none';
 
-        // Format existing subscription date to mm-dd-yyyy
         const existingDate = "{{ old('subscription_date', $subscription->subscription_date ? \Carbon\Carbon::parse($subscription->subscription_date)->format('m-d-Y') : '') }}";
 
         formContainer.innerHTML = `
@@ -77,33 +84,10 @@ function unlockDateField() {
 
         document.getElementById('password-section').style.display = 'none';
 
-        const dateInput = document.getElementById('date');
-
-        // Show native date picker on focus
-        dateInput.addEventListener('focus', function () {
-            let val = this.value;
-            this.type = 'date';
-            this.value = '';
-
-            if (val) {
-                const parts = val.split('-'); // mm-dd-yyyy
-                this.value = `${parts[2]}-${parts[0]}-${parts[1]}`; // yyyy-mm-dd
-            }
-        });
-
-        // Revert to mm-dd-yyyy on blur
-        dateInput.addEventListener('blur', function () {
-            if (this.value) {
-                const date = new Date(this.value);
-                const mm = String(date.getMonth() + 1).padStart(2, '0');
-                const dd = String(date.getDate()).padStart(2, '0');
-                const yyyy = date.getFullYear();
-                this.type = 'text';
-                this.value = `${mm}-${dd}-${yyyy}`;
-            } else {
-                this.type = 'text';
-                this.value = '';
-            }
+        // Initialize flatpickr
+        flatpickr("#date", {
+            dateFormat: "m-d-Y",
+            allowInput: false
         });
 
     } else {
@@ -111,7 +95,6 @@ function unlockDateField() {
     }
 }
 </script>
-
 
                     <!-- Status -->
                     <div class="form-group mb-3">
@@ -179,53 +162,53 @@ function unlockDateField() {
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const paymentOption = document.getElementById('payment_option');
-    const zelleFields = document.getElementById('zelle_fields');
-    const achFields = document.getElementById('ach_fields');
+    document.addEventListener('DOMContentLoaded', function() {
+        const paymentOption = document.getElementById('payment_option');
+        const zelleFields = document.getElementById('zelle_fields');
+        const achFields = document.getElementById('ach_fields');
 
-    function togglePaymentFields() {
-        const value = paymentOption.value;
-        if (value === 'zelle') {
-            zelleFields.classList.remove('d-none');
-            achFields.classList.add('d-none');
-        } else if (value === 'ach') {
-            achFields.classList.remove('d-none');
-            zelleFields.classList.add('d-none');
-        } else {
-            zelleFields.classList.add('d-none');
-            achFields.classList.add('d-none');
+        function togglePaymentFields() {
+            const value = paymentOption.value;
+            if (value === 'zelle') {
+                zelleFields.classList.remove('d-none');
+                achFields.classList.add('d-none');
+            } else if (value === 'ach') {
+                achFields.classList.remove('d-none');
+                zelleFields.classList.add('d-none');
+            } else {
+                zelleFields.classList.add('d-none');
+                achFields.classList.add('d-none');
+            }
         }
+
+        paymentOption.addEventListener('change', togglePaymentFields);
+        togglePaymentFields(); // Initialize on load
+    });
+
+    // Zelle Phone formatting
+    document.addEventListener('DOMContentLoaded', () => {
+        const phoneInput = document.querySelector('#zell_phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function() {
+                let value = this.value.replace(/\D/g, "").substring(0, 10);
+                if (value.length > 6) value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
+                else if (value.length > 3) value = `(${value.substring(0,3)}) ${value.substring(3)}`;
+                else if (value.length > 0) value = `(${value}`;
+                this.value = value;
+            });
+        }
+    });
+
+    function validateLengthforacount(input) {
+        const value = input.value;
+        if (value.length < 8 || value.length > 18) input.setCustomValidity("Account number must be between 8 and 18 digits.");
+        else input.setCustomValidity("");
     }
 
-    paymentOption.addEventListener('change', togglePaymentFields);
-    togglePaymentFields(); // Initialize on load
-});
-
-// Zelle Phone formatting
-document.addEventListener('DOMContentLoaded', () => {
-    const phoneInput = document.querySelector('#zell_phone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', function () {
-            let value = this.value.replace(/\D/g, "").substring(0,10);
-            if (value.length > 6) value = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
-            else if (value.length > 3) value = `(${value.substring(0,3)}) ${value.substring(3)}`;
-            else if (value.length > 0) value = `(${value}`;
-            this.value = value;
-        });
+    function validateLengthRouting(input) {
+        const value = input.value;
+        if (value.length !== 9) input.setCustomValidity("Routing number must be exactly 9 digits.");
+        else input.setCustomValidity("");
     }
-});
-
-function validateLengthforacount(input) {
-    const value = input.value;
-    if (value.length < 8 || value.length > 18) input.setCustomValidity("Account number must be between 8 and 18 digits.");
-    else input.setCustomValidity("");
-}
-
-function validateLengthRouting(input) {
-    const value = input.value;
-    if (value.length !== 9) input.setCustomValidity("Routing number must be exactly 9 digits.");
-    else input.setCustomValidity("");
-}
 </script>
 @endsection
