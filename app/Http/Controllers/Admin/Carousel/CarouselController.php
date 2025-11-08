@@ -49,8 +49,11 @@ class CarouselController extends Controller
             'user_id' => 'required|numeric|exists:users,id',
             'carousel' => 'required|image|mimes:jpeg,png,jpg,gif',
             'description' => 'nullable',
-            'from_date' => 'date',
-            'to_date' => 'date'
+            'from_date' => 'required|date',
+            'to_date' => 'required|date|after_or_equal:from_date',
+        ],
+        [
+            'to_date.after_or_equal' => 'The end date must be the same or later than the start date.',
         ]);
         $data = $request->only('user_id', 'carousel', 'description', 'from_date', 'to_date');
         

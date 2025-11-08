@@ -72,8 +72,10 @@ class CarouselController extends Controller
             'user_id' => 'required|numeric|exists:users,id',
             'carousel' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string',
-            'from_date' => 'nullable|date',
-            'to_date' => 'nullable|date',
+            'from_date' => 'required|date',
+            'to_date' => 'required|date|after_or_equal:from_date',
+        ], [
+            'to_date.after_or_equal' => 'The end date must be the same or later than the start date.',
         ]);
 
         // Collect form data
