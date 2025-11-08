@@ -65,6 +65,11 @@
                                 <div class="form-group">
                                     <label>From Date</label>
                                     <input type="date" class="form-control" name="from_date" value="">
+                                    @error('from_date')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
                             
@@ -72,6 +77,11 @@
                                 <div class="form-group">
                                     <label>To Date</label>
                                     <input type="date" class="form-control" name="to_date" value="">
+                                    @error('to_date')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>   
                             </div>
                         </div>                             
