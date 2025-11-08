@@ -8,10 +8,10 @@
                 <div class="card-title pr">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h4>All Expense </h4>
+                            <h4>All Expenses </h4>
                         </div>
                         <div class="d-flex align-items-center">
-                            <a href="{{ route('admin.AddexpensesForm') }}" class="btn btn-success">Add Expense</a>
+                            <a href="{{ route('admin.AddexpensesForm') }}" class="btn btn-success">Add Expenses</a>
                             <a href="{{route('expenses.getExpensesArchive')}}" class="btn btn-primary m-1">Archives</a>
                             <button class="btn btn-primary m-1 d-none" id="moveToArchives">Move to Archives</button>
                         </div>
@@ -50,7 +50,7 @@
                     
                         <!-- New Expense Items Filter -->
                         <div class="col-md-3">
-                            <label for="expense_items"><b>Expense Item:</b></label>
+                            <label for="expense_items"><b>Expenses Item:</b></label>
                             <select name="expense_items" class="form-control" required>
                                 <option value="all">ALL</option>
                                 <option value="advertising">Advertising</option>
@@ -84,7 +84,7 @@
                                     {{-- <th>Date</th> --}}
                                     <th>Payment Method</th>
                                     <th>Amount</th>
-                                    <th>Expense</th>
+                                    <th>Expenses</th>
                                     <th>Transaction Date</th>
                                     <th>Action</th>
                                 </tr>

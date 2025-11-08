@@ -5,7 +5,7 @@
         <div class="col-lg-11">
             <div class="card">
                 <div class="card-title">
-                    <h4>Create Careousel Image</h4>
+                    <h4>Create Carousel Image</h4>
                     @if (Session::has('msg'))
                         <p class="alert alert-info">{{ Session::get('msg') }}</p>
                     @endif
