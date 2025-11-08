@@ -12,22 +12,22 @@ class BannerController extends Controller
 {
 
     private $bannerInterface, $artistInterface;
-   
+
     public function __construct(BannerInterface $bannerInterface, ArtistInterface $artistInterface)
     {
         $this->bannerInterface = $bannerInterface;
         $this->artistInterface = $artistInterface;
     }
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         // dd(Auth::guard('admins')->check(), Auth::guard('sales')->check());
-        if(Auth::guard('admins')->check()){
+        if (Auth::guard('admins')->check()) {
             $data['banners'] = $this->bannerInterface->getAllBanners($request);
-        }else{
+        } else {
             $data['banners'] = $this->bannerInterface->getArtistBanners();
-        }    
+        }
         return view('admin.banner.index', $data);
-
     }
 
     /**
@@ -44,14 +44,17 @@ class BannerController extends Controller
      */
     public function store(Request $request)
     {
-       // echo "<pre>"; print_r($_POST); die;
+        // echo "<pre>"; print_r($_POST); die;
         $request->validate([
             'user_id' => 'required|numeric|exists:users,id',
             'banner_image' => 'required|image|mimes:jpeg,png,jpg,gif',
             'description' => 'nullable',
-            'from_date' => 'date',
-            'to_date' => 'date'
+            'from_date' => 'required|date',
+            'to_date' => 'required|date|after_or_equal:from_date',
+        ], [
+            'to_date.after_or_equal' => 'The end date must be the same or later than the start date.',
         ]);
+
         $data = $request->only('user_id', 'banner_image', 'description', 'from_date', 'to_date');
         $store = $this->bannerInterface->storeBannerImage($data);
         if ($store) {

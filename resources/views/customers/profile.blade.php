@@ -101,11 +101,11 @@
                 <div class="row p-4 align-items-center">
                     <div class="col-md-3 d-flex flex-column align-items-center">
                         @if (!empty($profile->profile_image) && File::exists(public_path('storage/ProfileImage/' . $profile->profile_image)))
-                            <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%"
-                                src="{{ asset('storage/ProfileImage/' . $profile->profile_image) }}" alt="">
+                        <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%"
+                            src="{{ asset('storage/ProfileImage/' . $profile->profile_image) }}" alt="">
                         @else
-                            <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%"
-                                src="{{ asset('noimg.png') }}" alt="">
+                        <img style="height: 82px; width: 82px; object-fit: cover; border-radius:50%"
+                            src="{{ asset('noimg.png') }}" alt="">
                         @endif
                         <!-- Hidden File Input -->
                         <input type="file" name="profile_image" id="profile_image" accept="image/*"
@@ -129,10 +129,10 @@
             <div class="profile-info">
                 <h4 class="mb-4">Client Information</h4>
                 @if (Session::has('msg'))
-                    <p class="alert alert-success">{{ Session::get('msg') }}</p>
+                <p class="alert alert-success">{{ Session::get('msg') }}</p>
                 @endif
                 @if (Session::has('error'))
-                    <p class="alert alert-danger">{{ Session::get('error') }}</p>
+                <p class="alert alert-danger">{{ Session::get('error') }}</p>
                 @endif
 
                 <div class="row mb-3">
@@ -160,67 +160,67 @@
                         <select name="state" id="state" class="form-control">
                             <option value="">Select State</option>
                             @php
-                                $states = [
-                                    'Alabama',
-                                    'Alaska',
-                                    'Arizona',
-                                    'Arkansas',
-                                    'California',
-                                    'Colorado',
-                                    'Connecticut',
-                                    'Delaware',
-                                    'Florida',
-                                    'Georgia',
-                                    'Hawaii',
-                                    'Idaho',
-                                    'Illinois',
-                                    'Indiana',
-                                    'Iowa',
-                                    'Kansas',
-                                    'Kentucky',
-                                    'Louisiana',
-                                    'Maine',
-                                    'Maryland',
-                                    'Massachusetts',
-                                    'Michigan',
-                                    'Minnesota',
-                                    'Mississippi',
-                                    'Missouri',
-                                    'Montana',
-                                    'Nebraska',
-                                    'Nevada',
-                                    'New Hampshire',
-                                    'New Jersey',
-                                    'New Mexico',
-                                    'New York',
-                                    'North Carolina',
-                                    'North Dakota',
-                                    'Ohio',
-                                    'Oklahoma',
-                                    'Oregon',
-                                    'Pennsylvania',
-                                    'Rhode Island',
-                                    'South Carolina',
-                                    'South Dakota',
-                                    'Tennessee',
-                                    'Texas',
-                                    'Utah',
-                                    'Vermont',
-                                    'Virginia',
-                                    'Washington',
-                                    'West Virginia',
-                                    'Wisconsin',
-                                    'Wyoming',
-                                ];
+                            $states = [
+                            'Alabama',
+                            'Alaska',
+                            'Arizona',
+                            'Arkansas',
+                            'California',
+                            'Colorado',
+                            'Connecticut',
+                            'Delaware',
+                            'Florida',
+                            'Georgia',
+                            'Hawaii',
+                            'Idaho',
+                            'Illinois',
+                            'Indiana',
+                            'Iowa',
+                            'Kansas',
+                            'Kentucky',
+                            'Louisiana',
+                            'Maine',
+                            'Maryland',
+                            'Massachusetts',
+                            'Michigan',
+                            'Minnesota',
+                            'Mississippi',
+                            'Missouri',
+                            'Montana',
+                            'Nebraska',
+                            'Nevada',
+                            'New Hampshire',
+                            'New Jersey',
+                            'New Mexico',
+                            'New York',
+                            'North Carolina',
+                            'North Dakota',
+                            'Ohio',
+                            'Oklahoma',
+                            'Oregon',
+                            'Pennsylvania',
+                            'Rhode Island',
+                            'South Carolina',
+                            'South Dakota',
+                            'Tennessee',
+                            'Texas',
+                            'Utah',
+                            'Vermont',
+                            'Virginia',
+                            'Washington',
+                            'West Virginia',
+                            'Wisconsin',
+                            'Wyoming',
+                            ];
                             @endphp
                             @foreach ($states as $state)
-                                <option value="{{ $state }}" {{ $profile->state == $state ? 'selected' : '' }}>
-                                    {{ $state }}
-                                </option>
+                            <option value="{{ $state }}" {{ $profile->state == $state ? 'selected' : '' }}>
+                                {{ $state }}
+                            </option>
                             @endforeach
                         </select>
                         @error('state')
-                            <span class="text-danger"><strong>{{ $message }}</strong></span>
+                        <span class="text-danger"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
 
@@ -229,7 +229,7 @@
                         <input type="text" id="zipcode" name="zipcode" class="form-control"
                             value="{{ $profile->zipcode }}">
                         @error('zipcode')
-                            <span class="text-danger"><strong>{{ $message }}</strong></span>
+                        <span class="text-danger"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
 
@@ -239,19 +239,24 @@
                     <div class="col-md-6">
                         <label class="form-label">Phone</label>
                         @php
-                            $rawPhone = preg_replace('/\D/', '', $profile->phone);
-                            $formattedPhone =
-                                strlen($rawPhone) === 10
-                                    ? '(' .
-                                        substr($rawPhone, 0, 3) .
-                                        ') ' .
-                                        substr($rawPhone, 3, 3) .
-                                        '-' .
-                                        substr($rawPhone, 6)
-                                    : $rawPhone;
+                        $rawPhone = preg_replace('/\D/', '', $profile->phone);
+                        $formattedPhone =
+                        strlen($rawPhone) === 10
+                        ? '(' .
+                        substr($rawPhone, 0, 3) .
+                        ') ' .
+                        substr($rawPhone, 3, 3) .
+                        '-' .
+                        substr($rawPhone, 6)
+                        : $rawPhone;
                         @endphp
                         <input type="text" name="mobile_number" id="mobile_number" class="form-control"
-                            value="{{ $formattedPhone }}" placeholder="(999) 9999-999">
+                            value="{{ $formattedPhone }}" placeholder="(999) 9999-999" minlength="10">
+                        @error('mobile_number')
+                        <span class="text-danger" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Email</label>
@@ -280,11 +285,11 @@
                         <input type="text" class="form-control" value="{{ $lead_name }}" readonly>
                     </div>
                     @if (!empty($profile->other_lead_source))
-                        <div class="col-md-4">
-                            <label class="form-label">Other Lead Source</label>
-                            <input type="text" class="form-control" value="{{ $profile->other_lead_source }}"
-                                readonly>
-                        </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Other Lead Source</label>
+                        <input type="text" class="form-control" value="{{ $profile->other_lead_source }}"
+                            readonly>
+                    </div>
                     @endif
                 </div>
 

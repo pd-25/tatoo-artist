@@ -67,7 +67,7 @@
                                     <div class="form-group">
                                         <label>Phone</label>
                                         <input type="text" class="form-control" id="phone" placeholder="phone number"
-                                            name="phone" value="{{ $artist->phone }}">
+                                            name="phone" value="{{ $artist->phone }}" minlength="10">
                                         @error('phone')
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>

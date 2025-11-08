@@ -114,7 +114,7 @@
                             <tr>
                                 <th class="text-center"><input type="checkbox" id="selectAll"></th>
                                 <th class="text-center">SN.</th>
-                        <!-- changed titles 091725
+                                <!-- changed titles 091725
                                 <th class="text-center">User Name</th>
                                 <th class="text-center">User Email</th>
                                 <th class="text-center">User Contact</th>
@@ -178,7 +178,7 @@
                                         </button>
                                         <br>
                                         @if ($quote->link_send_status == 0)
-                                    <!-- changed 091725
+                                        <!-- changed 091725
                                         <button class="btn btn-sm btn-primary"
                                             onclick="AgainSendlink({{ $quote->user_id }},{{ $quote->artist_id }},{{ $quote->id }})">Send Consent
                                             Link</button>
@@ -432,7 +432,7 @@
         });
     });
 </script>
-<script>
+<!-- <script>
     function Sendlink(authUserId) {
         const inputEmail = document.getElementById("inputEmail").value;
         $.ajax({
@@ -521,7 +521,7 @@
         $("#quo_size").text(size || "Not Provided");
         $("#quo_color").text(color || "Not Provided");
         $("#quo_whtogttato").text(when_to_get_tatto || "Not Provided");
-        $("#quo_budget").text(budget ? `$${budget}` : "Not Provided");
+        $("#quo_budget").text(budget ? `${budget}` : "Not Provided");
         $("#quo_availability").text(availability || "Not Provided");
         $("#quo_front_back_view").text(front_back_view || "Not Provided");
         $("#quo_created").text(created || "Not Provided");
@@ -541,6 +541,131 @@
             $(this).text('Show Actions');
         }
     });
+</script> -->
+
+
+<script>
+    function Sendlink(authUserId) {
+        const inputEmail = document.getElementById("inputEmail").value;
+        $.ajax({
+            type: "POST",
+            url: "{{ route('admin.SendLink') }}",
+            data: {
+                'type': 'walkin',
+                'email': inputEmail,
+                'artistid': authUserId,
+                '_token': '{{ csrf_token() }}'
+            },
+            beforeSend: function() {
+                $('.ajax-loader').show();
+            },
+            complete: function() {
+                $('.ajax-loader').hide();
+            },
+            success: function(result) {
+                if (result.message === "Email sent successfully") {
+                    swal({
+                        title: 'Email sent successfully.',
+                        target: ".myClass"
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    swal('Some error occurred, please reload the page');
+                }
+            },
+            error: function(xhr) {
+                swal('An error occurred: ' + xhr.responseJSON.error);
+            }
+        });
+    }
+
+    function AgainSendlink(userid, artistid, dbid) {
+        $.ajax({
+            type: "POST",
+            url: "{{ route('admin.SendLink') }}",
+            data: {
+                'userid': userid,
+                'artistid': artistid,
+                'dbid': dbid,
+                '_token': '{{ csrf_token() }}'
+            },
+            beforeSend: function() {
+                $('.ajax-loader').show();
+            },
+            complete: function() {
+                $('.ajax-loader').hide();
+            },
+            success: function(result) {
+                if (result.message === "Email sent successfully") {
+                    swal({
+                        title: 'Email sent successfully.',
+                        target: ".myClass"
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    swal('Some error occurred, please reload the page');
+                }
+            },
+            error: function(xhr) {
+                swal('An error occurred: ' + xhr.responseJSON.error);
+            }
+        });
+    }
+
+    const actionURL = "{{ route('admin.providePrice', ':id') }}";
+
+    $(document).on("click", ".viewQuoteDetails", function() {
+        let id = $(this).data('id');
+        let size = $(this).data('size');
+        let color = $(this).data('color');
+        let when_to_get_tatto = $(this).data('whtogttato');
+        let budget = $(this).data('budget');
+        let availability = $(this).data('availability');
+        let front_back_view = $(this).data('fbv');
+        let created = $(this).data('created');
+        let quote_description = $(this).data('desc');
+        let price = $(this).data('price');
+
+        // 🔹 Convert created & availability to mm/dd/yyyy format
+        function formatDate(dateStr) {
+            if (!dateStr) return "Not Provided";
+            // Remove ordinal suffix (st, nd, rd, th)
+            dateStr = dateStr.replace(/(\d+)(st|nd|rd|th)/, "$1");
+            let dateObj = new Date(dateStr);
+            if (isNaN(dateObj)) return dateStr; // fallback if parse fails
+            let mm = String(dateObj.getMonth() + 1).padStart(2, "0");
+            let dd = String(dateObj.getDate()).padStart(2, "0");
+            let yyyy = dateObj.getFullYear();
+            return `${mm}-${dd}-${yyyy}`;
+        }
+
+        $("#quoteForm").attr("action", actionURL.replace(':id', id));
+
+        $("#quo_size").text(size || "Not Provided");
+        $("#quo_color").text(color || "Not Provided");
+        $("#quo_whtogttato").text(when_to_get_tatto || "Not Provided");
+        $("#quo_budget").text(budget ? `${budget}` : "Not Provided");
+        $("#quo_availability").text(formatDate(availability));
+        $("#quo_front_back_view").text(front_back_view || "Not Provided");
+        $("#quo_created").text(formatDate(created));
+        $("#quote_description").html(quote_description || "Not Provided");
+        $("#provide_price").val(price || "");
+
+        $("#viewQuoteModal").modal('show');
+    });
+
+    $(document).on("click", ".toggle-actions", function() {
+        let actionsDiv = $(this).siblings(".quote-actions");
+        actionsDiv.toggle();
+        if (actionsDiv.is(':visible')) {
+            $(this).text('Hide Actions');
+        } else {
+            $(this).text('Show Actions');
+        }
+    });
 </script>
+
 
 @endsection

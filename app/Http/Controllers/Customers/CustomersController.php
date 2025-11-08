@@ -57,7 +57,7 @@ class CustomersController extends Controller
                 'address' => 'null',
                 'customer_state' => 'required',
                 'zipcode' => 'required|min:5|max:5',
-                'mobile_number' => 'required',
+                'mobile_number' => 'required|min:10',
                 'sex' => 'required',
                 'dob' => 'required|date',
                 'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2000',
@@ -75,6 +75,7 @@ class CustomersController extends Controller
                 'customer_state.required' => 'State is required.',
                 'zipcode.required' => 'Zipcode is required.',
                 'mobile_number.required' => 'Mobile number is required.',
+                'mobile_number.min' => 'Mobile number must be 10 digits.',
                 'sex.required' => 'Sex field is required.',
                 'dob.required' => 'Enter your date of birth.',
                 'dob.date' => 'Please enter a valid date format for DOB.',
@@ -174,7 +175,7 @@ class CustomersController extends Controller
             [
                 'state' => 'required',
                 'zipcode' => 'required|min:5|max:5',
-                'mobile_number' => 'required',
+                'mobile_number' => 'required|min:10',
                 'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2000',
                 'firstname' => 'nullable',
                 'lastname' => 'nullable',
@@ -183,7 +184,9 @@ class CustomersController extends Controller
             [
                 'state.required' => 'State is required.',
                 'zipcode.required' => 'Zipcode is required.',
+                'zipcode.min' => 'Zipcode must be 5 digits.',
                 'mobile_number.required' => 'Mobile number is required.',
+                'mobile_number.min' => 'Mobile number must be 10 digits.',
             ]
         );
         $checkIfEmailExists = User::where('email', $request->email)

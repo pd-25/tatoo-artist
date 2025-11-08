@@ -314,7 +314,7 @@ class ArtistController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8',
             'zipcode' => 'required|numeric|min:6',
-            'phone' => 'numeric',
+            'phone' => 'numeric|min:10',
             'address' => 'nullable|string',
             'cc_fees_percentage' => 'nullable|numeric',
             'blood_borne' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
@@ -427,7 +427,7 @@ class ArtistController extends Controller
         // Validation rules
         $request->validate([
             'zipcode' => 'required|numeric|min:6',
-            'phone' => 'numeric',
+            'phone' => 'required|min:10',
             'address' => 'nullable|string',
             'email' => 'email|unique:users,email,' . decrypt($id),
             'cc_fees_percentage' => 'nullable|numeric',

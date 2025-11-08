@@ -149,7 +149,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Mobile No.</label><span class="text-danger">*</span>
-                                            <input type="text" name="mobile_number" id="mobile_number" value="{{ old('mobile_number') }}" class="form-control" placeholder="(999) 999-9999">
+                                            <input type="text" name="mobile_number" id="mobile_number" value="{{ old('mobile_number') }}" class="form-control" placeholder="(999) 999-9999" minlength="10">
                                             @error('mobile_number')
                                             <span class="text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
