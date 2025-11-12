@@ -217,6 +217,7 @@ Route::group(['prefix' => 'user'], function () {
 
     Route::get('/admin/get-payment-methods', [PaymentController::class, 'getPaymentMethods'])->name('admin.getPaymentMethods');
     Route::get('/admin/subscriptions', [SubscriptionController::class, 'index'])->name('admin.subscriptions');
+    Route::get('/admin/subscriptions/report', [SubscriptionController::class, 'report'])->name('admin.subscriptions.report');
 
     Route::get('/admin/subscriptions/create', [SubscriptionController::class, 'create'])->name('admin.subscriptions.create');
     Route::post('/subscriptions', [SubscriptionController::class, 'store'])->name('subscriptions.store');

@@ -484,15 +484,12 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                                 </div>
                                 <div class="stat-content dib">
                                     <div class="stat-text">Subscription Plan</div>
-                                    @if ($havesubscription == 50)
-                                    <div class="stat-digit">Starter Plan</div>
-                                    @elseif($havesubscription == 100)
-                                    <div class="stat-digit">Professional Plan</div>
-                                    @elseif($havesubscription == 300)
-                                    <div class="stat-digit">Elite Plan</div>
-                                    @else
-                                    <div class="stat-digit">No Plan</div>
-                                    @endif
+                                    
+                                    <div class="stat-digit">
+                                        {{ \App\Models\Subscription::where('user_id', Auth::guard('artists')->id())->value('plan_name') ?? 'No Plan' }} - 
+                                        ${{ \App\Models\Subscription::where('user_id', Auth::guard('artists')->id())->value('subscription_plan') ?? '0' }}
+                                    </div>
+                                    
 
 
                                 </div>

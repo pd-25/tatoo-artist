@@ -16,6 +16,7 @@
      @if (Auth::guard('admins')->check())
     <div class="mb-3 text-end">
         <a href="{{ route('adminsubscriptions.create') }}" class="btn btn-primary">Add New Plan</a>
+        <a href="{{ route('admin.subscriptions.report') }}" class="btn btn-success">Get Report</a>
     </div>
     @endif
 

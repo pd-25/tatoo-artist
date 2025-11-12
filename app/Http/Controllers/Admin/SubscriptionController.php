@@ -48,6 +48,33 @@ class SubscriptionController extends Controller
         return view('admin.subscriptions.index', compact('plans'));
     }
 
+    public function report(Request $request)
+    {
+        $query = Subscription::query();
+
+        // Filters
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('payment_option')) {
+            $query->where('payment_option', $request->payment_option);
+        }
+
+        if ($request->filled('plan_name')) {
+            $query->where('plan_name', 'LIKE', '%' . $request->plan_name . '%');
+        }
+
+        if ($request->filled('date_from') && $request->filled('date_to')) {
+            $query->whereBetween('created_at', [$request->date_from, $request->date_to]);
+        }
+
+        $subscriptions = $query->orderBy('id', 'desc')->get();
+
+        return view('admin.subscriptions.report', compact('subscriptions'));
+    }
+
+
 
     public function create(Request $request)
     {

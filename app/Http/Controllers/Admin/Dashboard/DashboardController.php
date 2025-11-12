@@ -496,47 +496,51 @@ class DashboardController extends Controller
 
             $months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
             foreach ($months as $month) {
+    $first_date_this_month = Carbon::createFromDate($selectedyear, $month, 1)->startOfMonth();
+    $last_date_this_month  = Carbon::createFromDate($selectedyear, $month, 1)->endOfMonth();
 
-                $first_date_this_month = date($selectedyear . '-' . $month . '-01 00:00:00');
-                $last_date_this_month  = date("Y-m-t 23:59:59", strtotime($first_date_this_month));
+    // WALK IN 
+    $WALKInDataCount = DB::table('quotes')
+        ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
+        ->where('quotes.quote_type', '1')
+        ->whereBetween('quotes.created_at', [$first_date_this_month, $last_date_this_month])
+        ->count();
+    $WALKInData[] = [
+        'label' => $first_date_this_month->format('F'),
+        'y' => $WALKInDataCount
+    ];
 
-                // WALK IN 
-                $WALKInDataCount = DB::table('quotes')
-                    ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
-                    ->where('quotes.quote_type', '1')
-                    ->whereBetween('quotes.created_at', [$first_date_this_month, $last_date_this_month])
+    // QUOTES
+    $QuotesDataCount = DB::table('quotes')
+        ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
+        ->where('quotes.quote_type', '0')
+        ->whereBetween('quotes.created_at', [$first_date_this_month, $last_date_this_month])
+        ->count();
+    $QuotesData[] = [
+        'label' => $first_date_this_month->format('F'),
+        'y' => $QuotesDataCount
+    ];
 
-                    ->count();
-                $WALKInData[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' => $WALKInDataCount);
+    // ✅ SALES AMOUNT (Use payment date)
+    $totalSalesDeposit = DB::table('payments')
+        ->where('payments.artist_id', Auth::guard('sales')->user()->id)
+        ->whereBetween('payments.date', [$first_date_this_month, $last_date_this_month])
+        ->sum('payments.deposit_total');
+    $totalSalesDepositAmount[] = [
+        'label' => $first_date_this_month->format('F'),
+        'y' => (float) $totalSalesDeposit
+    ];
 
-                //Quotes
-                $QuotesDataCount = DB::table('quotes')
-                    ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
-                    ->where('quotes.quote_type', '0')
-                    ->whereBetween('quotes.created_at', [$first_date_this_month, $last_date_this_month])
-
-                    ->count();
-
-                $QuotesData[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' => $QuotesDataCount);
-
-                // Sales Amount
-                $totalSalesDeposit = DB::table('payments')
-                    ->where('payments.artist_id', Auth::guard('sales')->user()->id)
-                    ->where('payments.date', '>=', $first_date_this_month)
-                    ->where('payments.date', '<=', $last_date_this_month)
-                    ->sum('payments.deposit_total');
-                $totalSalesDepositAmount[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' => (float) $totalSalesDeposit);
-
-                // Expenses Amount
-                $totalExpensesAmount = DB::table('expense')
-                    ->where('expense.user_id', Auth::guard('sales')->user()->id)
-                    ->where('expense.transaction_date', '>=', $first_date_this_month)
-                    ->where('expense.transaction_date', '<=', $last_date_this_month)
-                    ->sum('expense.amount');
-                $totalExpensesAmountData[] = array('label' => date('F', strtotime($first_date_this_month)), 'y' => $totalExpensesAmount);
-            }
-
-
+    // ✅ EXPENSES AMOUNT (Use expense transaction date)
+    $totalExpensesAmount = DB::table('expense')
+        ->where('expense.user_id', Auth::guard('sales')->user()->id)
+        ->whereBetween('expense.transaction_date', [$first_date_this_month, $last_date_this_month])
+        ->sum('expense.amount');
+    $totalExpensesAmountData[] = [
+        'label' => $first_date_this_month->format('F'),
+        'y' => (float) $totalExpensesAmount
+    ];
+}
 
 
 
