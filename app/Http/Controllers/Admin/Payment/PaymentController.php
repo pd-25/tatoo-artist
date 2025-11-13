@@ -335,6 +335,8 @@ class PaymentController extends Controller
         $payments = collect();
         $customers = [];
 
+        $shopPercentage = null; //
+
         // Check if an artist is logged in and get their ID
         if (Auth::guard('artists')->check()) {
             $artistId = Auth::guard('artists')->id();
@@ -364,6 +366,7 @@ class PaymentController extends Controller
             if ($artist && $artist->artistData) {
                 $artistData = $artist->artistData;
                 $paymentMethods = explode(',', $artistData->payment_method); // Split by comma into an array
+                $shopPercentage = $artistData->shop_percentage; //
             }
         }
 
@@ -390,7 +393,7 @@ class PaymentController extends Controller
 
 
         // Pass payment methods and other data to the view
-        return view('admin.payment.create', compact('placements', 'artists', 'paymentMethods', 'artistId', 'customers'));
+        return view('admin.payment.create', compact('placements', 'artists', 'paymentMethods', 'artistId', 'customers', 'shopPercentage'));
     }
 
 

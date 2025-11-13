@@ -202,7 +202,7 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-lg-3">
                 <div class="card">
                     <div class="stat-widget-one">
@@ -263,66 +263,32 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                 </div>
             </div>
 
+            
+        
+            @foreach($totalPlansData as $plan)
             <div class="col-lg-4">
                 <div class="card">
                     <div class="stat-widget-one">
-                        <h5 class="text-center">Tier 1 Artists</h5>
+                        <h5 class="text-center">{{ $plan['plan_name'] }}</h5>
                         <hr>
                         <div style="display: flex; justify-content: space-between">
                             <div class="stat-digit">Artists</div>
-                            <div class="stat-digit">{{ @$totalArtist1 }}</div>
+                            <div class="stat-digit">{{ $plan['artists'] }}</div>
                         </div>
                         <div style="display: flex; justify-content: space-between">
                             <div class="stat-digit">Sales</div>
-                            <div class="stat-digit">{{ @$totalsalesprice1 }}</div>
+                            <div class="stat-digit">${{ number_format($plan['sales'], 2) }}</div>
                         </div>
                         <div style="display: flex; justify-content: space-between">
                             <div class="stat-digit">Quotes</div>
-                            <div class="stat-digit">{{ @$totalQuotes1 }}</div>
+                            <div class="stat-digit">{{ $plan['quotes'] }}</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="stat-widget-one">
-                        <h5 class="text-center">Tier 2 Artists</h5>
-                        <hr>
-                        <div style="display: flex; justify-content: space-between">
-                            <div class="stat-digit">Artists</div>
-                            <div class="stat-digit">{{ @$totalArtist2 }}</div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between">
-                            <div class="stat-digit">Sales</div>
-                            <div class="stat-digit">{{ @$totalsalesprice2 }}</div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between">
-                            <div class="stat-digit">Quotes</div>
-                            <div class="stat-digit">{{ @$totalQuotes2 }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="stat-widget-one">
-                        <h5 class="text-center">Tier 3 Artists</h5>
-                        <hr>
-                        <div style="display: flex; justify-content: space-between">
-                            <div class="stat-digit">Artists</div>
-                            <div class="stat-digit">{{ @$totalArtist3 }}</div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between">
-                            <div class="stat-digit">Sales</div>
-                            <div class="stat-digit">{{ @$totalsalesprice3 }}</div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between">
-                            <div class="stat-digit">Quotes</div>
-                            <div class="stat-digit">{{ @$totalQuotes3 }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforeach
+         
+
             @endif
 
 
@@ -484,12 +450,12 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                                 </div>
                                 <div class="stat-content dib">
                                     <div class="stat-text">Subscription Plan</div>
-                                    
+
                                     <div class="stat-digit">
-                                        {{ \App\Models\Subscription::where('user_id', Auth::guard('artists')->id())->value('plan_name') ?? 'No Plan' }} - 
+                                        {{ \App\Models\Subscription::where('user_id', Auth::guard('artists')->id())->value('plan_name') ?? 'No Plan' }} -
                                         ${{ \App\Models\Subscription::where('user_id', Auth::guard('artists')->id())->value('subscription_plan') ?? '0' }}
                                     </div>
-                                    
+
 
 
                                 </div>

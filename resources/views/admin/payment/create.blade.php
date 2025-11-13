@@ -54,6 +54,10 @@
 
                                 <div class="form-group">
                                     <label>Shop Percentage</label>
+                                    <input type="hidden" id="if_artist_data_table_shop_percentage_data_is_100_then_reimbursed_marked_yes_else_no"
+                                        class="form-control"
+                                        value="{{ $shopPercentage ?? '' }}"
+                                        readonly>
                                     <input type="text" class="form-control" id="shop_percentage" readonly>
                                 </div>
 
@@ -293,28 +297,53 @@
             }
         }
 
-        // ✅ FIXED: Use event delegation for dynamic element
+        // FIXED: Use event delegation for dynamic element
+        // $(document).on('change', '#payment-method', function() {
+        //     const selectedMethod = $(this).val();
+
+        //     if (selectedMethod === 'cc') {
+        //         $('input[name="reimbursed"][value="0"]').prop('checked', true);
+        //     } else {
+        //         $('input[name="reimbursed"][value="1"]').prop('checked', true);
+        //     }
+
+        //     updateFeesIfNeeded();
+        // });
+
+        // Modified logic here
         $(document).on('change', '#payment-method', function() {
-            const selectedMethod = $(this).val();
+            const selectedMethod = $(this).val().toLowerCase();
+            const shopPercentageVal = parseFloat(
+                $('#if_artist_data_table_shop_percentage_data_is_100_then_reimbursed_marked_yes_else_no').val()
+            );
 
             if (selectedMethod === 'cc') {
-                $('input[name="reimbursed"][value="0"]').prop('checked', true);
+                if (shopPercentageVal === 100 || shopPercentageVal === 100.0) {
+                    // If CC and shop_percentage = 100 → Yes
+                    $('input[name="reimbursed"][value="1"]').prop('checked', true);
+                } else {
+                    // If CC but shop_percentage ≠ 100 → No
+                    $('input[name="reimbursed"][value="0"]').prop('checked', true);
+                }
             } else {
+                // Non-CC → always Yes
                 $('input[name="reimbursed"][value="1"]').prop('checked', true);
             }
 
             updateFeesIfNeeded();
         });
+
+
     });
 </script>
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const select = document.getElementById("customerSelect");
         const userIdField = document.getElementById("customer_id");
 
-        select.addEventListener("change", function () {
+        select.addEventListener("change", function() {
             const selectedOption = select.options[select.selectedIndex];
             const userId = selectedOption.getAttribute("data-id") || "";
             userIdField.value = userId;

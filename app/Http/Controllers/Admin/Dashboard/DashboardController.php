@@ -48,7 +48,7 @@ class DashboardController extends Controller
             ->where('created_by', '!=', 0)
             ->count();
 
-        $totalUsersSubstractedByTotalCustomersWithCreatedBy = $totalUsers - $totalCustomersWithCreatedBy; 
+        $totalUsersSubstractedByTotalCustomersWithCreatedBy = $totalUsers - $totalCustomersWithCreatedBy;
 
 
         // Count the total number of artists
@@ -342,6 +342,42 @@ class DashboardController extends Controller
         if (Auth::guard('artists')->check()) {
             // Artist-specific logic (if needed)
         } elseif (Auth::guard('admins')->check()) {
+
+            // Tier -wise data
+            $totalPlansData = Subscription::select('plan_name')
+                ->distinct()
+                ->get()
+                ->map(function ($plan) use ($startDate, $endDate) {
+                    // Get unique user IDs per plan (avoid duplicates)
+                    $userIds = Subscription::where('plan_name', $plan->plan_name)
+                        ->distinct()
+                        ->pluck('user_id');
+
+                    // Artist count
+                    $artistCount = $userIds->count();
+
+                    // Quote count (filtered by date if provided)
+                    $quoteQuery = DB::table('quotes')->whereIn('artist_id', $userIds);
+                    if ($startDate && $endDate) {
+                        $quoteQuery->whereBetween('quotes.created_at', [$startDate, $endDate]);
+                    }
+                    $quoteCount = $quoteQuery->count();
+
+                    // Sales (filtered by date if provided)
+                    $paymentQuery = DB::table('payments')->whereIn('artist_id', $userIds);
+                    if ($startDate && $endDate) {
+                        $paymentQuery->whereBetween('payments.date', [$startDate, $endDate]);
+                    }
+                    $totalSales = $paymentQuery->sum('deposit_total');
+
+                    return [
+                        'plan_name' => $plan->plan_name,
+                        'artists' => $artistCount,
+                        'quotes' => $quoteCount,
+                        'sales' => $totalSales,
+                    ];
+                });
+
             // Admin: Fetch all data
             $query1 = Subscription::where('subscription_plan', '50');
             $query2 = Subscription::where('subscription_plan', '100');
@@ -496,52 +532,55 @@ class DashboardController extends Controller
 
             $months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
             foreach ($months as $month) {
-    $first_date_this_month = Carbon::createFromDate($selectedyear, $month, 1)->startOfMonth();
-    $last_date_this_month  = Carbon::createFromDate($selectedyear, $month, 1)->endOfMonth();
+                $first_date_this_month = Carbon::createFromDate($selectedyear, $month, 1)->startOfMonth();
+                $last_date_this_month  = Carbon::createFromDate($selectedyear, $month, 1)->endOfMonth();
 
-    // WALK IN 
-    $WALKInDataCount = DB::table('quotes')
-        ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
-        ->where('quotes.quote_type', '1')
-        ->whereBetween('quotes.created_at', [$first_date_this_month, $last_date_this_month])
-        ->count();
-    $WALKInData[] = [
-        'label' => $first_date_this_month->format('F'),
-        'y' => $WALKInDataCount
-    ];
+                // WALK IN 
+                $WALKInDataCount = DB::table('quotes')
+                    ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
+                    ->where('quotes.quote_type', '1')
+                    ->whereBetween('quotes.created_at', [$first_date_this_month, $last_date_this_month])
+                    ->count();
+                $WALKInData[] = [
+                    'label' => $first_date_this_month->format('F'),
+                    'y' => $WALKInDataCount
+                ];
 
-    // QUOTES
-    $QuotesDataCount = DB::table('quotes')
-        ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
-        ->where('quotes.quote_type', '0')
-        ->whereBetween('quotes.created_at', [$first_date_this_month, $last_date_this_month])
-        ->count();
-    $QuotesData[] = [
-        'label' => $first_date_this_month->format('F'),
-        'y' => $QuotesDataCount
-    ];
+                // QUOTES
+                $QuotesDataCount = DB::table('quotes')
+                    ->where('quotes.artist_id', Auth::guard('sales')->user()->id)
+                    ->where('quotes.quote_type', '0')
+                    ->whereBetween('quotes.created_at', [$first_date_this_month, $last_date_this_month])
+                    ->count();
+                $QuotesData[] = [
+                    'label' => $first_date_this_month->format('F'),
+                    'y' => $QuotesDataCount
+                ];
 
-    // ✅ SALES AMOUNT (Use payment date)
-    $totalSalesDeposit = DB::table('payments')
-        ->where('payments.artist_id', Auth::guard('sales')->user()->id)
-        ->whereBetween('payments.date', [$first_date_this_month, $last_date_this_month])
-        ->sum('payments.deposit_total');
-    $totalSalesDepositAmount[] = [
-        'label' => $first_date_this_month->format('F'),
-        'y' => (float) $totalSalesDeposit
-    ];
+                // SALES AMOUNT (Use payment date)
+                $totalSalesDeposit = DB::table('payments')
+                    ->where('payments.artist_id', Auth::guard('sales')->user()->id)
+                    ->whereBetween('payments.date', [$first_date_this_month, $last_date_this_month])
+                    ->sum('payments.deposit_total');
+                $totalSalesDepositAmount[] = [
+                    'label' => $first_date_this_month->format('F'),
+                    'y' => (float) $totalSalesDeposit
+                ];
 
-    // ✅ EXPENSES AMOUNT (Use expense transaction date)
-    $totalExpensesAmount = DB::table('expense')
-        ->where('expense.user_id', Auth::guard('sales')->user()->id)
-        ->whereBetween('expense.transaction_date', [$first_date_this_month, $last_date_this_month])
-        ->sum('expense.amount');
-    $totalExpensesAmountData[] = [
-        'label' => $first_date_this_month->format('F'),
-        'y' => (float) $totalExpensesAmount
-    ];
-}
+                // EXPENSES AMOUNT (Use expense transaction date)
+                $totalExpensesAmount = DB::table('expense')
+                    ->where('expense.user_id', Auth::guard('sales')->user()->id)
+                    ->whereBetween('expense.transaction_date', [$first_date_this_month, $last_date_this_month])
+                    ->sum('expense.amount');
+                $totalExpensesAmountData[] = [
+                    'label' => $first_date_this_month->format('F'),
+                    'y' => (float) $totalExpensesAmount
+                ];
+            }
 
+            if (!isset($totalPlansData)) {
+                $totalPlansData = [];
+            }
 
 
             return view(
@@ -569,7 +608,8 @@ class DashboardController extends Controller
                     'totalExpensesAmountData',
                     'totalArtwork',
                     'havesubscription',
-                    'totalAppointment'
+                    'totalAppointment',
+                    'totalPlansData',
                 )
             );
         } else {
@@ -577,6 +617,11 @@ class DashboardController extends Controller
             $QuotesData = array('label' => 0, 'y' => 0);
             $totalSalesDepositAmount = array('label' => 0, 'y' => 0);
             $totalExpensesAmountData = array('label' => 0, 'y' => 0);
+            
+            if (!isset($totalPlansData)) {
+                $totalPlansData = [];
+            }
+
 
             return view(
                 'admin.dashboard.dashboard',
@@ -600,6 +645,7 @@ class DashboardController extends Controller
                     'totalSalesDepositAmount',
                     'totalExpensesAmountData',
                     'totalSubscriber',
+                    'totalPlansData',
 
 
 
@@ -608,6 +654,9 @@ class DashboardController extends Controller
             );
         }
     }
+
+
+
     //for sales
     public function impersonate($salesExeID)
     {
