@@ -128,13 +128,11 @@ class DashboardController extends Controller
             $plans = collect(json_decode(file_get_contents($path), true));
             // dd($plans);
 
-            // $totalPlansData = $plans->pluck('name')->unique()->values()
-
-            $totalPlansData = Subscription::select('plan_name') ->distinct() ->get()
+            $totalPlansData = $plans->pluck('name')->unique()->values()
 
                 ->map(function ($plan) use ($startDate, $endDate) {
-                    // $userIds = Subscription::where('plan_name', $plan)
-                    $userIds = Subscription::where('plan_name', $plan->plan_name)
+                    // Get unique user IDs per plan (avoid duplicates)
+                    $userIds = Subscription::where('plan_name', $plan)
                         ->distinct()
                         ->pluck('user_id');
 
@@ -157,8 +155,7 @@ class DashboardController extends Controller
                     $totalSales = $paymentQuery->sum('deposit_total');
 
                     return [
-                        // 'plan_name' => $plan,
-                        'plan_name' => $plan->plan_name,
+                        'plan_name' => $plan,
                         'artists' => $artistCount,
                         'quotes' => $quoteCount,
                         'sales' => $totalSales,
