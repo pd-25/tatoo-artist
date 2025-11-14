@@ -751,13 +751,13 @@
                                 <div class="col-md-6">
                                     <label>CC Fees </label>
                                     <div class="form-group">
-                                        <input type="radio" name="cc_fees" value="1"
+                                        <input type="radio" name="cc_fees" value="1" id="ccOption1"
                                             {{ @$artistData->cc_fees == '1' ? 'checked' : '' }}>
                                         <label> 1) Credit Card Fees Paid By Shop</label><br>
-                                        <input type="radio" name="cc_fees" value="2"
+                                        <input type="radio" name="cc_fees" value="2" id="ccOption2"
                                             {{ @$artistData->cc_fees == '2' ? 'checked' : '' }}>
                                         <label> 2) Credit Card Fees Shared Using Current Shop Percentage</label><br>
-                                        <input type="radio" name="cc_fees" value="3"
+                                        <input type="radio" name="cc_fees" value="3" id="ccOption3"
                                             {{ @$artistData->cc_fees == '3' ? 'checked' : '' }}>
                                         <label> 3) Credit Card Fess Charged to Artist</label>
                                         @error('cc_fees')
@@ -1603,5 +1603,28 @@
         });
     });
 </script>
+
+<script>
+    $(document).ready(function() {
+
+        // When radio is changed
+        $('input[name="cc_fees"]').on('change', function() {
+            let selected = $(this).val();
+
+            if (selected == "1") {
+                $('#shop_percentage').val(100).prop('readonly', true);
+            } else {
+                $('#shop_percentage').prop('readonly', false);
+            }
+        });
+
+        // Trigger on page load (edit form case)
+        let initial = $('input[name="cc_fees"]:checked').val();
+        if (initial == "1") {
+            $('#shop_percentage').val(100).prop('readonly', true);
+        }
+    });
+</script>
+
 
 @endsection

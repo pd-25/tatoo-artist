@@ -135,9 +135,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Deposit Total</label>
+                                    <label>Paid</label>
                                     <input type="number" class="form-control" name="deposit_total" id="deposit_total"
-                                        placeholder="Deposit Total" value="{{ old('deposit_total') }}">
+                                        placeholder="Paid" value="{{ old('deposit_total') }}">
                                     <small id="total-error" class="text-danger d-none">Total deposit cannot exceed
                                         price.</small>
                                     @error('deposit_total') <span class="text-danger">{{ $message }}</span> @enderror
