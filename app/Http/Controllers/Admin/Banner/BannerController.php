@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Banner;
 use App\core\artist\ArtistInterface;
 use App\core\banner\BannerInterface;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -42,27 +43,61 @@ class BannerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // public function store(Request $request)
+    // {
+    //     // echo "<pre>"; print_r($_POST); die;
+    //     $request->validate([
+    //         'user_id' => 'required|numeric|exists:users,id',
+    //         'banner_image' => 'required|image|mimes:jpeg,png,jpg,gif',
+    //         'description' => 'nullable',
+    //         'from_date' => 'required|date',
+    //         'to_date' => 'required|date|after_or_equal:from_date',
+    //     ], [
+    //         'to_date.after_or_equal' => 'The end date must be the same or later than the start date.',
+    //     ]);
+
+    //     $data = $request->only('user_id', 'banner_image', 'description', 'from_date', 'to_date');
+    //     $store = $this->bannerInterface->storeBannerImage($data);
+    //     if ($store) {
+    //         return redirect()->route('banners.index')->with('msg', 'New banner image uploded successfully.');
+    //     } else {
+    //         return back()->with('msg', 'Some error occured.');
+    //     }
+    // }
+
     public function store(Request $request)
     {
-        // echo "<pre>"; print_r($_POST); die;
         $request->validate([
             'user_id' => 'required|numeric|exists:users,id',
             'banner_image' => 'required|image|mimes:jpeg,png,jpg,gif',
             'description' => 'nullable',
-            'from_date' => 'required|date',
-            'to_date' => 'required|date|after_or_equal:from_date',
+            'from_date' => 'required|date_format:m-d-Y',
+            'to_date' => 'required|date_format:m-d-Y|after_or_equal:from_date',
         ], [
             'to_date.after_or_equal' => 'The end date must be the same or later than the start date.',
         ]);
 
-        $data = $request->only('user_id', 'banner_image', 'description', 'from_date', 'to_date');
+        $from_date = Carbon::createFromFormat('m-d-Y', $request->from_date)->format('Y-m-d');
+        $to_date   = Carbon::createFromFormat('m-d-Y', $request->to_date)->format('Y-m-d');
+
+        // Build data
+        $data = [
+            'user_id'     => $request->user_id,
+            'description' => $request->description,
+            'from_date'   => $from_date,
+            'to_date'     => $to_date,
+            'banner_image'    => $request->file('banner_image'), // attach file object
+        ];
+
         $store = $this->bannerInterface->storeBannerImage($data);
+
         if ($store) {
-            return redirect()->route('banners.index')->with('msg', 'New banner image uploded successfully.');
+            return redirect()->route('artists.getArtistWiseBanner')->with('msg', 'New banner image uploaded successfully.');
         } else {
-            return back()->with('msg', 'Some error occured.');
+            return back()->with('msg', 'Some error occurred.');
         }
     }
+
 
     /**
      * Display the specified resource.

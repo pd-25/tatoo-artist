@@ -5,6 +5,7 @@ namespace App\Http\Controllers\artist;
 use App\core\artist\ArtistInterface;
 use App\core\carousel\CarouselInterface as BannerInterface;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CarouselController extends Controller
@@ -66,24 +67,59 @@ class CarouselController extends Controller
     }
 
 
+    // public function uploadArtistWiseBanner(Request $request)
+    // {
+    //     $request->validate([
+    //         'user_id' => 'required|numeric|exists:users,id',
+    //         'carousel' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    //         'description' => 'nullable|string',
+    //         'from_date' => 'required|date',
+    //         'to_date' => 'required|date|after_or_equal:from_date',
+    //     ], [
+    //         'to_date.after_or_equal' => 'The end date must be the same or later than the start date.',
+    //     ]);
+
+    //     // Collect form data
+    //     $data = $request->only('user_id', 'description', 'from_date', 'to_date');
+
+    //     // Attach the file object properly
+    //     $data['carousel'] = $request->file('carousel');
+    //     // dd($data);
+    //     $store = $this->bannerInterface->storeBannerImage($data);
+
+    //     if ($store) {
+    //         return redirect()->route('artists.getArtistWiseCarousel')
+    //             ->with('msg', 'New carousel image uploaded successfully.');
+    //     } else {
+    //         return back()->with('msg', 'Some error occurred.');
+    //     }
+    // }
+
     public function uploadArtistWiseBanner(Request $request)
     {
         $request->validate([
             'user_id' => 'required|numeric|exists:users,id',
             'carousel' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string',
-            'from_date' => 'required|date',
-            'to_date' => 'required|date|after_or_equal:from_date',
+            'from_date' => 'required|date_format:m-d-Y',
+            'to_date' => 'required|date_format:m-d-Y|after_or_equal:from_date',
         ], [
             'to_date.after_or_equal' => 'The end date must be the same or later than the start date.',
         ]);
 
-        // Collect form data
-        $data = $request->only('user_id', 'description', 'from_date', 'to_date');
+        // Convert mm-dd-yyyy to yyyy-mm-dd
+        $from_date = Carbon::createFromFormat('m-d-Y', $request->from_date)->format('Y-m-d');
+        $to_date   = Carbon::createFromFormat('m-d-Y', $request->to_date)->format('Y-m-d');
 
-        // Attach the file object properly
-        $data['carousel'] = $request->file('carousel');
-        // dd($data);
+        // Build data
+        $data = [
+            'user_id'     => $request->user_id,
+            'description' => $request->description,
+            'from_date'   => $from_date,
+            'to_date'     => $to_date,
+            'carousel'    => $request->file('carousel'), // attach file object
+        ];
+
         $store = $this->bannerInterface->storeBannerImage($data);
 
         if ($store) {
@@ -93,6 +129,7 @@ class CarouselController extends Controller
             return back()->with('msg', 'Some error occurred.');
         }
     }
+
 
     public function editArtistWiseBanner($id)
     {
@@ -107,31 +144,71 @@ class CarouselController extends Controller
         return view('admin.carousel.edit', $data);
     }
 
+    // public function updateArtistWiseBanner(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'user_id' => 'required|numeric|exists:users,id',
+    //         'carousel' => 'image|mimes:jpeg,png,jpg,gif',
+    //         'description' => 'nullable',
+    //         'from_date' => 'date',
+    //         'to_date' => 'date'
+    //     ]);
+
+    //     $id = $id; // Decrypt ID if needed
+    //     $data = $request->only('user_id', 'description', 'from_date', 'to_date');
+
+    //     // Check if a new image is uploaded
+    //     if ($request->hasFile('carousel')) {
+    //         $data['carousel'] = $request->file('carousel');
+    //     }
+
+    //     // Debugging: check what is being passed to the update function
+
+
+    //     $update = $this->bannerInterface->updateBannerImage($id, $data);
+
+    //     if ($update) {
+    //         return redirect()->route('artists.getArtistWiseCarousel')->with('msg', 'Carousel image updated successfully.');
+    //     } else {
+    //         return back()->with('msg', 'Some error occurred while updating.');
+    //     }
+    // }
+
+
     public function updateArtistWiseBanner(Request $request, $id)
     {
         $request->validate([
             'user_id' => 'required|numeric|exists:users,id',
             'carousel' => 'image|mimes:jpeg,png,jpg,gif',
-            'description' => 'nullable',
-            'from_date' => 'date',
-            'to_date' => 'date'
+            'description' => 'nullable|string',
+            'from_date' => 'required|date_format:m-d-Y',
+            'to_date'   => 'required|date_format:m-d-Y|after_or_equal:from_date',
+        ], [
+            'to_date.after_or_equal' => 'The end date must be the same or later than the start date.',
         ]);
 
-        $id = $id; // Decrypt ID if needed
-        $data = $request->only('user_id', 'description', 'from_date', 'to_date');
+        // Convert mm-dd-yyyy → yyyy-mm-dd
+        $from_date = Carbon::createFromFormat('m-d-Y', $request->from_date)->format('Y-m-d');
+        $to_date   = Carbon::createFromFormat('m-d-Y', $request->to_date)->format('Y-m-d');
 
-        // Check if a new image is uploaded
+        // Prepare data array
+        $data = [
+            'user_id'     => $request->user_id,
+            'description' => $request->description,
+            'from_date'   => $from_date,
+            'to_date'     => $to_date,
+        ];
+
+        // Add image only if uploaded
         if ($request->hasFile('carousel')) {
             $data['carousel'] = $request->file('carousel');
         }
 
-        // Debugging: check what is being passed to the update function
-
-
         $update = $this->bannerInterface->updateBannerImage($id, $data);
 
         if ($update) {
-            return redirect()->route('artists.getArtistWiseCarousel')->with('msg', 'Carousel image updated successfully.');
+            return redirect()->route('artists.getArtistWiseCarousel')
+                ->with('msg', 'Carousel image updated successfully.');
         } else {
             return back()->with('msg', 'Some error occurred while updating.');
         }
