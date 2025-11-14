@@ -196,7 +196,7 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                         <div class="stat-icon dib"><i class="ti-user color-primary border-primary"></i>
                         </div>
                         <div class="stat-content dib">
-                            <div class="stat-text">Total Subscriber</div>
+                            <div class="stat-text">Total Subscribers</div>
                             <div class="stat-digit">{{ $totalSubscriber }}</div>
                         </div>
                     </div>
@@ -209,7 +209,7 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                         <div class="stat-icon dib"><i class="ti-user color-primary border-primary"></i>
                         </div>
                         <div class="stat-content dib">
-                            <div class="stat-text">Total Sales Person</div>
+                            <div class="stat-text">Total Sales People</div>
                             <div class="stat-digit">{{ $totalSalesPerson }}</div>
                         </div>
                     </div>
@@ -324,7 +324,7 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                         <div class="stat-icon dib"><i class="ti-user color-primary border-primary"></i>
                         </div>
                         <div class="stat-content dib">
-                            <div class="stat-text">Total Subscriber</div>
+                            <div class="stat-text">Total Subscribers</div>
                             <div class="stat-digit">{{ $totalSubscriber }}</div>
                         </div>
                     </div>
