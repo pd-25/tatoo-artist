@@ -69,7 +69,7 @@
                     <th>#</th>
                     <th>Artist Name</th>
                     <th>Artist Email</th>
-                    <th>Geting Plan</th>
+                    <th>Getting Plan</th>
                     <th>Updated Plan</th>
                     <th>Zelle Email</th>
                     <th>Zelle Phone</th>
