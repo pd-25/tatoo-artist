@@ -263,8 +263,8 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                 </div>
             </div>
 
-            
-        
+
+
             @foreach($totalPlansData as $plan)
             <div class="col-lg-4">
                 <div class="card">
@@ -287,7 +287,7 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                 </div>
             </div>
             @endforeach
-         
+
 
             @endif
 
@@ -450,10 +450,31 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                                 </div>
                                 <div class="stat-content dib">
                                     <div class="stat-text">Subscription Plan</div>
+@php
+    $artistId = Auth::guard('artists')->id();
 
+    // Fetch artist's subscription row
+    $subscription = \App\Models\Subscription::where('user_id', $artistId)->first();
+
+    $planName = 'No Plan';
+    $planPrice = '0';
+
+    if ($subscription && $subscription->subscription_id) {
+        // Load the JSON file
+        $path = storage_path('app/subscriptionplans.json');
+        $plans = json_decode(file_get_contents($path), true);
+
+        // Find the matching plan
+        $matchedPlan = collect($plans)->firstWhere('id', (string)$subscription->subscription_id);
+
+        if ($matchedPlan) {
+            $planName = $matchedPlan['name'];
+            $planPrice = $matchedPlan['price'];
+        }
+    }
+@endphp
                                     <div class="stat-digit">
-                                        {{ \App\Models\Subscription::where('user_id', Auth::guard('artists')->id())->value('plan_name') ?? 'No Plan' }} -
-                                        ${{ \App\Models\Subscription::where('user_id', Auth::guard('artists')->id())->value('subscription_plan') ?? '0' }}
+                                        {{ $planName }} - ${{ $planPrice }}
                                     </div>
 
 

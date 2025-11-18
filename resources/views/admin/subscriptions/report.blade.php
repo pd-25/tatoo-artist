@@ -69,7 +69,8 @@
                     <th>#</th>
                     <th>Artist Name</th>
                     <th>Artist Email</th>
-                    <th>Plan</th>
+                    <th>Geting Plan</th>
+                    <th>Updated Plan</th>
                     <th>Zelle Email</th>
                     <th>Zelle Phone</th>
                     <th>ACH Bank</th>
@@ -86,7 +87,26 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $sub->user->name ?? 'N/A' }}</td>
                     <td>{{ $sub->user->email ?? 'N/A' }}</td>
-                    <td>${{ $sub->subscription_plan }}</td>
+                    <td class="text-danger">${{ $sub->subscription_plan }}</td>
+                    <!-- Updated Plan -->
+@php
+    $planName = 'No Plan';
+    $planPrice = '0';
+
+    // Read JSON data only once per loop
+    $path = storage_path('app/subscriptionplans.json');
+    $plans = json_decode(file_get_contents($path), true);
+
+    if ($sub->subscription_id) {
+        $matchedPlan = collect($plans)->firstWhere('id', (string)$sub->subscription_id);
+
+        if ($matchedPlan) {
+            $planName = $matchedPlan['name'];
+            $planPrice = $matchedPlan['price'];
+        }
+    }
+@endphp
+                    <td class="text-success" style="font-weight: bold;">${{ $planPrice }}</td>
                     <td>{{ $sub->zell_email ?? '-' }}</td>
                     <td>{{ $sub->zell_phone ?? '-' }}</td>
                     <td>{{ $sub->ach_bank_name ?? '-' }}</td>
