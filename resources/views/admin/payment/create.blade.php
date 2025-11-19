@@ -216,6 +216,7 @@
                     // Store shop percentage and cc fees
                     shopPercentage = parseFloat(data.shop_percentage) || 0;
                     ccFees = data.cc_fees;
+                    // console.log('CC Fees Type:', ccFees);
                     ccFeesPercentage = parseFloat(data.cc_fees_percentage) || 0;
 
                     updatePercentages(parseFloat($('#deposit_total').val()) || parseFloat($('#deposit').val()) || 0);
@@ -297,28 +298,15 @@
             }
         }
 
-        // FIXED: Use event delegation for dynamic element
-        // $(document).on('change', '#payment-method', function() {
-        //     const selectedMethod = $(this).val();
-
-        //     if (selectedMethod === 'cc') {
-        //         $('input[name="reimbursed"][value="0"]').prop('checked', true);
-        //     } else {
-        //         $('input[name="reimbursed"][value="1"]').prop('checked', true);
-        //     }
-
-        //     updateFeesIfNeeded();
-        // });
-
         // Modified logic here
         $(document).on('change', '#payment-method', function() {
             const selectedMethod = $(this).val().toLowerCase();
-            const shopPercentageVal = parseFloat(
-                $('#if_artist_data_table_shop_percentage_data_is_100_then_reimbursed_marked_yes_else_no').val()
-            );
+
+            const shopPercentageVal = parseFloat(ccFees) || 0;
+            console.log('Shop Percentage Value:', shopPercentageVal);
 
             if (selectedMethod === 'cc') {
-                if (shopPercentageVal === 100 || shopPercentageVal === 100.0) {
+                if (shopPercentageVal === 1 || shopPercentageVal === 1) {
                     // If CC and shop_percentage = 100 → Yes
                     $('input[name="reimbursed"][value="1"]').prop('checked', true);
                 } else {
