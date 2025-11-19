@@ -1604,7 +1604,7 @@
     });
 </script>
 
-<script>
+<!-- <script>
     $(document).ready(function() {
 
         // When radio is changed
@@ -1624,7 +1624,7 @@
             $('#shop_percentage').val(100).prop('readonly', true);
         }
     });
-</script>
+</script> -->
 
 
 @endsection
