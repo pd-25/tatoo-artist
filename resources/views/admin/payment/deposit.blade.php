@@ -102,6 +102,7 @@
                                 <th>Customer Name</th>
                                 <th>Price</th>
                                 <th>Paid</th>
+                                <th>Due</th>
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Pay Type</th>
                                 <th class="text-center">CC Amount</th>
@@ -134,6 +135,7 @@
                                 </td>
                                 <td>{{ $payment->price }}</td>
                                 <td>{{ $payment->deposit_total }}</td>
+                                <td>{{ $payment->total_due }}</td>
                                 <td class="text-center">{{ date('m-d-Y',strtotime( $payment->date)) }}</td>
                                 <td class="text-center">
                                     {{ $payment->deposit_log ? json_decode($payment->deposit_log, true)[count(json_decode($payment->deposit_log, true)) - 1]['method'] : '' }}
