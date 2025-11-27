@@ -280,7 +280,9 @@ class SubscriptionController extends Controller
         }
 
         // Parse subscription plan
-        list($price, $name) = explode('|', $request->subscription_plan);
+        // list($price, $name) = explode('|', $request->subscription_plan);
+        list($price, $name, $subscriptionIdFromFile) = explode('|', $request->subscription_plan);
+
 
         // Handle subscription date parsing
         $subscriptionDate = $request->subscription_date;
@@ -309,6 +311,7 @@ class SubscriptionController extends Controller
         // Update subscription
         $subscription->update([
             'user_id' => $request->user_id,
+            'subscription_id' => $subscriptionIdFromFile,
             'subscription_plan' => $price,
             'plan_name' => $name,
             'status' => $request->status,

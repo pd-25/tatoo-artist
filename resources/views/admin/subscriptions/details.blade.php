@@ -29,29 +29,29 @@
                 </div>
                 <div class="col-md-6">
 
-@php
-    $artistId = Auth::guard('artists')->id();
+                    @php
+                    $artistId = Auth::guard('artists')->id();
 
-    // Fetch artist's subscription row
-    $subscription = \App\Models\Subscription::where('user_id', $artistId)->first();
+                    // Fetch artist's subscription row
+                    $subscription = \App\Models\Subscription::where('user_id', $artistId)->first();
 
-    $planName = 'No Plan';
-    $planPrice = '0';
+                    $planName = 'No Plan';
+                    $planPrice = '0';
 
-    if ($subscription && $subscription->subscription_id) {
-        // Load the JSON file
-        $path = storage_path('app/subscriptionplans.json');
-        $plans = json_decode(file_get_contents($path), true);
+                    if ($subscription && $subscription->subscription_id) {
+                    // Load the JSON file
+                    $path = storage_path('app/subscriptionplans.json');
+                    $plans = json_decode(file_get_contents($path), true);
 
-        // Find the matching plan
-        $matchedPlan = collect($plans)->firstWhere('id', (string)$subscription->subscription_id);
+                    // Find the matching plan
+                    $matchedPlan = collect($plans)->firstWhere('id', (string)$subscription->subscription_id);
 
-        if ($matchedPlan) {
-            $planName = $matchedPlan['name'];
-            $planPrice = $matchedPlan['price'];
-        }
-    }
-@endphp
+                    if ($matchedPlan) {
+                    $planName = $matchedPlan['name'];
+                    $planPrice = $matchedPlan['price'];
+                    }
+                    }
+                    @endphp
 
                     <p><strong>Plan:</strong>
                         <span class="badge bg-warning text-dark">{{ $planName }} - ${{ $planPrice }}</span>
