@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Exports\TierOneExport;
+use App\Exports\TierTwoExport;
+use App\Exports\TierThreeExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Mail\SubscriptionMail;
 use App\Models\ExpenseModel;
 use App\Models\Subscription;
@@ -72,6 +76,45 @@ class SubscriptionController extends Controller
         $subscriptions = $query->orderBy('id', 'desc')->get();
 
         return view('admin.subscriptions.report', compact('subscriptions'));
+    }
+
+    public function exportInExcelSubsOne(Request $request)
+    {
+        $filters = [
+            'status' => $request->status,
+            'plan_name' => $request->plan_name,
+        ];
+
+        return Excel::download(
+            new TierOneExport($filters),
+            'tier_1_subscriptions_' . date('Y-m-d_His') . '.xlsx'
+        );
+    }
+
+    public function exportInExcelSubsTwo(Request $request)
+    {
+        $filters = [
+            'status' => $request->status,
+            'plan_name' => $request->plan_name,
+        ];
+
+        return Excel::download(
+            new TierTwoExport($filters),
+            'tier_2_subscriptions_' . date('Y-m-d_His') . '.xlsx'
+        );
+    }
+
+    public function exportInExcelSubsThree(Request $request)
+    {
+        $filters = [
+            'status' => $request->status,
+            'plan_name' => $request->plan_name,
+        ];
+
+        return Excel::download(
+            new TierThreeExport($filters),
+            'tier_3_subscriptions_' . date('Y-m-d_His') . '.xlsx'
+        );
     }
 
 

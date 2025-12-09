@@ -155,7 +155,8 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
             <div class="col-lg-3">
                 <div class="card">
                     <div class="stat-widget-one">
-                        <div class="stat-icon dib"><i class="ti-money color-success border-success"></i>
+                        <div class="stat-icon dib">
+                            <img src="{{asset('./admin-asset/icons/TattooArtistIcon.jpg')}}" width="50" alt="">
                         </div>
                         <div class="stat-content dib">
                             <div class="stat-text">Total Artists</div>
@@ -211,6 +212,20 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                         <div class="stat-content dib">
                             <div class="stat-text">Total Sales People</div>
                             <div class="stat-digit">{{ $totalSalesPerson }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="card">
+                    <div class="stat-widget-one">
+                        <div class="stat-icon dib">
+                            <img src="{{asset('./admin-asset/icons/TattooArtwork.png')}}" width="60" alt="">
+                        </div>
+                        <div class="stat-content dib">
+                            <div class="stat-text">Total Artwork</div>
+                            <div class="stat-digit">{{ $totalArtworks }}</div>
                         </div>
                     </div>
                 </div>
@@ -443,36 +458,36 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
             @if (Auth::guard('artists')->check())
             <div class="col-lg-12">
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div class="card">
                             <div class="stat-widget-one">
                                 <div class="stat-icon dib"><i class="ti-money color-success border-success"></i>
                                 </div>
                                 <div class="stat-content dib">
                                     <div class="stat-text">Subscription Plan</div>
-@php
-    $artistId = Auth::guard('artists')->id();
+                                    @php
+                                    $artistId = Auth::guard('artists')->id();
 
-    // Fetch artist's subscription row
-    $subscription = \App\Models\Subscription::where('user_id', $artistId)->first();
+                                    // Fetch artist's subscription row
+                                    $subscription = \App\Models\Subscription::where('user_id', $artistId)->first();
 
-    $planName = 'No Plan';
-    $planPrice = '0';
+                                    $planName = 'No Plan';
+                                    $planPrice = '0';
 
-    if ($subscription && $subscription->subscription_id) {
-        // Load the JSON file
-        $path = storage_path('app/subscriptionplans.json');
-        $plans = json_decode(file_get_contents($path), true);
+                                    if ($subscription && $subscription->subscription_id) {
+                                    // Load the JSON file
+                                    $path = storage_path('app/subscriptionplans.json');
+                                    $plans = json_decode(file_get_contents($path), true);
 
-        // Find the matching plan
-        $matchedPlan = collect($plans)->firstWhere('id', (string)$subscription->subscription_id);
+                                    // Find the matching plan
+                                    $matchedPlan = collect($plans)->firstWhere('id', (string)$subscription->subscription_id);
 
-        if ($matchedPlan) {
-            $planName = $matchedPlan['name'];
-            $planPrice = $matchedPlan['price'];
-        }
-    }
-@endphp
+                                    if ($matchedPlan) {
+                                    $planName = $matchedPlan['name'];
+                                    $planPrice = $matchedPlan['price'];
+                                    }
+                                    }
+                                    @endphp
                                     <div class="stat-digit">
                                         {{ $planName }} - ${{ $planPrice }}
                                     </div>
@@ -483,10 +498,11 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div class="card">
                             <div class="stat-widget-one">
-                                <div class="stat-icon dib"><i class="ti-layout-grid2 color-pink border-pink"></i>
+                                <div class="stat-icon dib">
+                                    <img src="{{asset('./admin-asset/icons/TattooArtwork.png')}}" width="80" alt="">
                                 </div>
                                 <div class="stat-content dib">
                                     <div class="stat-text">Total Artworks</div>
@@ -495,10 +511,11 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div class="card">
                             <div class="stat-widget-one">
-                                <div class="stat-icon dib"><i class="ti-layout-grid2 color-pink border-pink"></i>
+                                <div class="stat-icon dib">
+                                    <img src="{{asset('./admin-asset/icons/walkin.png')}}" width="42" alt="">
                                 </div>
                                 <div class="stat-content dib">
                                     <div class="stat-text">Total Customers</div>
@@ -507,10 +524,11 @@ $totalExpensesAmountDataJSON = json_encode($totalExpensesAmountData);
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div class="card">
                             <div class="stat-widget-one">
-                                <div class="stat-icon dib"><i class="ti-user color-primary border-primary"></i>
+                                <div class="stat-icon dib">
+                                    <img src="{{asset('./admin-asset/icons/appointment.jpg')}}" width="42" alt="">
                                 </div>
                                 <div class="stat-content dib">
                                     <div class="stat-text">Total Appoinment</div>

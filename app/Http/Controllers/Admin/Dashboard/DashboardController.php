@@ -58,6 +58,8 @@ class DashboardController extends Controller
         //Total artwork count
         $totalSalesPerson = User::where('type', 'sales')->count();
 
+        $totalArtworks = Artwork::count();
+
         //artist
         $totalSubscriber = '';
         $totalAppointment = '';
@@ -398,6 +400,7 @@ class DashboardController extends Controller
                     'havesubscription',
                     'totalAppointment',
                     'totalPlansData',
+                    'totalArtworks',
                 )
             );
         } else {
@@ -434,6 +437,7 @@ class DashboardController extends Controller
                     'totalExpensesAmountData',
                     'totalSubscriber',
                     'totalPlansData',
+                    'totalArtworks',
 
 
 
