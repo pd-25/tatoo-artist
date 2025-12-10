@@ -313,10 +313,10 @@
                                         <input type="file" class="form-control" id="zelle_qr_code"
                                             name="zelle_qr_code"
                                             value="{{ @$artistData->zelle_qr_code }}">
-                                            <img src="{{ $artist->artistData->zelle_qr_code 
+                                        <img src="{{ $artist->artistData->zelle_qr_code 
     ? asset('uploads/zelle_qr/' . $artist->artistData->zelle_qr_code) 
     : asset('noimg.png') }}"
-                            alt="Bloodborne Certification" width="150"> <br>
+                                            alt="Bloodborne Certification" width="150"> <br>
                                         @error('zelle_qr_code')
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -327,8 +327,10 @@
                                     <div class="form-group">
                                         <label>Referred By Email<span class="text-danger">*</span></label>
                                         <input type="email" class="form-control" id="referred_by_email"
-                                            placeholder="Referred By Email" name="referred_by_email"
-                                            value="{{ @$artistData->referred_by_email }}">
+                                            name="referred_by_email"
+                                            placeholder="Referred By Email"
+                                            value="{{ old('referred_by_email', $referredByEmail) }}" readonly>
+
                                         @error('referred_by_email')
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>

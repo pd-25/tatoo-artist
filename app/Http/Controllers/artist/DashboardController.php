@@ -177,6 +177,30 @@ class DashboardController extends Controller
         if ($data['artist'] == 'Not Found') {
             return back()->with('msg', 'No artist found!');
         }
+
+        /*
+    |--------------------------------------------------------------------------
+    | Referred By Email Logic
+    |--------------------------------------------------------------------------
+    |
+    | Step 1 : artistData has artist_id
+    | Step 2 : match artist_id → users table
+    | Step 3 : if created_by exists → show creator's email
+    | Step 4 : if not → show artist's own email
+    |
+    */
+
+        $artistUser = User::find(@$data['artistData']->artist_id);
+
+        if ($artistUser && $artistUser->created_by) {
+            // Referred by someone else → fetch that creator user
+            $referredUser = User::find($artistUser->created_by);
+            $data['referredByEmail'] = $referredUser ? $referredUser->email : $artistUser->email;
+        } else {
+            // No "created_by" → show this artist's own email
+            $data['referredByEmail'] = $artistUser ? $artistUser->email : null;
+        }
+
         return view('admin.artist.edit', $data);
     }
 }
