@@ -437,7 +437,53 @@ class ArtistController extends Controller
         // Data to be updated
         $data = $request->only('email', 'phone', 'address', 'address2', 'country', 'state', 'city', 'password', 'zipcode', 'latitude', 'longitude', 'profile_image', 'banner_image');
         $timeData = $request->only('sunday_from', 'sunday_to', 'monday_from', 'monday_to', 'tuesday_from', 'tuesday_to', 'wednesday_from', 'wednesday_to', 'thrusday_from', 'thrusday_to', 'friday_from', 'friday_to', 'saterday_from', 'saterday_to');
-        $artistData = $request->only('hourly_rate', 'specialty', 'specialty2', 'specialty3', 'specialty4', 'specialty5', 'years_in_trade', 'walk_in_welcome', 'certified_professionals', 'consultation_available', 'language_spoken', 'parking', 'payment_method', 'air_conditioned', 'water_available', 'coffee_available', 'mask_worn', 'vaccinated_staff', 'wheel_chair_accessible', 'bike_parking', 'wifi_available', 'artist_of_the_year', 'insta_handle', 'facebook_handle', 'youtube_handle', 'twitter_handle', 'google_map_api', 'yelp_api', 'shop_logo', 'shop_percentage', 'shop_email', 'shop_name', 'shop_address', 'wont_do', 'unique_offerings', 'cc_fees', 'cc_fees_percentage');
+        $artistData = $request->only(
+            'hourly_rate',
+            'deposit_amount',
+            'gmail',
+            'gmail_api_password',
+            'zelle_email',
+            'zelle_phone',
+            'zelle_qr_code',
+            'referred_by_email',
+            'specialty',
+            'specialty2',
+            'specialty3',
+            'specialty4',
+            'specialty5',
+            'years_in_trade',
+            'walk_in_welcome',
+            'certified_professionals',
+            'consultation_available',
+            'language_spoken',
+            'parking',
+            'payment_method',
+            'air_conditioned',
+            'water_available',
+            'coffee_available',
+            'mask_worn',
+            'vaccinated_staff',
+            'wheel_chair_accessible',
+            'bike_parking',
+            'wifi_available',
+            'artist_of_the_year',
+            'insta_handle',
+            'facebook_handle',
+            'youtube_handle',
+            'twitter_handle',
+            'google_map_api',
+            'yelp_api',
+            'shop_logo',
+            'shop_percentage',
+            'shop_email',
+            'shop_name',
+            'shop_address',
+            'wont_do',
+            'unique_offerings',
+            'cc_fees',
+            'cc_fees_percentage'
+        );
+
         $close = $request->only('sunday_close', 'monday_close', 'tuesday_close', 'wednesday_close', 'thrusday_close', 'friday_close', 'saterday_close');
 
         try {
@@ -456,6 +502,17 @@ class ArtistController extends Controller
                     // Update the artist data with the new blood_borne file path
                     $this->artistInterface->updateArtist($data, decrypt($id), $timeData, $artistData, $close);
                 }
+
+                if ($request->hasFile('zelle_qr_code')) {
+                    $file = $request->file('zelle_qr_code');
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $file->move(public_path('uploads/zelle_qr'), $fileName);
+                    $artistData['zelle_qr_code'] = $fileName;
+
+                    $this->artistInterface->updateArtist($data, decrypt($id), $timeData, $artistData, $close);
+                }
+
+
                 return back()->with('msg', 'Artist information updated successfully.');
             } elseif ($update == 'No data') {
                 return back()->with('msg', 'No artist found.');

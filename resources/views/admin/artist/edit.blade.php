@@ -1,6 +1,12 @@
 @extends('admin.layout.main')
 @section('title', env('APP_NAME') . ' | Category-edit')
 @section('content')
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <div class="row justify-content-center">
     <div class="col-lg-11">
         <div class="card">
@@ -182,105 +188,101 @@
                                         </span>
                                         @enderror
                                     </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label>Speciality 1</label><span class="text-danger">*</span>
-                                                <select name="specialty" class="form-control" value="{{ old('specialty') }}">
-                                                    <option value="">select style</option>
-                                                    @foreach ($styles as $style)
-                                                    <option value="{{ $style->id }}"
-                                                        {{ @$artistData->specialty == $style->id ? 'selected' : '' }}>
-                                                        {{ $style->title }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                                @error('specialty')
-                                                <span class="text-danger" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label>Specialty 2</label>
-                                                <select name="specialty2" class="form-control">
-                                                    <option value="">Select style</option>
-                                                    @foreach ($styles as $style)
-                                                    <option value="{{ $style->id }}" {{ @$artistData->specialty2 == $style->id ? 'selected' : '' }}>
-                                                        {{ $style->title }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                                @error('specialty2')
-                                                <span class="text-danger" role="alert"><strong>{{ $message }}</strong></span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label>Specialty 3</label>
-                                                <select name="specialty3" class="form-control">
-                                                    <option value="">Select style</option>
-                                                    @foreach ($styles as $style)
-                                                    <option value="{{ $style->id }}" {{ @$artistData->specialty3 == $style->id ? 'selected' : '' }}>
-                                                        {{ $style->title }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                                @error('specialty3')
-                                                <span class="text-danger" role="alert"><strong>{{ $message }}</strong></span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label>Specialty 4</label>
-                                                <select name="specialty4" class="form-control">
-                                                    <option value="">Select style</option>
-                                                    @foreach ($styles as $style)
-                                                    <option value="{{ $style->id }}" {{ @$artistData->specialty4 == $style->id ? 'selected' : '' }}>
-                                                        {{ $style->title }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                                @error('specialty4')
-                                                <span class="text-danger" role="alert"><strong>{{ $message }}</strong></span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label>Specialty 5</label>
-                                                <select name="specialty5" class="form-control">
-                                                    <option value="">Select style</option>
-                                                    @foreach ($styles as $style)
-                                                    <option value="{{ $style->id }}" {{ @$artistData->specialty5 == $style->id ? 'selected' : '' }}>
-                                                        {{ $style->title }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                                @error('specialty5')
-                                                <span class="text-danger" role="alert"><strong>{{ $message }}</strong></span>
-                                                @enderror
-                                            </div>
-                                        </div>
+                                    <label>CC Fees<span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <input type="radio" name="cc_fees" value="1" id="ccOption1"
+                                            {{ @$artistData->cc_fees == '1' ? 'checked' : '' }}>
+                                        <label> 1) Credit Card Fees Paid By Shop</label><br>
+                                        <input type="radio" name="cc_fees" value="2" id="ccOption2"
+                                            {{ @$artistData->cc_fees == '2' ? 'checked' : '' }}>
+                                        <label> 2) Credit Card Fees Shared Using Current Shop Percentage</label><br>
+                                        <input type="radio" name="cc_fees" value="3" id="ccOption3"
+                                            {{ @$artistData->cc_fees == '3' ? 'checked' : '' }}>
+                                        <label> 3) Credit Card Fess Charged to Artist</label>
+                                        @error('cc_fees')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
                                     </div>
                                 </div>
 
-
-
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Shop Percentage</label><span class="text-danger">*</span>
+                                        <input type="number" class="form-control" id="shop_percentage"
+                                            placeholder="Shop Percentage" name="shop_percentage"
+                                            value="{{ @$artistData->shop_percentage }}">
+                                        @error('shop_percentage')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Current CC Fees Percent Charged(%)<span class="text-danger">*</span></label>
+                                        <div class="form-group">
+                                            <input type="number" step="0.01" class="form-control" id="cc_fees_percentage" placeholder="Current CC Fees Percent Charged" name="cc_fees_percentage" value="{{ @$artistData->cc_fees_percentage }}">
+                                            @error('cc_fees_percentage')
+                                            <span class="text-danger" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Deposit Amount<span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" id="deposit_amount"
+                                            placeholder="Deposit Amount" name="deposit_amount"
+                                            value="{{ @$artistData->deposit_amount }}">
+                                        @error('deposit_amount')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Gmail</label>
+                                        <input type="text" class="form-control" id="gmail"
+                                            placeholder="Gmail" name="gmail"
+                                            value="{{ @$artistData->gmail }}">
+                                        @error('gmail')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Zelle Email</label>
+                                        <input type="email" class="form-control" id="zelle_email"
+                                            placeholder="Zelle Email" name="zelle_email"
+                                            value="{{ @$artistData->zelle_email }}">
+                                        @error('zelle_email')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Zelle Phone</label>
+                                        <input type="text" class="form-control" id="zelle_phone"
+                                            placeholder="Zelle Phone" name="zelle_phone"
+                                            value="{{ @$artistData->zelle_phone }}">
+                                        @error('zelle_phone')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -294,8 +296,146 @@
                                         </span>
                                         @enderror
                                     </div>
+                                    <div class="form-group">
+                                        <label>Gmail API Password</label>
+                                        <input type="text" class="form-control" id="gmail_api_password"
+                                            placeholder="Gmail API Password" name="gmail_api_password"
+                                            value="{{ @$artistData->gmail_api_password }}">
+                                        @error('gmail_api_password')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Zelle QR Code</label>
+                                        <input type="file" class="form-control" id="zelle_qr_code"
+                                            name="zelle_qr_code"
+                                            value="{{ @$artistData->zelle_qr_code }}">
+                                            <img src="{{ $artist->artistData->zelle_qr_code 
+    ? asset('uploads/zelle_qr/' . $artist->artistData->zelle_qr_code) 
+    : asset('noimg.png') }}"
+                            alt="Bloodborne Certification" width="150"> <br>
+                                        @error('zelle_qr_code')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Referred By Email<span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" id="referred_by_email"
+                                            placeholder="Referred By Email" name="referred_by_email"
+                                            value="{{ @$artistData->referred_by_email }}">
+                                        @error('referred_by_email')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Speciality 1</label><span class="text-danger">*</span>
+                                        <select name="specialty" class="form-control" value="{{ old('specialty') }}">
+                                            <option value="">select style</option>
+                                            @foreach ($styles as $style)
+                                            <option value="{{ $style->id }}"
+                                                {{ @$artistData->specialty == $style->id ? 'selected' : '' }}>
+                                                {{ $style->title }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @error('specialty')
+                                        <span class="text-danger" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Specialty 2</label>
+                                        <select name="specialty2" class="form-control">
+                                            <option value="">Select style</option>
+                                            @foreach ($styles as $style)
+                                            <option value="{{ $style->id }}" {{ @$artistData->specialty2 == $style->id ? 'selected' : '' }}>
+                                                {{ $style->title }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @error('specialty2')
+                                        <span class="text-danger" role="alert"><strong>{{ $message }}</strong></span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Specialty 3</label>
+                                        <select name="specialty3" class="form-control">
+                                            <option value="">Select style</option>
+                                            @foreach ($styles as $style)
+                                            <option value="{{ $style->id }}" {{ @$artistData->specialty3 == $style->id ? 'selected' : '' }}>
+                                                {{ $style->title }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @error('specialty3')
+                                        <span class="text-danger" role="alert"><strong>{{ $message }}</strong></span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Specialty 4</label>
+                                        <select name="specialty4" class="form-control">
+                                            <option value="">Select style</option>
+                                            @foreach ($styles as $style)
+                                            <option value="{{ $style->id }}" {{ @$artistData->specialty4 == $style->id ? 'selected' : '' }}>
+                                                {{ $style->title }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @error('specialty4')
+                                        <span class="text-danger" role="alert"><strong>{{ $message }}</strong></span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Specialty 5</label>
+                                        <select name="specialty5" class="form-control">
+                                            <option value="">Select style</option>
+                                            @foreach ($styles as $style)
+                                            <option value="{{ $style->id }}" {{ @$artistData->specialty5 == $style->id ? 'selected' : '' }}>
+                                                {{ $style->title }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @error('specialty5')
+                                        <span class="text-danger" role="alert"><strong>{{ $message }}</strong></span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Sign Up Date</label>
+                                    <input type="text" name="sign_up_date" class="form-control flatpickr" value="{{ $artistData->created_at->format('m-d-Y') }}" readonly>
+                                    @error('sign_up_date')
+                                    <span class="text-danger" role="alert"><strong>{{ $message }}</strong></span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Walk in Welcome</label>
                                         <select name="walk_in_welcome" class="form-control">
@@ -312,7 +452,6 @@
                                         @enderror
                                     </div>
                                 </div>
-
                             </div>
 
                             <div class="row">
@@ -748,38 +887,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <label>CC Fees </label>
-                                    <div class="form-group">
-                                        <input type="radio" name="cc_fees" value="1" id="ccOption1"
-                                            {{ @$artistData->cc_fees == '1' ? 'checked' : '' }}>
-                                        <label> 1) Credit Card Fees Paid By Shop</label><br>
-                                        <input type="radio" name="cc_fees" value="2" id="ccOption2"
-                                            {{ @$artistData->cc_fees == '2' ? 'checked' : '' }}>
-                                        <label> 2) Credit Card Fees Shared Using Current Shop Percentage</label><br>
-                                        <input type="radio" name="cc_fees" value="3" id="ccOption3"
-                                            {{ @$artistData->cc_fees == '3' ? 'checked' : '' }}>
-                                        <label> 3) Credit Card Fess Charged to Artist</label>
-                                        @error('cc_fees')
-                                        <span class="text-danger" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Current CC Fees Percent Charged(%)</label>
-                                        <div class="form-group">
-                                            <input type="number" step="0.01" class="form-control" id="cc_fees_percentage" placeholder="Current CC Fees Percent Charged" name="cc_fees_percentage" value="{{ @$artistData->cc_fees_percentage }}">
-                                            @error('cc_fees_percentage')
-                                            <span class="text-danger" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Parking Available</label>
@@ -1097,19 +1205,7 @@
                             </div>
                 </div> --}}
 
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Shop Percentage</label><span class="text-danger">*</span>
-                        <input type="number" class="form-control" id="shop_percentage"
-                            placeholder="Shop Percentage" name="shop_percentage"
-                            value="{{ @$artistData->shop_percentage }}">
-                        @error('shop_percentage')
-                        <span class="text-danger" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
-                </div>
+
 
                 <div class="col-md-6">
                     <div class="form-group">
@@ -1124,6 +1220,21 @@
 
 
                         @error('blood_borne')
+                        <span class="text-danger" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>{{ @$artist->created_by == 0 ? 'Admin' : 'Sales Person' }} Email</label><span
+                            class="text-danger">*</span>
+                        <input type="email" class="form-control"
+                            value="{{ @$artist->created_by == 0 ? 'admin@mail.com' : @$artist->createdBy->email }}"
+                            readonly>
+                        @error('shop_email')
                         <span class="text-danger" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
@@ -1147,22 +1258,6 @@
 
             </div>
         </div> --}}
-
-        <div class="col-md-6">
-            <div class="form-group">
-                <label>{{ @$artist->created_by == 0 ? 'Admin' : 'Sales Person' }} Email</label><span
-                    class="text-danger">*</span>
-                <input type="email" class="form-control"
-                    value="{{ @$artist->created_by == 0 ? 'admin@mail.com' : @$artist->createdBy->email }}"
-                    readonly>
-                @error('shop_email')
-                <span class="text-danger" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div>
-        </div>
-
     </div>
 
     <div class="row">
@@ -1626,5 +1721,12 @@
     });
 </script> -->
 
+
+
+<script>
+    $(document).ready(function() {
+        $('#zelle_phone').inputmask('(999) 999-9999');
+    });
+</script>
 
 @endsection
