@@ -236,10 +236,10 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Deposit Amount<span class="text-danger">*</span></label>
+                                        <label for="deposit_amount">Deposit Amount<span class="text-danger">*</span></label>
                                         <input type="number" class="form-control" id="deposit_amount"
                                             placeholder="Deposit Amount" name="deposit_amount"
-                                            value="{{ @$artistData->deposit_amount }}">
+                                            value="{{ @$artistData->deposit_amount }}" required>
                                         @error('deposit_amount')
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>

@@ -416,6 +416,18 @@ class ArtistController extends Controller
         if ($data['artist'] == 'Not Found') {
             return back()->with('msg', 'No artist found!');
         }
+
+        $artistUser = User::find(@$data['artistData']->artist_id);
+
+        if ($artistUser && $artistUser->created_by) {
+            // Referred by someone else → fetch that creator user
+            $referredUser = User::find($artistUser->created_by);
+            $data['referredByEmail'] = $referredUser ? $referredUser->email : $artistUser->email;
+        } else {
+            // No "created_by" → show this artist's own email
+            $data['referredByEmail'] = $artistUser ? $artistUser->email : null;
+        }
+
         return view('admin.artist.edit', $data);
     }
 
@@ -432,6 +444,7 @@ class ArtistController extends Controller
             'email' => 'email|unique:users,email,' . decrypt($id),
             'cc_fees_percentage' => 'nullable|numeric',
             'blood_borne' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'deposit_amount' => 'required|numeric',
         ]);
 
         // Data to be updated
