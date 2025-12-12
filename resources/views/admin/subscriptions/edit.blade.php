@@ -114,13 +114,28 @@
                         </select>
                     </div>
 
+                    <!--  -->
+
+                    <div class="form-group mb-3">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" class="form-control" value="{{auth()->guard('artists')->user()->name}}" placeholder="Enter Full Name">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="acc_hold_type">Account Holder Type</label>
+                        <select name="acc_hold_type" id="acc_hold_type" class="form-control">
+                            <option value="Personal" selected>Personal</option>
+                            <option value="Business">Business</option>
+                        </select>
+                    </div>
+
+
                     <!-- Payment Option -->
                     <div class="form-group mb-3">
                         <label for="payment_option">Payment Option</label>
                         <select id="payment_option" name="payment_option" class="form-control" required>
                             <option value="">Select Payment Option</option>
-                            <option value="zelle" @selected($subscription->payment_option == 'zelle')>Zelle</option>
-                            <option value="ach" @selected($subscription->payment_option == 'ach')>ACH</option>
+                            <!-- <option value="zelle" @selected($subscription->payment_option == 'zelle')>Zelle</option> -->
+                            <option value="ach" @selected($subscription->payment_option == 'ach') selected>ACH</option>
                         </select>
                     </div>
 
@@ -158,6 +173,11 @@
                             <label for="ach_account_number">ACH Account Number</label>
                             <input type="number" id="ach_account_number" name="ach_account_number" class="form-control" value="{{ old('ach_account_number', $subscription->ach_account_number) }}" placeholder="Enter Account Number" minlength="8" maxlength="18" oninput="validateLengthforacount(this)">
                         </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="ref_info">Reference Information</label>
+                        <input type="text" id="ref_info" name="ref_info" class="form-control" value="TattooMe Subscription" placeholder="Enter Reference Information" readonly>
                     </div>
 
                     <div class="form-group text-end">
@@ -217,6 +237,18 @@
         const value = input.value;
         if (value.length !== 9) input.setCustomValidity("Routing number must be exactly 9 digits.");
         else input.setCustomValidity("");
+    }
+</script>
+
+<script>
+    function validateLengthRouting(input) {
+        // Remove non-numeric characters
+        input.value = input.value.replace(/[^0-9]/g, '');
+
+        // Limit to 9 digits
+        if (input.value.length > 9) {
+            input.value = input.value.slice(0, 9);
+        }
     }
 </script>
 @endsection

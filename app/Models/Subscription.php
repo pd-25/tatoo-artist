@@ -35,6 +35,9 @@ class Subscription extends Model
         'ach_routing_number',
         'ach_account_number',
         'subscription_date',
+        'full_name',
+        'acc_hold_type',
+        'ref_info',
     ];
 
     /**

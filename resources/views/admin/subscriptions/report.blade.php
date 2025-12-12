@@ -41,7 +41,7 @@
             <div class="col-md-2">
                 <select name="status" class="form-control">
                     <option value="">All Status</option>
-                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                    <!-- <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option> -->
                     <option value="renew" {{ request('status') == 'renew' ? 'selected' : '' }}>Renew</option>
                     <option value="expired" {{ request('status') == 'expired' ? 'selected' : '' }}>Expired</option>
                 </select>

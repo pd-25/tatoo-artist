@@ -305,6 +305,9 @@ class SubscriptionController extends Controller
             'status' => 'required|string',
             'payment_option' => 'nullable|string|max:255',
             'subscription_date' => 'nullable|string',
+            'full_name' => 'required|string|max:255',
+            'acc_hold_type' => 'required|string|max:255',
+            'ref_info' => 'required|string|max:255',
         ]);
 
         // Conditional validation
@@ -366,6 +369,9 @@ class SubscriptionController extends Controller
             'ach_routing_number' => $request->ach_routing_number,
             'ach_account_number' => $request->ach_account_number,
             'subscription_date' => $subscriptionDate,
+            'full_name' => $request->full_name,
+            'acc_hold_type' => $request->acc_hold_type,
+            'ref_info' => $request->ref_info,
         ]);
 
         // Prepare data for email
