@@ -3,6 +3,21 @@
 @section('title', env('APP_NAME') . ' | Edit Subscription')
 
 <head>
+
+    <style>
+        /* Chrome, Edge, Safari */
+        #ach_routing_number::-webkit-inner-spin-button,
+        #ach_routing_number::-webkit-outer-spin-button {
+            -webkit-appearance: none !important;
+            margin: 0;
+        }
+
+        /* Firefox */
+        #ach_routing_number {
+            -moz-appearance: textfield !important;
+        }
+    </style>
+
     <!-- Add flatpickr CSS in your <head> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
@@ -132,11 +147,7 @@
                     <!-- Payment Option -->
                     <div class="form-group mb-3">
                         <label for="payment_option">Payment Option</label>
-                        <select id="payment_option" name="payment_option" class="form-control" required>
-                            <option value="">Select Payment Option</option>
-                            <!-- <option value="zelle" @selected($subscription->payment_option == 'zelle')>Zelle</option> -->
-                            <option value="ach" @selected($subscription->payment_option == 'ach') selected>ACH</option>
-                        </select>
+                        <input type="text" id="payment_option" name="payment_option" class="form-control" value="ach" style="text-transform: uppercase;">
                     </div>
 
                     <!-- Zelle Fields -->
