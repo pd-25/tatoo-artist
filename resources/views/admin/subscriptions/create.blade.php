@@ -1,7 +1,19 @@
 @extends('admin.layout.main')
 
 @section('title', env('APP_NAME').' | Create Subscription')
+<style>
+    /* Chrome, Edge, Safari */
+    #ach_routing_number::-webkit-inner-spin-button,
+    #ach_routing_number::-webkit-outer-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0;
+    }
 
+    /* Firefox */
+    #ach_routing_number {
+        -moz-appearance: textfield !important;
+    }
+</style>
 @section('content')
 <div class="row justify-content-center">
 
@@ -26,8 +38,8 @@
                                 <option value="{{ $plan['price'] }}|{{ $plan['name'] }}" @selected((string) $subscriptionPlan==(string) $plan['price'])>
                                     {{ $plan['name'] }} - {{ $plan['price'] }}
                                 </option>
-                                
-                            
+
+
 
                                 <!-- <input type="text" name="plans[{{ $index }}][name]" value="{{ $plan['name'] }}" placeholder="Plan Name" class="form-control mb-2"> -->
                                 <!-- <input type="number" name="plans[{{ $index }}][price]" value="{{ $plan['price'] }}" placeholder="Price" class="form-control"> -->
@@ -68,33 +80,33 @@
 
                             if (passwordInput === correctPassword) {
                                 errorMessage.style.display = 'none';
-// Add date field dynamically
-formContainer.innerHTML = `
+                                // Add date field dynamically
+                                formContainer.innerHTML = `
     <div class="datepicker">
         <label for="date">Select Subscription Date</label>
         <input type="text" name="subscription_date" class="form-control" id="date" placeholder="mm-dd-yyyy">
     </div>
 `;
 
-// Add event listeners after inserting the input
-const dateInput = document.getElementById('date');
+                                // Add event listeners after inserting the input
+                                const dateInput = document.getElementById('date');
 
-dateInput.addEventListener('focus', function () {
-    this.type = 'date';
-});
+                                dateInput.addEventListener('focus', function() {
+                                    this.type = 'date';
+                                });
 
-dateInput.addEventListener('blur', function () {
-    if (this.value) {
-        const date = new Date(this.value);
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const dd = String(date.getDate()).padStart(2, '0');
-        const yyyy = date.getFullYear();
-        this.type = 'text';
-        this.value = `${mm}-${dd}-${yyyy}`;
-    } else {
-        this.type = 'text';
-    }
-});
+                                dateInput.addEventListener('blur', function() {
+                                    if (this.value) {
+                                        const date = new Date(this.value);
+                                        const mm = String(date.getMonth() + 1).padStart(2, '0');
+                                        const dd = String(date.getDate()).padStart(2, '0');
+                                        const yyyy = date.getFullYear();
+                                        this.type = 'text';
+                                        this.value = `${mm}-${dd}-${yyyy}`;
+                                    } else {
+                                        this.type = 'text';
+                                    }
+                                });
 
                                 // Optionally, clear the password input and hide the password section
                                 document.getElementById('password-section').style.display = 'none';
@@ -128,11 +140,24 @@ dateInput.addEventListener('blur', function () {
                     </div>
 
                     <div class="form-group mb-3">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" class="form-control" value="{{auth()->guard('artists')->user()->name}}" placeholder="Enter Full Name">
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="acc_hold_type">Account Holder Type</label>
+                        <select name="acc_hold_type" id="acc_hold_type" class="form-control">
+                            <option value="Personal" selected>Personal</option>
+                            <option value="Business">Business</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3" style="display: none;">
                         <label for="payment_option">Payment Option</label>
                         <select id="payment_option" name="payment_option" class="form-control" required>
                             <option value="">Select Payment Option</option>
                             <option value="zelle">Zelle</option>
-                            <option value="ach">ACH</option>
+                            <option value="ach" selected>ACH</option>
                         </select>
                     </div>
 
@@ -168,13 +193,17 @@ dateInput.addEventListener('blur', function () {
 
                         <div class="form-group mb-3">
                             <label for="ach_routing_number">ACH Routing Number</label>
-                            <input type="text" id="ach_routing_number" name="ach_routing_number" class="form-control" placeholder="Enter Routing Number" maxlength="9"
-                                oninput="validateLengthRouting(this)">
+                            <input type="number" id="ach_routing_number" name="ach_routing_number" class="form-control" placeholder="Enter Routing Number" maxlength="9" oninput="validateLengthRouting(this)">
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="ach_account_number">ACH Account Number</label>
                             <input type="number" id="ach_account_number" name="ach_account_number" class="form-control" placeholder="Enter Account Number" minlength="8" maxlength="18" oninput="validateLengthforacount(this)">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="ref_info">Reference Information</label>
+                            <input type="text" id="ref_info" name="ref_info" class="form-control" value="TattooMe Subscription" placeholder="Enter Reference Information" readonly>
                         </div>
                     </div>
 
@@ -195,10 +224,8 @@ dateInput.addEventListener('blur', function () {
         const zelleFields = document.getElementById('zelle_fields');
         const achFields = document.getElementById('ach_fields');
 
-        paymentOption.addEventListener('change', function() {
+        function togglePaymentFields() {
             const value = paymentOption.value;
-
-            // Show/hide fields based on selected payment option
             if (value === 'zelle') {
                 zelleFields.classList.remove('d-none');
                 achFields.classList.add('d-none');
@@ -209,7 +236,10 @@ dateInput.addEventListener('blur', function () {
                 zelleFields.classList.add('d-none');
                 achFields.classList.add('d-none');
             }
-        });
+        }
+
+        paymentOption.addEventListener('change', togglePaymentFields);
+        togglePaymentFields(); // Initialize on load
     });
     document.addEventListener('DOMContentLoaded', () => {
         // Select the input by class or ID
@@ -261,6 +291,18 @@ dateInput.addEventListener('blur', function () {
             input.setCustomValidity(""); // Clears any previous error message
         }
 
+    }
+</script>
+
+<script>
+    function validateLengthRouting(input) {
+        // Remove non-numeric characters
+        input.value = input.value.replace(/[^0-9]/g, '');
+
+        // Limit to 9 digits
+        if (input.value.length > 9) {
+            input.value = input.value.slice(0, 9);
+        }
     }
 </script>
 

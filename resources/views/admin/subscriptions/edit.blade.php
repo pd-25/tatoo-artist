@@ -138,14 +138,14 @@
                     <div class="form-group mb-3">
                         <label for="acc_hold_type">Account Holder Type</label>
                         <select name="acc_hold_type" id="acc_hold_type" class="form-control">
-                            <option value="Personal" selected>Personal</option>
-                            <option value="Business">Business</option>
+                            <option value="Personal" @selected($subscription->acc_hold_type == 'Personal')>Personal</option>
+                            <option value="Business" @selected($subscription->acc_hold_type == 'Business')>Business</option>
                         </select>
                     </div>
 
 
                     <!-- Payment Option -->
-                    <div class="form-group mb-3">
+                    <div class="form-group mb-3" style="display: none;">
                         <label for="payment_option">Payment Option</label>
                         <input type="text" id="payment_option" name="payment_option" class="form-control" value="ach" style="text-transform: uppercase;">
                     </div>
