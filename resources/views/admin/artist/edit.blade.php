@@ -313,10 +313,13 @@
                                         <input type="file" class="form-control" id="zelle_qr_code"
                                             name="zelle_qr_code"
                                             value="{{ @$artistData->zelle_qr_code }}">
-                                        <img src="{{ $artist->artistData->zelle_qr_code 
-    ? asset('uploads/zelle_qr/' . $artist->artistData->zelle_qr_code) 
-    : asset('noimg.png') }}"
-                                            alt="Bloodborne Certification" width="150"> <br>
+                                        @if($artist->artistData && $artist->artistData->zelle_qr_code)
+                                        <img src="{{ asset('uploads/zelle_qr/' . $artist->artistData->zelle_qr_code) }}"
+                                            width="150">
+                                        @else
+                                        <img src="{{ asset('noimg.png') }}" width="150">
+                                        @endif
+                                        <br>
                                         @error('zelle_qr_code')
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
