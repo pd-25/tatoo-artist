@@ -1226,10 +1226,12 @@
                     <div class="form-group">
                         <label>Bloodborne Pathogen Certification</label>
                         <input type="file" class="form-control" id="blood_borne" name="blood_borne">
-                        <img src="{{ $artist->artistData->blood_borne 
-    ? asset('uploads/blood_borne/' . $artist->artistData->blood_borne) 
+                        <img src="{{ optional($artist->artistData)->blood_borne
+    ? asset('uploads/blood_borne/' . $artist->artistData->blood_borne)
     : asset('noimg.png') }}"
-                            alt="Bloodborne Certification" width="150"> <br>
+                            alt="Blood Borne Certificate"
+                            width="150">
+                        <br>
 
 
 
