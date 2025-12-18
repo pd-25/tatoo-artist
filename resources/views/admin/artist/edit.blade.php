@@ -434,11 +434,21 @@
 
                                 <div class="col-md-6">
                                     <label>Sign Up Date</label>
-                                    <input type="text" name="sign_up_date" class="form-control flatpickr" value="{{ $artistData->created_at->format('m-d-Y') }}" readonly>
+                                    <input type="text"
+                                        name="sign_up_date"
+                                        class="form-control flatpickr"
+                                        value="{{ optional($artistData)->created_at
+                    ? optional($artistData->created_at)->format('m-d-Y')
+                    : '' }}"
+                                        readonly>
+
                                     @error('sign_up_date')
-                                    <span class="text-danger" role="alert"><strong>{{ $message }}</strong></span>
+                                    <span class="text-danger" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
                                     @enderror
                                 </div>
+
 
                                 <div class="col-md-12">
                                     <div class="form-group">
