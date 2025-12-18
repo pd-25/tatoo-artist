@@ -42,7 +42,7 @@
 
                     <!-- Subscription Plan -->
                     <div class="form-group mb-3">
-                        <label for="subscription_plan">Subscription Plan</label>
+                        <label for="subscription_plan">Subscription Plan<span class="text-danger">*</span></label>
                         <select id="subscription_plan" name="subscription_plan" class="form-control" required>
                             <option value="">Select Status</option>
                             @foreach ($plans as $plan)
@@ -67,7 +67,7 @@
                     <!-- Password Unlock for Subscription Date -->
                     <div class="form-group mb-3">
                         <div id="password-section">
-                            <label for="password">Enter Password (use for sales person)</label>
+                            <label for="password">Enter Password (use for sales person)<span class="text-danger">*</span></label>
                             <div class="d-flex gap-2">
                                 <div style="width: 90%;">
                                     <input type="password" id="password" class="form-control" placeholder="Password">
@@ -121,7 +121,7 @@
 
                     <!-- Status -->
                     <div class="form-group mb-3">
-                        <label for="status">Status</label>
+                        <label for="status">Status<span class="text-danger">*</span></label>
                         <select id="status" name="status" class="form-control" required>
                             <option value="">Select Status</option>
                             <option value="Renew" @selected($subscription->status == 'Renew')>Renew</option>
@@ -132,11 +132,11 @@
                     <!--  -->
 
                     <div class="form-group mb-3">
-                        <label for="full_name">Full Name</label>
+                        <label for="full_name">Full Name<span class="text-danger">*</span></label>
                         <input type="text" id="full_name" name="full_name" class="form-control" value="{{auth()->guard('artists')->user()->name}}" placeholder="Enter Full Name">
                     </div>
                     <div class="form-group mb-3">
-                        <label for="acc_hold_type">Account Holder Type</label>
+                        <label for="acc_hold_type">Account Holder Type<span class="text-danger">*</span></label>
                         <select name="acc_hold_type" id="acc_hold_type" class="form-control">
                             <option value="Personal" @selected($subscription->acc_hold_type == 'Personal')>Personal</option>
                             <option value="Business" @selected($subscription->acc_hold_type == 'Business')>Business</option>
@@ -165,11 +165,11 @@
                     <!-- ACH Fields -->
                     <div id="ach_fields" class="{{ $subscription->payment_option == 'ach' ? '' : 'd-none' }}">
                         <div class="form-group mb-3">
-                            <label for="ach_bank_name">ACH Bank Name</label>
+                            <label for="ach_bank_name">ACH Bank Name<span class="text-danger">*</span></label>
                             <input type="text" id="ach_bank_name" name="ach_bank_name" class="form-control" value="{{ old('ach_bank_name', $subscription->ach_bank_name) }}" placeholder="Enter Bank Name">
                         </div>
                         <div class="form-group mb-3">
-                            <label for="ach_type">ACH Type</label>
+                            <label for="ach_type">ACH Type<span class="text-danger">*</span></label>
                             <select id="ach_type" name="ach_type" class="form-control">
                                 <option value="">Select Status</option>
                                 <option value="Checking" @selected($subscription->ach_type == 'Checking')>Checking</option>
@@ -177,17 +177,17 @@
                             </select>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="ach_routing_number">ACH Routing Number</label>
+                            <label for="ach_routing_number">ACH Routing Number<span class="text-danger">*</span></label>
                             <input type="number" id="ach_routing_number" name="ach_routing_number" class="form-control" value="{{ old('ach_routing_number', $subscription->ach_routing_number) }}" placeholder="Enter Routing Number" maxlength="9" oninput="validateLengthRouting(this)">
                         </div>
                         <div class="form-group mb-3">
-                            <label for="ach_account_number">ACH Account Number</label>
+                            <label for="ach_account_number">ACH Account Number<span class="text-danger">*</span></label>
                             <input type="number" id="ach_account_number" name="ach_account_number" class="form-control" value="{{ old('ach_account_number', $subscription->ach_account_number) }}" placeholder="Enter Account Number" minlength="8" maxlength="18" oninput="validateLengthforacount(this)">
                         </div>
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="ref_info">Reference Information</label>
+                        <label for="ref_info">Reference Information<span class="text-danger">*</span></label>
                         <input type="text" id="ref_info" name="ref_info" class="form-control" value="TattooMe Subscription" placeholder="Enter Reference Information" readonly>
                     </div>
 

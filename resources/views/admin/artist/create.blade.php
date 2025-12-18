@@ -52,7 +52,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Phone</label>
+                                    <label>Phone<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="phone" placeholder="phone number" name="phone"
                                         value="{{ old('phone') }}">
                                     @error('name')
@@ -65,7 +65,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Main Address</label>
+                            <label>Main Address<span class="text-danger">*</span></label>
                             <input type="text" class="form-control" placeholder="address" name="address" id="autocomplete">
                             <input type="hidden" name="latitude" id="latitude">
                             <input type="hidden" name="longitude" id="longitude">
@@ -553,7 +553,7 @@
                                 <div class="form-group">
                                     <label>Unique Offerings</label>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="unique_offerings[]" value="Vegan Ink" id="Vegan Ink" checked>
+                                        <input class="form-check-input" type="checkbox" name="unique_offerings[]" value="Vegan Ink" id="Vegan Ink">
                                         <label class="form-check-label" for="Vegan Ink">
                                             Vegan Ink
                                         </label>
@@ -599,7 +599,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label>Current CC Fees Percent Charged(%) </label>
+                                <label>Current CC Fees Percent Charged(%)<span class="text-danger">*</span></label>
                                 <div class="form-group">
                                     <input type="number" step="0.01" name="cc_fees_percentage" required class="form-control" placeholder="Current CC Fees Percent Charged">
                                     @error('cc_fees_percentage')

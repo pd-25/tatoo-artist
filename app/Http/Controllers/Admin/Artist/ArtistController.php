@@ -325,6 +325,7 @@ class ArtistController extends Controller
 
         $artistData = $request->only(
             'hourly_rate',
+            'deposit_amount',
             "specialty",
             "specialty2",
             "specialty3",
@@ -444,7 +445,7 @@ class ArtistController extends Controller
             'email' => 'email|unique:users,email,' . decrypt($id),
             'cc_fees_percentage' => 'nullable|numeric',
             'blood_borne' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'deposit_amount' => 'required|numeric',
+            'deposit_amount' => 'nullable|numeric',
         ]);
 
         // Data to be updated

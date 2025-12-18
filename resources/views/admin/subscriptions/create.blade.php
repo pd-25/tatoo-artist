@@ -30,7 +30,7 @@
 
 
                     <div class="form-group mb-3">
-                        <label for="subscription_plan">Subscription Plan</label>
+                        <label for="subscription_plan">Subscription Plan<span class="text-danger">*</span></label>
                         <select id="subscription_plan" name="subscription_plan" class="form-control" required>
                             <option value="">Select Status</option>
                             @foreach ($plans as $index => $plan)
@@ -53,7 +53,7 @@
                     </div>
                     <div class="form-group mb-3">
                         <div id="password-section">
-                            <label for="password">Enter Password (use for sales person)</label>
+                            <label for="password">Enter Password (use for sales person)<span class="text-danger">*</span></label>
 
                             <div class="d-flex gap-2">
                                 <div class="" style="width: 90%;">
@@ -131,7 +131,7 @@
                     </script>
 
                     <div class="form-group mb-3">
-                        <label for="status">Status</label>
+                        <label for="status">Status<span class="text-danger">*</span></label>
                         <select id="status" name="status" class="form-control" required>
                             <option value="">Select Status</option>
                             <option value="Renew">Renew</option>
@@ -140,12 +140,12 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="full_name">Full Name</label>
+                        <label for="full_name">Full Name<span class="text-danger">*</span></label>
                         <input type="text" id="full_name" name="full_name" class="form-control" value="{{auth()->guard('artists')->user()->name}}" placeholder="Enter Full Name">
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="acc_hold_type">Account Holder Type</label>
+                        <label for="acc_hold_type">Account Holder Type<span class="text-danger">*</span></label>
                         <select name="acc_hold_type" id="acc_hold_type" class="form-control">
                             <option value="Personal" selected>Personal</option>
                             <option value="Business">Business</option>
@@ -177,12 +177,12 @@
                     <!-- ACH Fields -->
                     <div id="ach_fields" class="d-none">
                         <div class="form-group mb-3">
-                            <label for="ach_bank_name">ACH Bank Name</label>
+                            <label for="ach_bank_name">ACH Bank Name<span class="text-danger">*</span></label>
                             <input type="text" id="ach_bank_name" name="ach_bank_name" class="form-control" placeholder="Enter Bank Name">
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="ach_type">ACH Type</label>
+                            <label for="ach_type">ACH Type<span class="text-danger">*</span></label>
                             <select id="ach_type" name="ach_type" class="form-control">
                                 <option value="">Select Status</option>
                                 <option value="Checking">Checking</option>
@@ -192,17 +192,17 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="ach_routing_number">ACH Routing Number</label>
+                            <label for="ach_routing_number">ACH Routing Number<span class="text-danger">*</span></label>
                             <input type="number" id="ach_routing_number" name="ach_routing_number" class="form-control" placeholder="Enter Routing Number" maxlength="9" oninput="validateLengthRouting(this)">
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="ach_account_number">ACH Account Number</label>
+                            <label for="ach_account_number">ACH Account Number<span class="text-danger">*</span></label>
                             <input type="number" id="ach_account_number" name="ach_account_number" class="form-control" placeholder="Enter Account Number" minlength="8" maxlength="18" oninput="validateLengthforacount(this)">
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="ref_info">Reference Information</label>
+                            <label for="ref_info">Reference Information<span class="text-danger">*</span></label>
                             <input type="text" id="ref_info" name="ref_info" class="form-control" value="TattooMe Subscription" placeholder="Enter Reference Information" readonly>
                         </div>
                     </div>
